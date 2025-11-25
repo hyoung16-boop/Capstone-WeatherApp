@@ -1,0 +1,49 @@
+com.example.weatherproject.app-core-runtime-2.2.0-0 C:\Users\jueun\.gradle\caches\8.13\transforms\05ea4fc5541826d4b35cbd4a3abde7d5\transformed\core-runtime-2.2.0\res
+com.example.weatherproject.app-material3-release-1 C:\Users\jueun\.gradle\caches\8.13\transforms\0bcb1f5a294d6a45678a49d139f6bc1b\transformed\material3-release\res
+com.example.weatherproject.app-ui-text-release-2 C:\Users\jueun\.gradle\caches\8.13\transforms\0e8bedf86b2cd8524b92b5857c67052f\transformed\ui-text-release\res
+com.example.weatherproject.app-core-ktx-1.17.0-3 C:\Users\jueun\.gradle\caches\8.13\transforms\15306ee4286a33bba3226b295a9d0e9a\transformed\core-ktx-1.17.0\res
+com.example.weatherproject.app-animation-release-4 C:\Users\jueun\.gradle\caches\8.13\transforms\17aebc1c61991c9b3d61182c9eaa3ba2\transformed\animation-release\res
+com.example.weatherproject.app-activity-compose-1.11.0-5 C:\Users\jueun\.gradle\caches\8.13\transforms\2dbc3205cb9c6e13813a376dcf6e8fc1\transformed\activity-compose-1.11.0\res
+com.example.weatherproject.app-lifecycle-livedata-core-2.9.4-6 C:\Users\jueun\.gradle\caches\8.13\transforms\3b7b174c4f351681bfebcbd27ad46256\transformed\lifecycle-livedata-core-2.9.4\res
+com.example.weatherproject.app-lifecycle-process-2.9.4-7 C:\Users\jueun\.gradle\caches\8.13\transforms\42d46d2d3769705ecebae8c80858c34e\transformed\lifecycle-process-2.9.4\res
+com.example.weatherproject.app-savedstate-compose-release-8 C:\Users\jueun\.gradle\caches\8.13\transforms\516675017afda058c23a3ba7ccd5846a\transformed\savedstate-compose-release\res
+com.example.weatherproject.app-material-icons-extended-release-9 C:\Users\jueun\.gradle\caches\8.13\transforms\599b761d94d0d9bfaf7cadf97acc8fcd\transformed\material-icons-extended-release\res
+com.example.weatherproject.app-tracing-1.2.0-10 C:\Users\jueun\.gradle\caches\8.13\transforms\626a688c35d645d29604c539ca47eec1\transformed\tracing-1.2.0\res
+com.example.weatherproject.app-lifecycle-runtime-compose-release-11 C:\Users\jueun\.gradle\caches\8.13\transforms\6846212a55fdac589984d4c9cd2a0378\transformed\lifecycle-runtime-compose-release\res
+com.example.weatherproject.app-savedstate-ktx-1.3.1-12 C:\Users\jueun\.gradle\caches\8.13\transforms\6bacc7f3b99e523ae660a1774e338eb4\transformed\savedstate-ktx-1.3.1\res
+com.example.weatherproject.app-animation-core-release-13 C:\Users\jueun\.gradle\caches\8.13\transforms\6fbdffb0a65da9ff2f0075c8b184dbc0\transformed\animation-core-release\res
+com.example.weatherproject.app-ui-release-14 C:\Users\jueun\.gradle\caches\8.13\transforms\702a4645065b474992b639a00fbe4f6e\transformed\ui-release\res
+com.example.weatherproject.app-activity-1.11.0-15 C:\Users\jueun\.gradle\caches\8.13\transforms\72abf05fa0d5f6484b87fc3911634d19\transformed\activity-1.11.0\res
+com.example.weatherproject.app-startup-runtime-1.1.1-16 C:\Users\jueun\.gradle\caches\8.13\transforms\775bac89a720c198efbbb200b8241f0c\transformed\startup-runtime-1.1.1\res
+com.example.weatherproject.app-lifecycle-runtime-release-17 C:\Users\jueun\.gradle\caches\8.13\transforms\823330e84c06c0afacc2e334699a8ae4\transformed\lifecycle-runtime-release\res
+com.example.weatherproject.app-savedstate-release-18 C:\Users\jueun\.gradle\caches\8.13\transforms\90eff5a2f2a1fb531238d9be72627d84\transformed\savedstate-release\res
+com.example.weatherproject.app-lifecycle-viewmodel-ktx-2.9.4-19 C:\Users\jueun\.gradle\caches\8.13\transforms\915be015f78e7a91e475453230a7b957\transformed\lifecycle-viewmodel-ktx-2.9.4\res
+com.example.weatherproject.app-ui-geometry-release-20 C:\Users\jueun\.gradle\caches\8.13\transforms\968e164e7e3ddcd900f9e6da7e97da7d\transformed\ui-geometry-release\res
+com.example.weatherproject.app-customview-poolingcontainer-1.0.0-21 C:\Users\jueun\.gradle\caches\8.13\transforms\988deda1f0c0c851f8317c00031cb9d5\transformed\customview-poolingcontainer-1.0.0\res
+com.example.weatherproject.app-emoji2-1.3.0-22 C:\Users\jueun\.gradle\caches\8.13\transforms\9acb774eed2e951332bb0465128b5126\transformed\emoji2-1.3.0\res
+com.example.weatherproject.app-core-viewtree-1.0.0-23 C:\Users\jueun\.gradle\caches\8.13\transforms\9e72b83fa694f85fa3bae4de5aaa36ce\transformed\core-viewtree-1.0.0\res
+com.example.weatherproject.app-lifecycle-viewmodel-release-24 C:\Users\jueun\.gradle\caches\8.13\transforms\a1463db81c460b6006f0dde18d9afa05\transformed\lifecycle-viewmodel-release\res
+com.example.weatherproject.app-material-ripple-release-25 C:\Users\jueun\.gradle\caches\8.13\transforms\a3328a3a6235220b7dcd1c89e94182ba\transformed\material-ripple-release\res
+com.example.weatherproject.app-foundation-layout-release-26 C:\Users\jueun\.gradle\caches\8.13\transforms\a57564168cf4f0cdfcd914c275bab6fc\transformed\foundation-layout-release\res
+com.example.weatherproject.app-activity-ktx-1.11.0-27 C:\Users\jueun\.gradle\caches\8.13\transforms\a57589d02dcea719ca92ad8137af44c9\transformed\activity-ktx-1.11.0\res
+com.example.weatherproject.app-core-1.17.0-28 C:\Users\jueun\.gradle\caches\8.13\transforms\a729d0b8908cf6daa89192c37f5c50c4\transformed\core-1.17.0\res
+com.example.weatherproject.app-lifecycle-viewmodel-savedstate-release-29 C:\Users\jueun\.gradle\caches\8.13\transforms\b031bafca27178804470307c29dc17ee\transformed\lifecycle-viewmodel-savedstate-release\res
+com.example.weatherproject.app-ui-unit-release-30 C:\Users\jueun\.gradle\caches\8.13\transforms\b06066e2a01a6ccaafe2001476d5bff0\transformed\ui-unit-release\res
+com.example.weatherproject.app-graphics-path-1.0.1-31 C:\Users\jueun\.gradle\caches\8.13\transforms\ba75d7e6fee8f8a11908320fae93a0af\transformed\graphics-path-1.0.1\res
+com.example.weatherproject.app-ui-tooling-preview-release-32 C:\Users\jueun\.gradle\caches\8.13\transforms\c057438538af9b4e6eea46826d89b6ea\transformed\ui-tooling-preview-release\res
+com.example.weatherproject.app-coil-base-2.6.0-33 C:\Users\jueun\.gradle\caches\8.13\transforms\c9343234a2c30590626cd468f6368073\transformed\coil-base-2.6.0\res
+com.example.weatherproject.app-appcompat-resources-1.6.1-34 C:\Users\jueun\.gradle\caches\8.13\transforms\ccf32c9af056b98c64d387303ecf5891\transformed\appcompat-resources-1.6.1\res
+com.example.weatherproject.app-material-icons-core-release-35 C:\Users\jueun\.gradle\caches\8.13\transforms\e0bf7ba8308e4169f5e0d5a8db805fe4\transformed\material-icons-core-release\res
+com.example.weatherproject.app-ui-util-release-36 C:\Users\jueun\.gradle\caches\8.13\transforms\e647111bd34b380b214289c1992c060d\transformed\ui-util-release\res
+com.example.weatherproject.app-foundation-release-37 C:\Users\jueun\.gradle\caches\8.13\transforms\f2a1857c6f88b0300d486cfbd79bc3ca\transformed\foundation-release\res
+com.example.weatherproject.app-annotation-experimental-1.4.1-38 C:\Users\jueun\.gradle\caches\8.13\transforms\f622abdae9332f1b002ea20b690c29b1\transformed\annotation-experimental-1.4.1\res
+com.example.weatherproject.app-ui-graphics-release-39 C:\Users\jueun\.gradle\caches\8.13\transforms\f90c599a91d8b8ebd3a094abd77fe0a6\transformed\ui-graphics-release\res
+com.example.weatherproject.app-profileinstaller-1.4.0-40 C:\Users\jueun\.gradle\caches\8.13\transforms\f9ededffc1757bf1516d836013e57b28\transformed\profileinstaller-1.4.0\res
+com.example.weatherproject.app-pngs-41 C:\save\Capstone Design\weatherapp\app\build\generated\res\pngs\release
+com.example.weatherproject.app-resValues-42 C:\save\Capstone Design\weatherapp\app\build\generated\res\resValues\release
+com.example.weatherproject.app-updated_navigation_xml-43 C:\save\Capstone Design\weatherapp\app\build\generated\updated_navigation_xml\release
+com.example.weatherproject.app-packageReleaseResources-44 C:\save\Capstone Design\weatherapp\app\build\intermediates\incremental\release\packageReleaseResources\merged.dir
+com.example.weatherproject.app-packageReleaseResources-45 C:\save\Capstone Design\weatherapp\app\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
+com.example.weatherproject.app-release-46 C:\save\Capstone Design\weatherapp\app\build\intermediates\merged_res\release\mergeReleaseResources
+com.example.weatherproject.app-main-47 C:\save\Capstone Design\weatherapp\app\src\main\res
+com.example.weatherproject.app-release-48 C:\save\Capstone Design\weatherapp\app\src\release\res

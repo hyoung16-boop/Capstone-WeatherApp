@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.0" type="incidents">
+
+    <incident
+        id="PropertyEscape"
+        severity="error"
+        message="Windows file separators (`\`) and drive letter separators (&apos;:&apos;) must be escaped (`\\`) in property files; use C\\:/Users/jueun/AppData/Local/Android/Sdk">
+        <fix-replace
+            description="Escape"
+            oldString=":"
+            replacement="\:"
+            priority="0"/>
+        <location
+            file="../local.properties"
+            line="1"
+            column="10"
+            startOffset="9"
+            endLine="1"
+            endColumn="11"
+            endOffset="10"/>
+    </incident>
+
+    <incident
+        id="RedundantLabel"
+        severity="warning"
+        message="Redundant label can be removed">
+        <fix-attribute
+            description="Delete label"
+            namespace="http://schemas.android.com/apk/res/android"
+            attribute="label"/>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*manifest*0}"
+            line="21"
+            column="13"
+            startOffset="988"
+            endLine="21"
+            endColumn="45"
+            endOffset="1020"/>
+    </incident>
+
+    <incident
+        id="AndroidGradlePluginVersion"
+        severity="warning"
+        message="A newer version of com.android.application than 8.13.0 is available: 8.13.1">
+        <fix-replace
+            description="Replace with 8.13.1"
+            family="Update versions"
+            robot="true"
+            independent="true"
+            oldString="8.13.0"
+            replacement="8.13.1"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="2"
+            column="7"
+            startOffset="18"
+            endLine="2"
+            endColumn="15"
+            endOffset="26"/>
+        <map>
+            <entry
+                name="coordinate"
+                string="com.android.application"/>
+            <entry
+                name="revision"
+                string="8.13.1"/>
+        </map>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="Upgrade `androidx.compose.foundation` for keyboard and mouse support">
+        <fix-replace
+            description="Change to 1.9.5"
+            family="Update versions"
+            oldString="1.6.8"
+            replacement="1.9.5"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="43"
+            column="20"
+            startOffset="973"
+            endLine="43"
+            endColumn="66"
+            endOffset="1019"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.compose.material:material-icons-extended-android than 1.6.8 is available: 1.7.8">
+        <fix-replace
+            description="Change to 1.7.8"
+            family="Update versions"
+            oldString="1.6.8"
+            replacement="1.7.8"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="44"
+            column="20"
+            startOffset="1040"
+            endLine="44"
+            endColumn="85"
+            endOffset="1105"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.9.4 is available: 2.10.0">
+        <fix-replace
+            description="Change to 2.10.0"
+            family="Update versions"
+            oldString="2.9.4"
+            replacement="2.10.0"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="8"
+            column="23"
+            startOffset="155"
+            endLine="8"
+            endColumn="30"
+            endOffset="162"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.activity:activity-compose than 1.11.0 is available: 1.12.0">
+        <fix-replace
+            description="Change to 1.12.0"
+            family="Update versions"
+            oldString="1.11.0"
+            replacement="1.12.0"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="9"
+            column="19"
+            startOffset="182"
+            endLine="9"
+            endColumn="27"
+            endOffset="190"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.11.01">
+        <fix-replace
+            description="Change to 2025.11.01"
+            family="Update versions"
+            oldString="2024.09.00"
+            replacement="2025.11.01"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="10"
+            column="14"
+            startOffset="205"
+            endLine="10"
+            endColumn="26"
+            endOffset="217"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of io.coil-kt:coil-compose than 2.6.0 is available: 2.7.0">
+        <fix-replace
+            description="Change to 2.7.0"
+            family="Update versions"
+            oldString="2.6.0"
+            replacement="2.7.0"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="45"
+            column="20"
+            startOffset="1126"
+            endLine="45"
+            endColumn="51"
+            endOffset="1157"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.2.21">
+        <fix-replace
+            description="Change to 2.2.21"
+            family="Update versions"
+            oldString="2.0.21"
+            replacement="2.2.21"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="10"
+            startOffset="37"
+            endLine="3"
+            endColumn="18"
+            endOffset="45"/>
+    </incident>
+
+    <incident
+        id="NewerVersionAvailable"
+        severity="warning"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.2.21">
+        <fix-replace
+            description="Change to 2.2.21"
+            family="Update versions"
+            oldString="2.0.21"
+            replacement="2.2.21"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="10"
+            startOffset="37"
+            endLine="3"
+            endColumn="18"
+            endOffset="45"/>
+    </incident>
+
+    <incident
+        id="ObsoleteSdkInt"
+        severity="warning"
+        message="Unnecessary; `SDK_INT` is always >= 30">
+        <fix-data conditional="true"/>
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/weatherproject/MainActivity.kt"
+            line="587"
+            column="9"
+            startOffset="20470"
+            endLine="587"
+            endColumn="55"
+            endOffset="20516"/>
+    </incident>
+
+    <incident
+        id="UseTomlInstead"
+        severity="warning"
+        message="Use version catalog instead">
+        <fix-composite
+            description="Replace with new library catalog declaration for androidx-foundation"
+            robot="true">
+            <fix-replace
+                description="Replace with foundationVersion = &quot;1.6.8&quot;..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="foundationVersion = &quot;1.6.8&quot;&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="28"
+                    endOffset="28"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with androidx-foundation = { module = &quot;androidx.compose.foundation:foundation&quot;, version.ref = &quot;foundationVersion&quot; }..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="androidx-foundation = { module = &quot;androidx.compose.foundation:foundation&quot;, version.ref = &quot;foundationVersion&quot; }&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="327"
+                    endOffset="327"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with libs.androidx.foundation"
+                robot="true"
+                replacement="libs.androidx.foundation"
+                priority="0">
+                <range
+                    file="${:app*projectDir}/build.gradle.kts"
+                    startOffset="973"
+                    endOffset="1019"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="43"
+            column="20"
+            startOffset="973"
+            endLine="43"
+            endColumn="66"
+            endOffset="1019"/>
+    </incident>
+
+    <incident
+        id="UseTomlInstead"
+        severity="warning"
+        message="Use version catalog instead">
+        <fix-composite
+            description="Replace with new library catalog declaration for androidx-material-icons-extended-android"
+            robot="true">
+            <fix-replace
+                description="Replace with materialIconsExtendedAndroidVersion = &quot;1.6.8&quot;..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="materialIconsExtendedAndroidVersion = &quot;1.6.8&quot;&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="219"
+                    endOffset="219"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with androidx-material-icons-extended-android = { module = &quot;androidx.compose.material:material-icons-extended-android&quot;, version.ref = &quot;materialIconsExtendedAndroidVersion&quot; }..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="androidx-material-icons-extended-android = { module = &quot;androidx.compose.material:material-icons-extended-android&quot;, version.ref = &quot;materialIconsExtendedAndroidVersion&quot; }&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="327"
+                    endOffset="327"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with libs.androidx.material.icons.extended.android"
+                robot="true"
+                replacement="libs.androidx.material.icons.extended.android"
+                priority="0">
+                <range
+                    file="${:app*projectDir}/build.gradle.kts"
+                    startOffset="1040"
+                    endOffset="1105"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="44"
+            column="20"
+            startOffset="1040"
+            endLine="44"
+            endColumn="85"
+            endOffset="1105"/>
+    </incident>
+
+    <incident
+        id="UseTomlInstead"
+        severity="warning"
+        message="Use version catalog instead">
+        <fix-composite
+            description="Replace with new library catalog declaration for coil-kt-coil-compose"
+            robot="true">
+            <fix-replace
+                description="Replace with coilComposeVersion = &quot;2.6.0&quot;..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="coilComposeVersion = &quot;2.6.0&quot;&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="28"
+                    endOffset="28"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with coil-kt-coil-compose = { module = &quot;io.coil-kt:coil-compose&quot;, version.ref = &quot;coilComposeVersion&quot; }..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="coil-kt-coil-compose = { module = &quot;io.coil-kt:coil-compose&quot;, version.ref = &quot;coilComposeVersion&quot; }&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="327"
+                    endOffset="327"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with libs.coil.kt.coil.compose"
+                robot="true"
+                replacement="libs.coil.kt.coil.compose"
+                priority="0">
+                <range
+                    file="${:app*projectDir}/build.gradle.kts"
+                    startOffset="1126"
+                    endOffset="1157"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="45"
+            column="20"
+            startOffset="1126"
+            endLine="45"
+            endColumn="51"
+            endOffset="1157"/>
+    </incident>
+
+</incidents>
