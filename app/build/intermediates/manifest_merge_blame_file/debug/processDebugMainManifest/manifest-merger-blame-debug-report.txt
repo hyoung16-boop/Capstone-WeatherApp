@@ -9,17 +9,17 @@
 9        android:targetSdkVersion="36" />
 10
 11    <uses-permission android:name="android.permission.INTERNET" />
-11-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:4:5-67
-11-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:4:22-64
+11-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:4:5-67
+11-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:4:22-64
 12    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-12-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:5:5-76
-12-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:5:22-74
+12-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:5:5-76
+12-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:5:22-74
 13    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-13-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:6:5-81
-13-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:6:22-78
+13-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:6:5-81
+13-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:6:22-78
 14    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-14-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:7:5-79
-14-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:7:22-76
+14-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:7:5-79
+14-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:7:22-76
 15
 16    <permission
 16-->[androidx.core:core:1.17.0] C:\Users\jueun\.gradle\caches\8.13\transforms\1db1882e714ebb71921587c0378cc7dd\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
@@ -33,56 +33,56 @@
 20-->[androidx.core:core:1.17.0] C:\Users\jueun\.gradle\caches\8.13\transforms\1db1882e714ebb71921587c0378cc7dd\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
 21
 22    <application
-22-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:9:5-33:19
+22-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:9:5-33:19
 23        android:allowBackup="true"
-23-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:10:9-35
+23-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:10:9-35
 24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 24-->[androidx.core:core:1.17.0] C:\Users\jueun\.gradle\caches\8.13\transforms\1db1882e714ebb71921587c0378cc7dd\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
 25        android:dataExtractionRules="@xml/data_extraction_rules"
-25-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:11:9-65
+25-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:11:9-65
 26        android:debuggable="true"
 27        android:extractNativeLibs="false"
 28        android:fullBackupContent="@xml/backup_rules"
-28-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:12:9-54
+28-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:12:9-54
 29        android:icon="@mipmap/ic_launcher"
-29-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:13:9-43
+29-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:13:9-43
 30        android:label="@string/app_name"
-30-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:14:9-41
+30-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:14:9-41
 31        android:roundIcon="@mipmap/ic_launcher_round"
-31-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:15:9-54
+31-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:15:9-54
 32        android:supportsRtl="true"
-32-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:16:9-35
+32-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:16:9-35
 33        android:testOnly="true"
 34        android:theme="@style/Theme.WeatherProject" >
-34-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:17:9-52
+34-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:17:9-52
 35        <activity
-35-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:18:9-28:20
+35-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:18:9-28:20
 36            android:name="com.example.weatherproject.MainActivity"
-36-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:19:13-41
+36-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:19:13-41
 37            android:exported="true"
-37-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:20:13-36
+37-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:20:13-36
 38            android:label="@string/app_name"
-38-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:21:13-45
+38-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:21:13-45
 39            android:theme="@style/Theme.WeatherProject" >
-39-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:22:13-56
+39-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:22:13-56
 40            <intent-filter>
-40-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:23:13-27:29
+40-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:23:13-27:29
 41                <action android:name="android.intent.action.MAIN" />
-41-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:24:17-69
-41-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:24:25-66
+41-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:24:17-69
+41-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:24:25-66
 42
 43                <category android:name="android.intent.category.LAUNCHER" />
-43-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:26:17-77
-43-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:26:27-74
+43-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:17-77
+43-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:27-74
 44            </intent-filter>
 45        </activity>
 46
 47        <receiver
-47-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:30:9-32:40
+47-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:30:9-32:40
 48            android:name="com.example.weatherproject.receiver.AlarmReceiver"
-48-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:31:13-51
+48-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:31:13-51
 49            android:exported="false" />
-49-->C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:32:13-37
+49-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:32:13-37
 50
 51        <service
 51-->[androidx.room:room-runtime:2.6.1] C:\Users\jueun\.gradle\caches\8.13\transforms\a24131c36c9cbaaffcab93088e54da8b\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63

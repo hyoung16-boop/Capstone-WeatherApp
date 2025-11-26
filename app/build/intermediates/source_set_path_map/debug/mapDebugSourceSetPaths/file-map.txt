@@ -43,11 +43,11 @@ com.example.weatherproject.app-ui-test-manifest-1.9.0-41 C:\Users\jueun\.gradle\
 com.example.weatherproject.app-lifecycle-process-2.9.4-42 C:\Users\jueun\.gradle\caches\8.13\transforms\eefe0302764809dde0f710a2631c4c43\transformed\lifecycle-process-2.9.4\res
 com.example.weatherproject.app-customview-poolingcontainer-1.0.0-43 C:\Users\jueun\.gradle\caches\8.13\transforms\f49f54b78156c26f40f5067201357391\transformed\customview-poolingcontainer-1.0.0\res
 com.example.weatherproject.app-lifecycle-runtime-compose-release-44 C:\Users\jueun\.gradle\caches\8.13\transforms\f88cad1a70d95ab4ab98cd0f9bdd67c9\transformed\lifecycle-runtime-compose-release\res
-com.example.weatherproject.app-pngs-45 C:\save\Capstone Design\weatherapp\app\build\generated\res\pngs\debug
-com.example.weatherproject.app-resValues-46 C:\save\Capstone Design\weatherapp\app\build\generated\res\resValues\debug
-com.example.weatherproject.app-updated_navigation_xml-47 C:\save\Capstone Design\weatherapp\app\build\generated\updated_navigation_xml\debug
-com.example.weatherproject.app-packageDebugResources-48 C:\save\Capstone Design\weatherapp\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.example.weatherproject.app-packageDebugResources-49 C:\save\Capstone Design\weatherapp\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.example.weatherproject.app-debug-50 C:\save\Capstone Design\weatherapp\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.example.weatherproject.app-debug-51 C:\save\Capstone Design\weatherapp\app\src\debug\res
-com.example.weatherproject.app-main-52 C:\save\Capstone Design\weatherapp\app\src\main\res
+com.example.weatherproject.app-pngs-45 C:\save\cj\weatherapp\app\build\generated\res\pngs\debug
+com.example.weatherproject.app-resValues-46 C:\save\cj\weatherapp\app\build\generated\res\resValues\debug
+com.example.weatherproject.app-updated_navigation_xml-47 C:\save\cj\weatherapp\app\build\generated\updated_navigation_xml\debug
+com.example.weatherproject.app-packageDebugResources-48 C:\save\cj\weatherapp\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.weatherproject.app-packageDebugResources-49 C:\save\cj\weatherapp\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.weatherproject.app-debug-50 C:\save\cj\weatherapp\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.weatherproject.app-debug-51 C:\save\cj\weatherapp\app\src\debug\res
+com.example.weatherproject.app-main-52 C:\save\cj\weatherapp\app\src\main\res

@@ -14,11 +14,11 @@ data class WeatherState(
 // "현재 날씨" 카드 '틀'
 data class CurrentWeather(
     val iconUrl: String = "",
-    val temperature: Double = 18.0,
+    val temperature: String = "18°", // Double -> String
     val description: String = "Partly Cloudy",
     val maxTemp: String = "최고: 22°",
     val minTemp: String = "최저: 14°",
-    val feelsLike: Double = 17.0
+    val feelsLike: String = "체감: 17°" // Double -> String
 )
 
 // "시간별 예보" 카드 '틀'
@@ -32,10 +32,10 @@ data class HourlyForecast(
 
 // "날씨 상세" 카드 '틀'
 data class WeatherDetails(
-    val feelsLike: Double = 17.0,
-    val humidity: Double = 65.0,
+    val feelsLike: String = "17°", // Double -> String
+    val humidity: String = "65%", // Double -> String
     val precipitation: String = "0 mm",
-    val wind: Double = 12.0, // Assuming km/h
+    val wind: String = "12 km/h", // Double -> String
     val pm10: String = "45 µg/m³",
     val pm25: String = "18 µg/m³",
     val pressure: String = "1013 hPa",

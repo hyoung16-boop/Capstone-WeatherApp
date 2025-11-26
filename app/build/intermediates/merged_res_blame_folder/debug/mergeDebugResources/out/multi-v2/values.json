@@ -21,6 +21,23 @@
                     }
                 },
                 {
+                    "source": "C:\\save\\cj\\weatherapp\\app\\src\\main\\res\\values\\themes.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "59",
+                        "endColumns": "91",
+                        "endOffsets": "146"
+                    },
+                    "to": {
+                        "startLines": "239",
+                        "startColumns": "4",
+                        "startOffsets": "15141",
+                        "endColumns": "90",
+                        "endOffsets": "15227"
+                    }
+                },
+                {
                     "source": "C:\\Users\\jueun\\.gradle\\caches\\8.13\\transforms\\32a272c409277c441935a255695dde02\\transformed\\foundation-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5",
@@ -54,23 +71,6 @@
                         "endLines": "113,132,133,134,135,136,137,138,139,140,143,144,145,146,147,148,149,150,151,152,153,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,220,223",
                         "endColumns": "72,87,85,80,83,68,64,82,105,85,13,53,68,60,68,88,94,73,96,92,97,13,90,87,95,97,63,67,86,93,66,71,71,100,108,75,68,47,65,63,73,56,56,71,49,53,70,70,69,68,57,75,70,73,85,49,69,64,12,12",
                         "endOffsets": "6753,8060,8146,8227,8311,8380,8445,8528,8634,8720,8840,8894,8963,9024,9093,9182,9277,9351,9448,9541,9639,9788,9879,9967,10063,10161,10225,10293,10380,10474,10541,10613,10685,10786,10895,10971,11040,11088,11154,11218,11292,11349,11406,11478,11528,11582,11653,11724,11794,11863,11921,11997,12068,12142,12228,12278,12348,12413,14043,14196"
-                    }
-                },
-                {
-                    "source": "C:\\save\\Capstone Design\\weatherapp\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "17",
-                        "endColumns": "52",
-                        "endOffsets": "65"
-                    },
-                    "to": {
-                        "startLines": "116",
-                        "startColumns": "4",
-                        "startOffsets": "6911",
-                        "endColumns": "52",
-                        "endOffsets": "6959"
                     }
                 },
                 {
@@ -144,6 +144,23 @@
                     }
                 },
                 {
+                    "source": "C:\\save\\cj\\weatherapp\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "7,2,3,4,5,6,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "293,57,105,153,201,247,336",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "330,99,147,195,241,287,373"
+                    },
+                    "to": {
+                        "startLines": "7,12,13,14,15,16,17",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "491,796,843,890,937,982,1027",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "528,838,885,932,977,1022,1064"
+                    }
+                },
+                {
                     "source": "C:\\Users\\jueun\\.gradle\\caches\\8.13\\transforms\\ae364e7df22134bac54af2ca64e2f377\\transformed\\ui-graphics-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -158,6 +175,23 @@
                         "startOffsets": "4951",
                         "endColumns": "65",
                         "endOffsets": "5012"
+                    }
+                },
+                {
+                    "source": "C:\\save\\cj\\weatherapp\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "52",
+                        "endOffsets": "65"
+                    },
+                    "to": {
+                        "startLines": "116",
+                        "startColumns": "4",
+                        "startOffsets": "6911",
+                        "endColumns": "52",
+                        "endOffsets": "6959"
                     }
                 },
                 {
@@ -264,40 +298,6 @@
                         "endLines": "412,418,424,427,438",
                         "endColumns": "24,24,24,24,24",
                         "endOffsets": "21252,21496,21743,21876,22288"
-                    }
-                },
-                {
-                    "source": "C:\\save\\Capstone Design\\weatherapp\\app\\src\\main\\res\\values\\themes.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "59",
-                        "endColumns": "91",
-                        "endOffsets": "146"
-                    },
-                    "to": {
-                        "startLines": "239",
-                        "startColumns": "4",
-                        "startOffsets": "15141",
-                        "endColumns": "90",
-                        "endOffsets": "15227"
-                    }
-                },
-                {
-                    "source": "C:\\save\\Capstone Design\\weatherapp\\app\\src\\main\\res\\values\\colors.xml",
-                    "from": {
-                        "startLines": "7,2,3,4,5,6,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "293,57,105,153,201,247,336",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "330,99,147,195,241,287,373"
-                    },
-                    "to": {
-                        "startLines": "7,12,13,14,15,16,17",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "491,796,843,890,937,982,1027",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "528,838,885,932,977,1022,1064"
                     }
                 },
                 {
