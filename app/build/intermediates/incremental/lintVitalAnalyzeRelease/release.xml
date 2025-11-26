@@ -2,11 +2,11 @@
     name="release"
     package="com.example.weatherproject"
     minSdkVersion="30"
-    targetSdkVersion="36.0"
-    mergedManifest="build\intermediates\merged_manifest\release\processReleaseMainManifest\AndroidManifest.xml"
-    proguardFiles="build\intermediates\default_proguard_files\global\proguard-android-optimize.txt-8.13.0;proguard-rules.pro"
-    partialResultsDir="build\intermediates\lint_vital_partial_results\release\lintVitalAnalyzeRelease\out"
-    desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\66bb1ece9541483a034e7a48f91131e8\transformed\D8BackportedDesugaredMethods.txt">
+    targetSdkVersion="34"
+    mergedManifest="build\intermediates\merged_manifest\release\AndroidManifest.xml"
+    proguardFiles="build\intermediates\default_proguard_files\global\proguard-android-optimize.txt-8.1.0;proguard-rules.pro"
+    partialResultsDir="build\intermediates\lint_vital_partial_results\release\out"
+    desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\e88bddeace0c5cadaa9f074b7f02fa55\transformed\D8BackportedDesugaredMethods.txt">
   <buildFeatures
       namespacing="REQUIRED"/>
   <sourceProviders>
@@ -20,12 +20,11 @@
   </testSourceProviders>
   <testFixturesSourceProviders>
   </testFixturesSourceProviders>
-  <artifact
-      classOutputs="build\intermediates\javac\release\compileReleaseJavaWithJavac\classes;build\tmp\kotlin-classes\release;build\kotlinToolingMetadata;build\generated\ksp\release\resources;build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\release\processReleaseResources\R.jar"
-      type="MAIN"
+  <mainArtifact
+      classOutputs="build\intermediates\javac\release\classes;build\tmp\kotlin-classes\release;build\kotlinToolingMetadata;build\generated\ksp\release\resources;build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\release\R.jar"
       applicationId="com.example.weatherproject"
       generatedSourceFolders="build\generated\ksp\release\java;build\generated\ksp\release\kotlin;build\generated\ap_generated_sources\release\out"
       generatedResourceFolders="build\generated\res\resValues\release"
-      desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\66bb1ece9541483a034e7a48f91131e8\transformed\D8BackportedDesugaredMethods.txt">
-  </artifact>
+      desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\e88bddeace0c5cadaa9f074b7f02fa55\transformed\D8BackportedDesugaredMethods.txt">
+  </mainArtifact>
 </variant>

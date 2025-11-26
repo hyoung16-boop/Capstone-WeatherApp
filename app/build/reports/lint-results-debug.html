@@ -177,22 +177,22 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 26 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 23 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Wed Nov 26 13:02:48 KST 2025 by AGP (8.13.0)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Wed Nov 26 16:30:56 KST 2025 by AGP (8.1.0)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Issue Types</span>
     <nav class="mdl-navigation">
       <a class="mdl-navigation__link" href="#overview"><i class="material-icons">dashboard</i>Overview</a>
+      <a class="mdl-navigation__link" href="#OldTargetApi"><i class="material-icons warning-icon">warning</i>Target SDK attribute is not targeting latest version (1)</a>
+      <a class="mdl-navigation__link" href="#UnusedAttribute"><i class="material-icons warning-icon">warning</i>Attribute unused on older versions (1)</a>
       <a class="mdl-navigation__link" href="#RedundantLabel"><i class="material-icons warning-icon">warning</i>Redundant label on activity (1)</a>
-      <a class="mdl-navigation__link" href="#AndroidGradlePluginVersion"><i class="material-icons warning-icon">warning</i>Obsolete Android Gradle Plugin Version (1)</a>
-      <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (9)</a>
-      <a class="mdl-navigation__link" href="#NewerVersionAvailable"><i class="material-icons warning-icon">warning</i>Newer Library Versions Available (3)</a>
+      <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (11)</a>
       <a class="mdl-navigation__link" href="#ObsoleteSdkInt"><i class="material-icons warning-icon">warning</i>Obsolete SDK_INT Version Check (1)</a>
       <a class="mdl-navigation__link" href="#UnusedResources"><i class="material-icons warning-icon">warning</i>Unused resources (7)</a>
-      <a class="mdl-navigation__link" href="#UseTomlInstead"><i class="material-icons warning-icon">warning</i>Use TOML Version Catalog Instead (4)</a>
+      <a class="mdl-navigation__link" href="#UseTomlInstead"><i class="material-icons warning-icon">warning</i>Use TOML Version Catalog Instead (1)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -209,16 +209,16 @@ document.getElementById(id).style.display = 'none';
 </td></tr>
 <tr>
 <td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
-<a href="#RedundantLabel">RedundantLabel</a>: Redundant label on activity</td></tr>
+<a href="#OldTargetApi">OldTargetApi</a>: Target SDK attribute is not targeting latest version</td></tr>
 <tr>
 <td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
-<a href="#AndroidGradlePluginVersion">AndroidGradlePluginVersion</a>: Obsolete Android Gradle Plugin Version</td></tr>
+<a href="#UnusedAttribute">UnusedAttribute</a>: Attribute unused on older versions</td></tr>
 <tr>
-<td class="countColumn">9</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#RedundantLabel">RedundantLabel</a>: Redundant label on activity</td></tr>
+<tr>
+<td class="countColumn">11</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#GradleDependency">GradleDependency</a>: Obsolete Gradle Dependency</td></tr>
-<tr>
-<td class="countColumn">3</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
-<a href="#NewerVersionAvailable">NewerVersionAvailable</a>: Newer Library Versions Available</td></tr>
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Performance">Performance</a>
 </td></tr>
 <tr>
@@ -230,11 +230,11 @@ document.getElementById(id).style.display = 'none';
 <tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Productivity">Productivity</a>
 </td></tr>
 <tr>
-<td class="countColumn">4</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#UseTomlInstead">UseTomlInstead</a>: Use TOML Version Catalog Instead</td></tr>
-<tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (70)</a>
+<tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (41)</a>
 </td></tr>
-<tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (43)</a>
+<tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (42)</a>
 </td></tr>
 </table>
 <br/>              </div>
@@ -244,7 +244,107 @@ Dismiss</button>            </div>
             </div>
           </section>
 <a name="Correctness"></a>
-<a name="RedundantLabel"></a>
+<a name="OldTargetApi"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="OldTargetApiCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Target SDK attribute is not targeting latest version</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:14</span>: <span class="message">Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details.</span><br /><pre class="errorlines">
+<span class="lineno"> 11 </span>    defaultConfig {
+<span class="lineno"> 12 </span>        applicationId = "com.example.weatherproject"
+<span class="lineno"> 13 </span>        minSdk = 30
+<span class="caretline"><span class="lineno"> 14 </span>        <span class="warning">targetSdk = 34</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 15 </span>        versionCode = 1
+<span class="lineno"> 16 </span>        versionName = "1.0"
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationOldTargetApi" style="display: none;">
+When your application runs on a version of Android that is more recent than your <code>targetSdkVersion</code> specifies that it has been tested with, various compatibility modes kick in. This ensures that your application continues to work, but it may look out of place. For example, if the <code>targetSdkVersion</code> is less than 14, your app may get an option button in the UI.<br/>
+<br/>
+To fix this issue, set the <code>targetSdkVersion</code> to the highest available value. Then test your app to make sure everything works correctly. You may want to consult the compatibility notes to see what changes apply to each version you are adding support for: <a href="https://developer.android.com/reference/android/os/Build.VERSION_CODES.html">https://developer.android.com/reference/android/os/Build.VERSION_CODES.html</a> as well as follow this guide:<br/>
+<a href="https://developer.android.com/distribute/best-practices/develop/target-sdk.html">https://developer.android.com/distribute/best-practices/develop/target-sdk.html</a><br/><div class="moreinfo">More info: <ul><li><a href="https://developer.android.com/distribute/best-practices/develop/target-sdk.html">https://developer.android.com/distribute/best-practices/develop/target-sdk.html</a>
+<li><a href="https://developer.android.com/reference/android/os/Build.VERSION_CODES.html">https://developer.android.com/reference/android/os/Build.VERSION_CODES.html</a>
+</ul></div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "OldTargetApi" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">OldTargetApi</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 6/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationOldTargetApiLink" onclick="reveal('explanationOldTargetApi');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="OldTargetApiCardLink" onclick="hideid('OldTargetApiCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="UnusedAttribute"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="UnusedAttributeCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Attribute unused on older versions</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/AndroidManifest.xml">../../src/main/AndroidManifest.xml</a>:11</span>: <span class="message">Attribute <code>dataExtractionRules</code> is only used in API level 31 and higher (current min is 30)</span><br /><pre class="errorlines">
+<span class="lineno">  8 </span>
+<span class="lineno">  9 </span>    <span class="tag">&lt;application</span><span class="attribute">
+</span><span class="lineno"> 10 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">allowBackup</span>=<span class="value">"true"</span>
+<span class="caretline"><span class="lineno"> 11 </span>        <span class="warning"><span class="prefix">android:</span><span class="attribute">dataExtractionRules</span>=<span class="value">"@xml/data_extraction_rules"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 12 </span>        <span class="prefix">android:</span><span class="attribute">fullBackupContent</span>=<span class="value">"@xml/backup_rules"</span>
+<span class="lineno"> 13 </span>        <span class="prefix">android:</span><span class="attribute">icon</span>=<span class="value">"@mipmap/ic_launcher"</span>
+<span class="lineno"> 14 </span>        <span class="prefix">android:</span><span class="attribute">label</span>=<span class="value">"@string/app_name"</span>
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationUnusedAttribute" style="display: none;">
+This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the <code>minSdkVersion</code> attribute).<br/>
+<br/>
+This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.<br/>
+<br/>
+Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new <code>&lt;tag></code> element in layouts introduced in API 21.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "UnusedAttribute" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">UnusedAttribute</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 6/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationUnusedAttributeLink" onclick="reveal('explanationUnusedAttribute');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="UnusedAttributeCardLink" onclick="hideid('UnusedAttributeCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="RedundantLabel"></a>
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="RedundantLabelCard" style="display: block;">
             <div class="mdl-card mdl-cell mdl-cell--12-col">
   <div class="mdl-card__title">
@@ -289,50 +389,6 @@ When an activity does not have a label attribute, it will use the one from the a
 Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="RedundantLabelCardLink" onclick="hideid('RedundantLabelCard');">
 Dismiss</button>            </div>
             </div>
-          </section><a name="AndroidGradlePluginVersion"></a>
-<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="AndroidGradlePluginVersionCard" style="display: block;">
-            <div class="mdl-card mdl-cell mdl-cell--12-col">
-  <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Obsolete Android Gradle Plugin Version</h2>
-  </div>
-              <div class="mdl-card__supporting-text">
-<div class="issue">
-<div class="warningslist">
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:2</span>: <span class="message">A newer version of com.android.application than 8.13.0 is available: 8.13.1</span><br /><pre class="errorlines">
-<span class="lineno">  1 </span>[versions]
-<span class="caretline"><span class="lineno">  2 </span>agp = <span class="warning">"8.13.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  3 </span>kotlin = "2.0.21"
-<span class="lineno">  4 </span>coreKtx = "1.17.0"
-<span class="lineno">  5 </span>junit = "4.13.2"
-</pre>
-
-</div>
-<div class="metadata"><div class="explanation" id="explanationAndroidGradlePluginVersion" style="display: none;">
-This detector looks for usage of the Android Gradle Plugin where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
-To suppress this error, use the issue id "AndroidGradlePluginVersion" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
-<br/></div>
-</div>
-</div>
-<div class="chips">
-<span class="mdl-chip">
-    <span class="mdl-chip__text">AndroidGradlePluginVersion</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Correctness</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Warning</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Priority 4/10</span>
-</span>
-</div>
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationAndroidGradlePluginVersionLink" onclick="reveal('explanationAndroidGradlePluginVersion');">
-Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="AndroidGradlePluginVersionCardLink" onclick="hideid('AndroidGradlePluginVersionCard');">
-Dismiss</button>            </div>
-            </div>
           </section><a name="GradleDependency"></a>
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="GradleDependencyCard" style="display: block;">
             <div class="mdl-card mdl-cell mdl-cell--12-col">
@@ -342,96 +398,113 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:48</span>: <span class="message">Upgrade <code>androidx.compose.foundation</code> for keyboard and mouse support</span><br /><pre class="errorlines">
-<span class="lineno"> 45 </span>    implementation(libs.androidx.room.ktx)
-<span class="lineno"> 46 </span>    ksp(libs.androidx.room.compiler)
-<span class="lineno"> 47 </span>
-<span class="caretline"><span class="lineno"> 48 </span>    implementation(<span class="warning">"androidx.compose.foundation:foundation:1.6.8"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 49 </span>    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-<span class="lineno"> 50 </span>    implementation("io.coil-kt:coil-compose:2.6.0")
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
+<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:48</span>: <span class="message">A newer version of io.coil-kt:coil-compose than 2.2.2 is available: 2.6.0</span><br /><pre class="errorlines">
+<span class="lineno"> 45 </span>    ksp(libs.androidx.room.compiler)
+<span class="lineno"> 46 </span>
+<span class="lineno"> 47 </span>    implementation("androidx.compose.material:material-icons-extended")
+<span class="caretline"><span class="lineno"> 48 </span>    implementation("<span class="warning">io.coil-kt:coil-compose:2.2.2</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 49 </span>    implementation(libs.androidx.core.ktx)
+<span class="lineno"> 50 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
+<span class="lineno"> 51 </span>    implementation(libs.androidx.activity.compose)
 </pre>
 
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:49</span>: <span class="message">A newer version of androidx.compose.material:material-icons-extended-android than 1.6.8 is available: 1.7.8</span><br /><pre class="errorlines">
-<span class="lineno"> 46 </span>    ksp(libs.androidx.room.compiler)
-<span class="lineno"> 47 </span>
-<span class="lineno"> 48 </span>    implementation("androidx.compose.foundation:foundation:1.6.8")
-<span class="caretline"><span class="lineno"> 49 </span>    implementation(<span class="warning">"androidx.compose.material:material-icons-extended-android:1.6.8"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 50 </span>    implementation("io.coil-kt:coil-compose:2.6.0")
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
-<span class="lineno"> 52 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
-</pre>
-
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:59</span>: <span class="message">A newer version of androidx.navigation:navigation-compose than 2.8.0 is available: 2.9.6</span><br /><pre class="errorlines">
-<span class="lineno"> 56 </span>    implementation(libs.androidx.compose.ui.graphics)
-<span class="lineno"> 57 </span>    implementation(libs.androidx.compose.ui.tooling.preview)
-<span class="lineno"> 58 </span>    implementation(libs.androidx.compose.material3)
-<span class="caretline"><span class="lineno"> 59 </span>    implementation(<span class="warning">"androidx.navigation:navigation-compose:2.8.0"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 60 </span>    testImplementation(libs.junit)
-<span class="lineno"> 61 </span>    androidTestImplementation(libs.androidx.junit)
-<span class="lineno"> 62 </span>    androidTestImplementation(libs.androidx.espresso.core)
-</pre>
-
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:8</span>: <span class="message">A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.9.4 is available: 2.10.0</span><br /><pre class="errorlines">
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:4</span>: <span class="message">A newer version of androidx.core:core-ktx than 1.9.0 is available: 1.17.0</span><br /><pre class="errorlines">
+<span class="lineno">  1 </span>[versions]
+<span class="lineno">  2 </span>agp = "8.1.0"
+<span class="lineno">  3 </span>kotlin = "1.8.10"
+<span class="caretline"><span class="lineno">  4 </span>coreKtx = <span class="warning">"1.9.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 <span class="lineno">  5 </span>junit = "4.13.2"
-<span class="lineno">  6 </span>junitVersion = "1.3.0"
-<span class="lineno">  7 </span>espressoCore = "3.7.0"
-<span class="caretline"><span class="lineno">  8 </span>lifecycleRuntimeKtx = <span class="warning">"2.9.4"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  9 </span>activityCompose = "1.11.0"
-<span class="lineno"> 10 </span>composeBom = "2024.09.00"
-<span class="lineno"> 11 </span>room = "2.6.1"
+<span class="lineno">  6 </span>junitVersion = "1.1.5"
+<span class="lineno">  7 </span>espressoCore = "3.5.1"
 </pre>
 
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:9</span>: <span class="message">A newer version of androidx.activity:activity-compose than 1.11.0 is available: 1.12.0</span><br /><pre class="errorlines">
-<span class="lineno">  6 </span>junitVersion = "1.3.0"
-<span class="lineno">  7 </span>espressoCore = "3.7.0"
-<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.9.4"
-<span class="caretline"><span class="lineno">  9 </span>activityCompose = <span class="warning">"1.11.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 10 </span>composeBom = "2024.09.00"
-<span class="lineno"> 11 </span>room = "2.6.1"
-<span class="lineno"> 12 </span>ksp = "2.0.21-1.0.27"
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:6</span>: <span class="message">A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0</span><br /><pre class="errorlines">
+<span class="lineno">  3 </span>kotlin = "1.8.10"
+<span class="lineno">  4 </span>coreKtx = "1.9.0"
+<span class="lineno">  5 </span>junit = "4.13.2"
+<span class="caretline"><span class="lineno">  6 </span>junitVersion = <span class="warning">"1.1.5"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  7 </span>espressoCore = "3.5.1"
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
 </pre>
 
-<button class="mdl-button mdl-js-button mdl-button--primary" id="GradleDependencyDivLink" onclick="reveal('GradleDependencyDiv');" />+ 4 More Occurrences...</button>
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:7</span>: <span class="message">A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0</span><br /><pre class="errorlines">
+<span class="lineno">  4 </span>coreKtx = "1.9.0"
+<span class="lineno">  5 </span>junit = "4.13.2"
+<span class="lineno">  6 </span>junitVersion = "1.1.5"
+<span class="caretline"><span class="lineno">  7 </span>espressoCore = <span class="warning">"3.5.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:8</span>: <span class="message">A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.6.0 is available: 2.10.0</span><br /><pre class="errorlines">
+<span class="lineno">  5 </span>junit = "4.13.2"
+<span class="lineno">  6 </span>junitVersion = "1.1.5"
+<span class="lineno">  7 </span>espressoCore = "3.5.1"
+<span class="caretline"><span class="lineno">  8 </span>lifecycleRuntimeKtx = <span class="warning">"2.6.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="lineno"> 11 </span>room = "2.4.3"
+</pre>
+
+<button class="mdl-button mdl-js-button mdl-button--primary" id="GradleDependencyDivLink" onclick="reveal('GradleDependencyDiv');" />+ 6 More Occurrences...</button>
 <div id="GradleDependencyDiv" style="display: none">
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:10</span>: <span class="message">A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.11.01</span><br /><pre class="errorlines">
-<span class="lineno">  7 </span>espressoCore = "3.7.0"
-<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.9.4"
-<span class="lineno">  9 </span>activityCompose = "1.11.0"
-<span class="caretline"><span class="lineno"> 10 </span>composeBom = <span class="warning">"2024.09.00"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 11 </span>room = "2.6.1"
-<span class="lineno"> 12 </span>ksp = "2.0.21-1.0.27"
-<span class="lineno"> 13 </span>
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:9</span>: <span class="message">A newer version of androidx.activity:activity-compose than 1.6.1 is available: 1.12.0</span><br /><pre class="errorlines">
+<span class="lineno">  6 </span>junitVersion = "1.1.5"
+<span class="lineno">  7 </span>espressoCore = "3.5.1"
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="caretline"><span class="lineno">  9 </span>activityCompose = <span class="warning">"1.6.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="lineno"> 11 </span>room = "2.4.3"
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
 </pre>
 
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.4</span><br /><pre class="errorlines">
-<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.9.4"
-<span class="lineno">  9 </span>activityCompose = "1.11.0"
-<span class="lineno"> 10 </span>composeBom = "2024.09.00"
-<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.6.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 12 </span>ksp = "2.0.21-1.0.27"
-<span class="lineno"> 13 </span>
-<span class="lineno"> 14 </span>[libraries]
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:10</span>: <span class="message">A newer version of androidx.compose:compose-bom than 2023.01.00 is available: 2025.11.01</span><br /><pre class="errorlines">
+<span class="lineno">  7 </span>espressoCore = "3.5.1"
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="caretline"><span class="lineno"> 10 </span>composeBom = <span class="warning">"2023.01.00"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 11 </span>room = "2.4.3"
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
+<span class="lineno"> 13 </span>navigation = "2.5.3"
 </pre>
 
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.4</span><br /><pre class="errorlines">
-<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.9.4"
-<span class="lineno">  9 </span>activityCompose = "1.11.0"
-<span class="lineno"> 10 </span>composeBom = "2024.09.00"
-<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.6.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 12 </span>ksp = "2.0.21-1.0.27"
-<span class="lineno"> 13 </span>
-<span class="lineno"> 14 </span>[libraries]
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-compiler than 2.4.3 is available: 2.8.4</span><br /><pre class="errorlines">
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.4.3"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
+<span class="lineno"> 13 </span>navigation = "2.5.3"
 </pre>
 
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.4</span><br /><pre class="errorlines">
-<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.9.4"
-<span class="lineno">  9 </span>activityCompose = "1.11.0"
-<span class="lineno"> 10 </span>composeBom = "2024.09.00"
-<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.6.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 12 </span>ksp = "2.0.21-1.0.27"
-<span class="lineno"> 13 </span>
-<span class="lineno"> 14 </span>[libraries]
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-ktx than 2.4.3 is available: 2.8.4</span><br /><pre class="errorlines">
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.4.3"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
+<span class="lineno"> 13 </span>navigation = "2.5.3"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:11</span>: <span class="message">A newer version of androidx.room:room-runtime than 2.4.3 is available: 2.8.4</span><br /><pre class="errorlines">
+<span class="lineno">  8 </span>lifecycleRuntimeKtx = "2.6.0"
+<span class="lineno">  9 </span>activityCompose = "1.6.1"
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="caretline"><span class="lineno"> 11 </span>room = <span class="warning">"2.4.3"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
+<span class="lineno"> 13 </span>navigation = "2.5.3"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:13</span>: <span class="message">A newer version of androidx.navigation:navigation-compose than 2.5.3 is available: 2.9.6</span><br /><pre class="errorlines">
+<span class="lineno"> 10 </span>composeBom = "2023.01.00"
+<span class="lineno"> 11 </span>room = "2.4.3"
+<span class="lineno"> 12 </span>ksp = "1.8.10-1.0.9"
+<span class="caretline"><span class="lineno"> 13 </span>navigation = <span class="warning">"2.5.3"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 14 </span>
+<span class="lineno"> 15 </span>[libraries]
+<span class="lineno"> 16 </span>androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 </pre>
 
 </div>
@@ -462,70 +535,6 @@ To suppress this error, use the issue id "GradleDependency" as explained in the 
 Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="GradleDependencyCardLink" onclick="hideid('GradleDependencyCard');">
 Dismiss</button>            </div>
             </div>
-          </section><a name="NewerVersionAvailable"></a>
-<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="NewerVersionAvailableCard" style="display: block;">
-            <div class="mdl-card mdl-cell mdl-cell--12-col">
-  <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Newer Library Versions Available</h2>
-  </div>
-              <div class="mdl-card__supporting-text">
-<div class="issue">
-<div class="warningslist">
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:50</span>: <span class="message">A newer version of io.coil-kt:coil-compose than 2.6.0 is available: 2.7.0</span><br /><pre class="errorlines">
-<span class="lineno"> 47 </span>
-<span class="lineno"> 48 </span>    implementation("androidx.compose.foundation:foundation:1.6.8")
-<span class="lineno"> 49 </span>    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-<span class="caretline"><span class="lineno"> 50 </span>    implementation(<span class="warning">"io.coil-kt:coil-compose:2.6.0"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
-<span class="lineno"> 52 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
-<span class="lineno"> 53 </span>    implementation(libs.androidx.activity.compose)
-</pre>
-
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:3</span>: <span class="message">A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.2.21</span><br /><pre class="errorlines">
-<span class="lineno">  1 </span>[versions]
-<span class="lineno">  2 </span>agp = "8.13.0"
-<span class="caretline"><span class="lineno">  3 </span>kotlin = <span class="warning">"2.0.21"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  4 </span>coreKtx = "1.17.0"
-<span class="lineno">  5 </span>junit = "4.13.2"
-<span class="lineno">  6 </span>junitVersion = "1.3.0"
-</pre>
-
-<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:3</span>: <span class="message">A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.2.21</span><br /><pre class="errorlines">
-<span class="lineno">  1 </span>[versions]
-<span class="lineno">  2 </span>agp = "8.13.0"
-<span class="caretline"><span class="lineno">  3 </span>kotlin = <span class="warning">"2.0.21"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno">  4 </span>coreKtx = "1.17.0"
-<span class="lineno">  5 </span>junit = "4.13.2"
-<span class="lineno">  6 </span>junitVersion = "1.3.0"
-</pre>
-
-</div>
-<div class="metadata"><div class="explanation" id="explanationNewerVersionAvailable" style="display: none;">
-This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the <code>GradleDependency</code> check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also <b>much</b> slower.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
-To suppress this error, use the issue id "NewerVersionAvailable" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
-<br/></div>
-</div>
-</div>
-<div class="chips">
-<span class="mdl-chip">
-    <span class="mdl-chip__text">NewerVersionAvailable</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Correctness</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Warning</span>
-</span>
-<span class="mdl-chip">
-    <span class="mdl-chip__text">Priority 4/10</span>
-</span>
-</div>
-              </div>
-              <div class="mdl-card__actions mdl-card--border">
-<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationNewerVersionAvailableLink" onclick="reveal('explanationNewerVersionAvailable');">
-Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="NewerVersionAvailableCardLink" onclick="hideid('NewerVersionAvailableCard');">
-Dismiss</button>            </div>
-            </div>
           </section>
 <a name="Performance"></a>
 <a name="ObsoleteSdkInt"></a>
@@ -537,7 +546,7 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/com/example/weatherproject/util/NotificationHelper.kt">../../src/main/java/com/example/weatherproject/util/NotificationHelper.kt</a>:21</span>: <span class="message">Unnecessary; <code>SDK_INT</code> is always >= 30</span><br /><pre class="errorlines">
+<span class="location"><a href="../../src/main/java/com/example/weatherproject/util/NotificationHelper.kt">../../src/main/java/com/example/weatherproject/util/NotificationHelper.kt</a>:21</span>: <span class="message">Unnecessary; SDK_INT is always >= 30</span><br /><pre class="errorlines">
 <span class="lineno"> 18 </span>
 <span class="lineno"> 19 </span>  <span class="keyword">val</span> notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) <span class="keyword">as</span> NotificationManager
 <span class="lineno"> 20 </span>
@@ -656,25 +665,7 @@ Unused resources make applications larger and slow down builds.<br/>
 The unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.<br/>
 <br/>
 You can include test sources in the unused resource check by setting the system property lint.unused-resources.include-tests =true, and to exclude them (usually for performance reasons), use lint.unused-resources.exclude-tests =true.<br/>
-,<br/><br/>
-This check can be configured via the following options:<br/><br/>
-<div class="options">
-<b>skip-libraries</b> (default is true):<br/>
-Whether the unused resource check should skip reporting unused resources in libraries.<br/>
-<br/>
-Many libraries will declare resources that are part of the library surface; other modules depending on the library will also reference the resources. To avoid reporting all these resources as unused (in the context of a library), the unused resource check normally skips reporting unused resources in libraries. Instead, run the unused resource check on the consuming app module (along with <code>checkDependencies=true</code>).<br/>
-<br/>
-However, there are cases where you want to check that all the resources declared in a library are used; in that case, you can disable the skip option.<br/>
-<br/>
-To configure this option, use a `lint.xml` file in the project or source folder using an <code>&lt;option&gt;</code> block like the following:
-<pre class="errorlines">
-<span class="lineno"> 1 </span><span class="tag">&lt;lint></span>
-<span class="lineno"> 2 </span>    <span class="tag">&lt;issue</span><span class="attribute"> id</span>=<span class="value">"UnusedResources"</span>>
-<span class="caretline"><span class="lineno"> 3 </span>        <span class="tag">&lt;option</span><span class="attribute"> name</span>=<span class="warning"><span class="value">"skip-libraries"</span> <span class="attribute">value</span>=<span class="value">"true"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 4 </span>    <span class="tag">&lt;/issue></span>
-<span class="lineno"> 5 </span><span class="tag">&lt;/lint></span>
-</pre>
-</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+,<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
 To suppress this error, use the issue id "UnusedResources" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
 <br/></div>
 </div>
@@ -711,43 +702,13 @@ Dismiss</button>            </div>
 <div class="issue">
 <div class="warningslist">
 <span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:48</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
-<span class="lineno"> 45 </span>    implementation(libs.androidx.room.ktx)
-<span class="lineno"> 46 </span>    ksp(libs.androidx.room.compiler)
-<span class="lineno"> 47 </span>
-<span class="caretline"><span class="lineno"> 48 </span>    implementation(<span class="warning">"androidx.compose.foundation:foundation:1.6.8"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 49 </span>    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-<span class="lineno"> 50 </span>    implementation("io.coil-kt:coil-compose:2.6.0")
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
-</pre>
-
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:49</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
-<span class="lineno"> 46 </span>    ksp(libs.androidx.room.compiler)
-<span class="lineno"> 47 </span>
-<span class="lineno"> 48 </span>    implementation("androidx.compose.foundation:foundation:1.6.8")
-<span class="caretline"><span class="lineno"> 49 </span>    implementation(<span class="warning">"androidx.compose.material:material-icons-extended-android:1.6.8"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 50 </span>    implementation("io.coil-kt:coil-compose:2.6.0")
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
-<span class="lineno"> 52 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
-</pre>
-
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:50</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
-<span class="lineno"> 47 </span>
-<span class="lineno"> 48 </span>    implementation("androidx.compose.foundation:foundation:1.6.8")
-<span class="lineno"> 49 </span>    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-<span class="caretline"><span class="lineno"> 50 </span>    implementation(<span class="warning">"io.coil-kt:coil-compose:2.6.0"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 51 </span>    implementation(libs.androidx.core.ktx)
-<span class="lineno"> 52 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
-<span class="lineno"> 53 </span>    implementation(libs.androidx.activity.compose)
-</pre>
-
-<span class="location"><a href="../../build.gradle.kts">../../build.gradle.kts</a>:59</span>: <span class="message">Use version catalog instead</span><br /><pre class="errorlines">
-<span class="lineno"> 56 </span>    implementation(libs.androidx.compose.ui.graphics)
-<span class="lineno"> 57 </span>    implementation(libs.androidx.compose.ui.tooling.preview)
-<span class="lineno"> 58 </span>    implementation(libs.androidx.compose.material3)
-<span class="caretline"><span class="lineno"> 59 </span>    implementation(<span class="warning">"androidx.navigation:navigation-compose:2.8.0"</span>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 60 </span>    testImplementation(libs.junit)
-<span class="lineno"> 61 </span>    androidTestImplementation(libs.androidx.junit)
-<span class="lineno"> 62 </span>    androidTestImplementation(libs.androidx.espresso.core)
+<span class="lineno"> 45 </span>    ksp(libs.androidx.room.compiler)
+<span class="lineno"> 46 </span>
+<span class="lineno"> 47 </span>    implementation("androidx.compose.material:material-icons-extended")
+<span class="caretline"><span class="lineno"> 48 </span>    implementation("<span class="warning">io.coil-kt:coil-compose:2.2.2</span>")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 49 </span>    implementation(libs.androidx.core.ktx)
+<span class="lineno"> 50 </span>    implementation(libs.androidx.lifecycle.runtime.ktx)
+<span class="lineno"> 51 </span>    implementation(libs.androidx.activity.compose)
 </pre>
 
 </div>
@@ -790,52 +751,25 @@ whether a particular check is included in analysis when configuring builds.
 (Note that the list does not include the hundreds of built-in checks into lint,
 only additional ones.)
 <div id="IncludedIssues" style="display: none;"><br/><br/><div class="issue">
-<div class="id">ArcAnimationSpecTypeIssue<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-ArcAnimationSpec is designed for 2D values. Particularly, for positional values such as Offset.<br/>
-Trying to use it for values of different dimensions (Float, Size, Color, etc.) will result in unpredictable animation behavior.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.animation.core<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">AutoboxingStateCreation<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Calling <code>mutableStateOf&lt;T>()</code> when <code>T</code> is either backed by a primitive type on the JVM or is a value class results in a state implementation that requires all state values to be boxed. This usually causes an additional allocation for each state write, and adds some additional work to auto-unbox values when reading the value of the state. Instead, prefer to use a specialized primitive state implementation for <code>Int</code>, <code>Long</code>, <code>Float</code>, and <code>Double</code> when the state does not need to track null values and does not override the default <code>SnapshotMutationPolicy</code>. See <code>mutableIntStateOf()</code>, <code>mutableLongStateOf()</code>, <code>mutableFloatStateOf()</code>, and <code>mutableDoubleStateOf()</code> for more information.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">AutoboxingStateValueProperty<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Avoid using the generic <code>value</code> property when using a specialized State type. Reading or writing to the state's generic <code>value</code> property will result in an unnecessary autoboxing operation. Prefer the specialized value property (e.g. <code>intValue</code> for <code>MutableIntState</code>), or use property delegation to avoid unnecessary allocations.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">ComposableDestinationInComposeScope<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
-Composable destinations should only be constructed directly within a NavGraphBuilder scope. Composable destinations cannot be nested, and you should use the <code>navigation</code> function to create a nested graph instead.<br/><div class="vendor">
+Composable destinations should only be constructed directly within a NavGraphBuilder scope. Composable destinations cannot not be nested, and you should use the <code>navigation</code> function to create a nested graph instead.<br/><div class="vendor">
 Vendor: Jetpack Navigation Compose<br/>
 Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableModifierFactory<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Modifier factory functions that need to be aware of the composition should use androidx.compose.ui.composed {} in their implementation instead of being marked as @Composable. This allows Modifiers to be referenced in top level variables and constructed outside of the composition.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
 <br/></div>
@@ -880,51 +814,12 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">ConfigurationScreenWidthHeight<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Configuration.screenWidthDp and Configuration.screenHeightDp have different insets behaviour depending on target SDK version, and are rounded to the nearest Dp. This means that using these values in composition to size a layout can result in issues, as these values do not accurately represent the actual available window size. Instead it is recommended to use WindowInfo.containerSize which accurately represents the window size.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">ConflictingOnColor<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
 In the Material color system background colors have a corresponding 'on' color which is used for the content color inside a component. For example, a button colored <code>primary</code> will have <code>onPrimary</code> text. Because of this, it is important that there is only one possible <code>onColor</code> for a given color value, otherwise there is no way to know which 'on' color should be used inside a component. To fix this either use the same 'on' color for identical background colors, or use a different background color for each 'on' color.<br/><div class="vendor">
 Vendor: Jetpack Compose<br/>
 Identifier: androidx.compose.material<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">ConstantContentStateKeyInItemsCall<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-When using shared elements (<code>Modifier.sharedElement</code> or <code>Modifier.sharedBounds</code>) in a LazyList, each Composable within an <code>items</code> block should have its own unique key. Otherwise, only one item of the visible layout will be rendered, regardless if there's an ongoing shared element transition.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.animation<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">ContextCastToActivity<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Casting Context to Activity is an error as Contexts are not always Activities. Use LocalActivity instead<br/><div class="vendor">
-Vendor: Jetpack Activity Compose<br/>
-Identifier: androidx.activity.compose<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
@@ -951,19 +846,6 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 Attaching a &lt;deeplink> to an &lt;activity> destination will never give                 the right behavior when using an implicit deep link on another app's task                 (where the system back should immediately take the user back to the app that                 triggered the deep link). Instead, attach the deep link directly to                 the second activity (either by manually writing the appropriate &lt;intent-filter>                 or by adding the &lt;deeplink> to the start destination of a nav host in that second                 activity).<br/><div class="vendor">
 Vendor: Android Open Source Project<br/>
 Identifier: androidx.navigation.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">EmptyNavDeepLink<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Attempting to create an empty NavDeepLink will result in an IllegalStateException at runtime. You may set these arguments within the lambda of the call to navDeepLink.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.navigation.common<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
 </div>
 <br/>
@@ -1023,16 +905,12 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">FrequentlyChangingValue<div class="issueSeparator"></div>
+<div class="id">FrequentlyChangedStateReadInComposition<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
-Reading a value annotated with @FrequentlyChangingValue inside composition can cause performance issues due to frequent recompositions. To avoid frequent recompositions, instead consider:<br/>
-<br/>
-- Using derivedStateOf to filter state changes based on a provided calculation. For example, rather than recomposing on every scroll position change, only recomposing if the scroll position changes from 0 (at the top of the list) to greater than 0 (not at the top of the list), and vice versa.<br/>
-- Using snapshotFlow to create a flow of changes from a provided state. This can then be collected inside a LaunchedEffect, and used to make changes without needing to recompose.<br/>
-- If using Compose UI, read this value inside measure / layout / draw, depending on where it is needed. This will cause invalidation of the corresponding phase, instead of a recomposition. See developer.android.com for more information on Jetpack Compose phases.<br/><div class="vendor">
+This property is observable and is updated after every scroll or remeasure. If you use it in the composable function directly, it will be recomposed on every change, causing potential performance issues including infinity recomposition loops. Prefer wrapping it with derivedStateOf to use calculation based on this property in composition or collect changes inside LaunchedEffect instead.<br/><div class="vendor">
 Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.runtime<br/>
+Identifier: androidx.compose.foundation<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
@@ -1067,79 +945,12 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=527362">
 </div>
 </div>
 <div class="issue">
-<div class="id">InvalidLanguageTagDelimiter<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-A language tag must be compliant with IETF BCP47, specifically a sequence of subtags must be separated by hyphens (-) instead of underscores (_)<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui.text<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=779818">https://issuetracker.google.com/issues/new?component=779818</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">InvalidUseOfOnBackPressed<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-You should not used OnBackPressedCallback for non-UI cases. If you<br/>
-                |add a callback, you have to handle back completely in the callback.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture#ui-logic">https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture#ui-logic</a>
-</div><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.activity<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=527362">https://issuetracker.google.com/issues/new?component=527362</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">LaunchDuringComposition<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
 Calling <code>launch</code> during composition is incorrect. Doing so will cause launch to be called multiple times resulting in a RuntimeException. Instead, use <code>SideEffect</code> and <code>launch</code> inside of the suspending block. The block will only run after a successful composition.<br/><div class="vendor">
 Vendor: Jetpack Activity Compose<br/>
 Identifier: androidx.activity.compose<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">LifecycleCurrentStateInComposition<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Calling Lifecycle.currentState within composition will not observe changes to the Lifecycle, so changes might not be reflected within the composition. Instead you should use lifecycle.currentStateAsState() to observe changes to the Lifecycle, and recompose when it changes.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.lifecycle<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">LocalContextConfigurationRead<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Changes to the Configuration object will not cause LocalContext reads to be invalidated, so you may end up with stale values when the Configuration changes. Instead, use LocalConfiguration.current to retrieve the Configuration - this will recompose callers when the Configuration object changes.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">LocalContextResourcesRead<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Changes to the Configuration object will not cause LocalContext.current.resources reads to be invalidated, so calls to APIs suchas Resources.getString() will not be updated when the Configuration changes. Instead, use LocalResources.current to retrieve the Resources - this will invalidate callers when the Configuration changes, to ensure that these calls reflect the latest values.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
@@ -1199,19 +1010,6 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">ModifierNodeInspectableProperties<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-ModifierNodeElements may override inspectableProperties() to provide information about the modifier in the layout inspector. The default implementation attempts to read all of the properties on the class reflectively, which may not comprehensively or effectively describe the modifier.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">ModifierParameter<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
@@ -1255,64 +1053,10 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">NoCollectCallFound<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-You must call collect on the progress in the onBack function. The collect call is what properly splits the callback so it knows what to do when the back gestures is started vs when it is completed. Failing to call collect will cause all code in the block to run when the gesture is started.<br/><div class="vendor">
-Vendor: Jetpack Activity Compose<br/>
-Identifier: androidx.activity.compose<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">NullSafeMutableLiveData<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-This check ensures that LiveData values are not null when explicitly                 declared as non-nullable.<br/>
-<br/>
-                Kotlin interoperability does not support enforcing explicit null-safety when using                 generic Java type parameters. Since LiveData is a Java class its value can always                 be null even when its type is explicitly declared as non-nullable. This can lead                 to runtime exceptions from reading a null LiveData value that is assumed to be                 non-nullable.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.lifecycle<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">OpaqueUnitKey<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Certain Compose functions including <code>remember</code>, <code>LaunchedEffect</code>, and <code>DisposableEffect</code> declare (and sometimes require) one or more key parameters. When a key parameter changes, it is a signal that the previous invocation is now invalid. In certain cases, it may be required to pass <code>Unit</code> as a key to one of these functions, indicating that the invocation never becomes invalid. Using <code>Unit</code> as a key should be done infrequently, and should always be done explicitly by passing the <code>Unit</code> literal. This inspection checks for invocations where <code>Unit</code> is being passed as a key argument in any form other than the <code>Unit</code> literal. This is usually done by mistake, and can harm readability. If a Unit expression is being passed as a key, it is always equivalent to move the expression before the function invocation and pass the <code>Unit</code> literal instead.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">ProduceStateDoesNotAssignValue<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
 produceState returns an observable State using values assigned inside the producer lambda. If the lambda never assigns (i.e <code>value = foo</code>), then the State will never change. Make sure to assign a value when the source you are producing values from changes / emits a new value. For sample usage see the produceState documentation.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">RememberInComposition<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-APIs annotated with @RememberInComposition must not be called inside composition. This can lead to correctness issues and / or performance issues. Instead, use <code>remember</code> to cache the value across compositions, or hoist this call outside of composition.<br/><div class="vendor">
 Vendor: Jetpack Compose<br/>
 Identifier: androidx.compose.runtime<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
@@ -1387,32 +1131,6 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">SuspiciousCompositionLocalModifierRead<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Jetpack Compose is unable to send updated values of a CompositionLocal when it's read in a Modifier.Node's initializer and onAttach() or onDetach() callbacks. Modifier.Node's callbacks are not aware of snapshot reads, and their lifecycle callbacks are not invoked on every recomposition. If you read a CompositionLocal in onAttach() or onDetach(), you will only get the CompositionLocal's value once at the moment of the read, which may lead to unexpected behaviors. We recommend instead reading CompositionLocals at time-of-use in callbacks that apply your Modifier's behavior, like measure() for LayoutModifierNode, draw() for DrawModifierNode, and so on. To observe the value of the CompositionLocal manually, extend from the ObserverNode interface and place the read inside an observeReads {} block within the onObservedReadsChanged() callback.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">SuspiciousModifierThen<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Calling a Modifier factory function with an implicit receiver inside Modifier.then will result in the receiver (<code>this</code>) being added twice to the chain. For example, fun Modifier.myModifier() = this.then(otherModifier()) - the implementation of factory functions such as Modifier.otherModifier() will internally call this.then(...) to chain the provided modifier with their implementation. When you expand this.then(otherModifier()), it becomes: this.then(this.then(OtherModifierImplementation)) - so you can see that <code>this</code> is included twice in the chain, which results in modifiers such as padding being applied twice, for example. Instead, you should either remove the then() and directly chain the factory function on the receiver, this.otherModifier(), or add the empty Modifier as the receiver for the factory, such as this.then(Modifier.otherModifier())<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.ui<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">TestManifestGradleConfiguration<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
@@ -1433,6 +1151,19 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=741505">
 <code>Modifier.composed</code> allows invoking @Composable functions when creating a <code>Modifier</code> instance - for example, using <code>remember</code> to have instance-specific state, allowing the same <code>Modifier</code> object to be safely used in multiple places. Using <code>Modifier.composed</code> without calling any @Composable functions inside is unnecessary, and since the Modifier is no longer skippable, this can cause a lot of extra work inside the composed body, leading to worse performance.<br/><div class="vendor">
 Vendor: Jetpack Compose<br/>
 Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnrememberedAnimatable<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Animatable instances created during composition need to be `remember`ed, otherwise they will be recreated during recomposition, and lose their state. Either hoist the Animatable to an object that is not created during composition, or wrap the Animatable in a call to <code>remember</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation.core<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
@@ -1540,32 +1271,6 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">
 </div>
 </div>
 <div class="issue">
-<div class="id">UnusedBoxWithConstraintsScope<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-The <code>content</code> lambda in BoxWithConstraints has a scope which will include the incoming constraints. If this scope is ignored, then the cost of subcomposition is being wasted and this BoxWithConstraints should be replaced with a Box.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.foundation<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">UnusedContentLambdaTargetStateParameter<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-<code>content</code> lambda in AnimatedContent works as a lookup function that returns the corresponding content based on the parameter (a state of type <code>T</code>). It is important for this lambda to return content <i>specific</i> to the input parameter, so that the different contents can be properly animated. Not using the input parameter to the content lambda will result in the same content for different input (i.e. target state) and therefore an erroneous transition between the exact same content.`<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.animation<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">UnusedCrossfadeTargetStateParameter<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
@@ -1579,51 +1284,12 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 </div>
 </div>
 <div class="issue">
-<div class="id">UnusedMaterial3ScaffoldPaddingParameter<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-The <code>content</code> lambda in Scaffold has a padding parameter which will include any inner padding for the content due to app bars. If this parameter is ignored, then content may be obscured by the app bars resulting in visual issues or elements that can't be interacted with.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.material3<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">UnusedMaterialScaffoldPaddingParameter<div class="issueSeparator"></div>
 </div>
 <div class="metadata"><div class="explanation">
 The <code>content</code> lambda in Scaffold has a padding parameter which will include any inner padding for the content due to app bars. If this parameter is ignored, then content may be obscured by the app bars resulting in visual issues or elements that can't be interacted with.<br/><div class="vendor">
 Vendor: Jetpack Compose<br/>
 Identifier: androidx.compose.material<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">UnusedSharedTransitionModifierParameter<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-When using <code>SharedTransitionScope</code> the provided <code>Modifier</code> should always be used on the top-most child, as the <code>Modifier</code> both obtains the root coordinates and creates an overlay. Otherwise, consider using <code>SharedTransitionLayout</code>.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.animation<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">UnusedTargetStateInContentKeyLambda<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-In <code>AnimatedContent</code>, the <code>contentKey</code> lambda may be used when the <code>targetState</code> is expected to mutate frequently but not all mutations are desired to be considered a target state change. So <code>contentKey</code> is expected to always use the given <code>targetState</code> parameter to calculate its result.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.animation<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
 </div>
 <br/>
@@ -1651,98 +1317,6 @@ Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">
 Vendor: Jetpack Compose<br/>
 Identifier: androidx.compose.foundation<br/>
 Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">UsingMaterialAndMaterial3Libraries<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-material and material3 are separate design system libraries that are incompatible with each other, as they have their own distinct theming systems. Using components from both libraries concurrently can cause issues: for example material components will not pick up the correct content color from a material3 container, and vice versa.<br/><div class="vendor">
-Vendor: Jetpack Compose<br/>
-Identifier: androidx.compose.material3<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">ViewModelConstructorInComposable<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-View models should not be constructed directly inside composable functions. Instead you should use the lifecycle viewmodel extensionfunctions e.g. viewModel&lt;MyViewModel>()<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.lifecycle<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">WrongNavigateRouteType<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-If the destination class contains arguments, the route is expected to be class instance with the arguments filled in.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.navigation.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">WrongRequiresOptIn<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-Experimental features defined in Kotlin source code must be annotated with the Kotlin<br/>
-<code>@RequiresOptIn</code> annotation. Using <code>androidx.annotation.RequiresOptIn</code> will prevent the<br/>
-Kotlin compiler from enforcing its opt-in policies.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.annotation.experimental<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">https://issuetracker.google.com/issues/new?component=459778</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.navigation.runtime<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
-Vendor: Android Open Source Project<br/>
-Identifier: androidx.navigation.common<br/>
-Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
-</div>
-<br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
-</div>
-<div class="metadata"><div class="explanation">
-If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
-Vendor: Jetpack Navigation Compose<br/>
-Identifier: androidx.navigation.compose<br/>
 </div>
 <br/>
 <br/></div>
@@ -1797,7 +1371,7 @@ According to the Android Design Guide,<br/>
 <br/>
 "Other platforms use an explicit back button with label to allow the user to navigate up the application's hierarchy. Instead, Android uses the main action bar's app icon for hierarchical navigation and the navigation bar's back button for temporal navigation."<br/>
 <br/>
-This check is not very sophisticated (it just looks for buttons with the label "Back"), so it is disabled by default to not trigger on common scenarios like pairs of Back/Next buttons to paginate through screens.<br/><div class="moreinfo">More info: <a href="https://d.android.com/r/studio-ui/designer/material/design">https://d.android.com/r/studio-ui/designer/material/design</a>
+This check is not very sophisticated (it just looks for buttons with the label "Back"), so it is disabled by default to not trigger on common scenarios like pairs of Back/Next buttons to paginate through screens.<br/><div class="moreinfo">More info: <a href="https://material.io/design/">https://material.io/design/</a>
 </div><br/>
 <br/></div>
 </div>
@@ -1924,8 +1498,18 @@ inline fun assert(condition: () -> Boolean) {
 </div>
 <div class="metadata">Disabled By: Default<br/>
 <div class="explanation">
-There are predefined sizes (for each density) for launcher icons. You should follow these conventions to make sure your icons fit in with the overall look of the platform.<br/><div class="moreinfo">More info: <a href="https://d.android.com/r/studio-ui/designer/material/iconography">https://d.android.com/r/studio-ui/designer/material/iconography</a>
+There are predefined sizes (for each density) for launcher icons. You should follow these conventions to make sure your icons fit in with the overall look of the platform.<br/><div class="moreinfo">More info: <a href="https://material.io/design/iconography/">https://material.io/design/iconography/</a>
 </div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ImplicitSamInstance<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Kotlin's support for SAM (single accessor method) interfaces lets you pass a lambda to the interface. This will create a new instance on the fly even though there is no explicit constructor call. If you pass one of these lambdas or method references into a method which (for example) stores or compares the object identity, unexpected results may happen.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
 <br/></div>
 </div>
 </div>
@@ -1989,7 +1573,7 @@ To designate a unit test as the documentation example for an issue, name the tes
 </div>
 <div class="metadata">Disabled By: Default<br/>
 <div class="explanation">
-You should never compare two PSI elements for equality with <code>equals</code>; use <code>PsiEquivalenceUtil.areElementsEquivalent(PsiElement, PsiElement)</code> instead.<br/><br/>
+You should never compare two PSI elements for equality with <code>equals</code>; use <code>isEquivalentTo(PsiElement)</code> instead.<br/><br/>
 <br/></div>
 </div>
 </div>
@@ -2026,15 +1610,6 @@ This detector looks for invalid line endings with repeated carriage return chara
 </div>
 </div>
 <div class="issue">
-<div class="id">MemberExtensionConflict<div class="issueSeparator"></div>
-</div>
-<div class="metadata">Disabled By: Default<br/>
-<div class="explanation">
-When both member and extension declarations are applicable, the resolution takes the member. This also implies that, if an extension existed first, but then a member is added later, the same call-site may end up with different call resolutions depending on target environment. This results in a potential runtime exception if the generated binary (library or app) targets earlier environment (i.e., without the new member, but only extension). More concrete example is found at: <a href="https://issuetracker.google.com/issues/350432371">https://issuetracker.google.com/issues/350432371</a><br/><br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">MinSdkTooLow<div class="issueSeparator"></div>
 </div>
 <div class="metadata">Disabled By: Default<br/>
@@ -2050,6 +1625,16 @@ The value of the <code>minSdkVersion</code> property is too low and can be incre
 <div class="metadata">Disabled By: Default<br/>
 <div class="explanation">
 Margin values should be positive. Negative values are generally a sign that you are making assumptions about views surrounding the current one, or may be tempted to turn off child clipping to allow a view to escape its parent. Turning off child clipping to do this not only leads to poor graphical performance, it also results in wrong touch event handling since touch events are based strictly on a chain of parent-rect hit tests. Finally, making assumptions about the size of strings can lead to localization problems.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NewerVersionAvailable<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the <code>GradleDependency</code> check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also <b>much</b> slower.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
 <br/></div>
 </div>
 </div>
@@ -2102,30 +1687,6 @@ To configure this option, use a `lint.xml` file in the project or source folder 
 Permissions should be prefixed with an app's package name, using reverse-domain-style naming. This prefix should be followed by <code>.permission.</code>, and then a description of the capability that the permission represents, in upper SNAKE_CASE. For example, <code>com.example.myapp.permission.ENGAGE_HYPERSPACE</code>.<br/>
 <br/>
 Following this recommendation avoids naming collisions, and helps clearly identify the owner and intention of a custom permission.<br/><br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">PrivacySandboxBlockedCall<div class="issueSeparator"></div>
-</div>
-<div class="metadata">Disabled By: Default<br/>
-<div class="explanation">
-Many APIs are unavailable in the Privacy Sandbox, depending on the <code>targetSdk</code>.<br/>
-<br/>
-If your code is designed to run in the sandbox (and never outside the sandbox) then you should remove the blocked calls to avoid exceptions at runtime.<br/>
-<br/>
-If your code is part of a library that can be executed both inside and outside the sandbox, surround the code with <code>if (!Process.isSdkSandbox()) { ... }</code> (or use your own field or method annotated with <code>@ChecksRestrictedEnvironment</code>) to avoid executing blocked calls when in the sandbox. Or, add the <code>@RestrictedForEnvironment</code> annotation to the containing method if the entire method should not be called when in the sandbox.<br/>
-<br/>
-This check is disabled by default, and should only be enabled in modules that may execute in the Privacy Sandbox.<br/><br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
-<div class="id">ReflectionAnnotation<div class="issueSeparator"></div>
-</div>
-<div class="metadata">Disabled By: Default<br/>
-<div class="explanation">
-When methods are using reflection to access APIs, they should declare what APIs they are accessing using the new <code>@UsesReflectionToAccessMethod</code> and <code>@UsesReflectionToAccessField</code> annotations. This makes it possible for the shrinker (R8) to correctly remove unused code and resources without accidentally also removing reflectively accessed code, which can lead to program crashes.<br/><br/>
 <br/></div>
 </div>
 </div>
@@ -2196,21 +1757,11 @@ A private inner class which is accessed from the outer class will force the comp
 </div>
 </div>
 <div class="issue">
-<div class="id">ThreadConstraint<div class="issueSeparator"></div>
-</div>
-<div class="metadata">Disabled By: Default<br/>
-<div class="explanation">
-Ensures that a method which expects to be called on a specific thread, is actually called from that thread. For example, calls on methods in widgets should always be made on the UI thread.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/components/processes-and-threads.html#Threads">https://developer.android.com/guide/components/processes-and-threads.html#Threads</a>
-</div><br/>
-<br/></div>
-</div>
-</div>
-<div class="issue">
 <div class="id">TypographyQuotes<div class="issueSeparator"></div>
 </div>
 <div class="metadata">Disabled By: Default<br/>
 <div class="explanation">
-Straight single quotes and double quotes, when used as a pair, can be replaced by "curvy quotes" (or directional quotes). Use the right single quotation mark for apostrophes. Never use generic quotes ", ' or free-standing accents `, ´ for quotation marks, apostrophes, or primes. This can make the text more readable.<br/><div class="moreinfo">More info: <a href="https://en.wikipedia.org/wiki/Quotation_mark">https://en.wikipedia.org/wiki/Quotation_mark</a>
+Straight single quotes and double quotes, when used as a pair, can be replaced by "curvy quotes" (or directional quotes). This can make the text more readable. Note that you should never use grave accents and apostrophes to quote, `like this'. (Also note that you should not use curvy quotes for code fragments.)<br/><div class="moreinfo">More info: <a href="https://en.wikipedia.org/wiki/Quotation_mark">https://en.wikipedia.org/wiki/Quotation_mark</a>
 </div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
 <br/>
 <br/></div>
@@ -2240,6 +1791,16 @@ To configure this option, use a `lint.xml` file in the project or source folder 
 </div><div class="moreinfo">More info: <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a>
 </div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
 <br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsafeImplicitIntentLaunch<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This intent matches a non-exported component within the same app. In many cases, the app developer could instead use an explicit Intent to send messages to their internal components, ensuring that the messages are safely delivered without exposure to malicious apps on the device. Using such implicit intents will result in a crash in an upcoming version of Android.<br/><div class="moreinfo">More info: <a href="https://goo.gle/ImplicitIntentHijack">https://goo.gle/ImplicitIntentHijack</a>
+</div><br/>
 <br/></div>
 </div>
 </div>

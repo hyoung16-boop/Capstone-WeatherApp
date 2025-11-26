@@ -2,32 +2,66 @@
 
 package com.example.weatherproject.ui
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.Context
+import android.location.Geocoder
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.weatherproject.data.CurrentWeather
 import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.data.WeeklyForecast
+import com.example.weatherproject.util.PreferenceManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.util.Locale
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val preferenceManager = PreferenceManager(application)
 
     // 메인 날씨 상태 (UI가 바라보는 데이터)
     private val _uiState = MutableStateFlow(WeatherState())
     val uiState: StateFlow<WeatherState> = _uiState
 
-    // ⭐️ 검색 결과 리스트
+    // 검색 결과 리스트
     private val _searchResults = MutableStateFlow<List<String>>(emptyList())
     val searchResults = _searchResults.asStateFlow()
 
-    // ⭐️ 사용자가 입력 중인 검색어
+    // 사용자가 입력 중인 검색어
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+    // 체질 보정값
+    private val _tempAdjustment = MutableStateFlow(0)
+    val tempAdjustment = _tempAdjustment.asStateFlow()
+
+    // 최초 설정 다이얼로그 표시 여부
+    private val _showSetupDialog = MutableStateFlow(false)
+    val showSetupDialog = _showSetupDialog.asStateFlow()
+
     init {
         loadFakeData()
+        checkUserPreference()
+    }
+
+    private fun checkUserPreference() {
+        if (!preferenceManager.isSetupComplete()) {
+            _showSetupDialog.value = true
+        } else {
+            _tempAdjustment.value = preferenceManager.getTempAdjustment()
+        }
+    }
+
+    fun saveTempAdjustment(value: Int) {
+        preferenceManager.setTempAdjustment(value)
+        _tempAdjustment.value = value
+        _showSetupDialog.value = false
     }
 
     // ⭐️ 검색어가 바뀔 때마다 호출되는 함수
@@ -37,10 +71,10 @@ class MainViewModel : ViewModel() {
         if (text.length > 0) {
             // 가짜 검색 결과 (나중에 API 연동 시 교체)
             _searchResults.value = listOf(
-                "$text 시청",
-                "$text 강남구",
-                "$text 해운대구",
-                "$text 역"
+                "$text",
+                "$text 시",
+                "$text 구",
+                "$text 동"
             )
         } else {
             _searchResults.value = emptyList()
@@ -48,7 +82,7 @@ class MainViewModel : ViewModel() {
     }
 
     // ⭐️ 도시를 클릭했을 때 호출되는 함수
-    fun onCitySelected(city: String) {
+    fun onCitySelected(context: Context, city: String) {
         _searchText.value = "" // 검색창 비우기
         _searchResults.value = emptyList() // 리스트 숨기기
 
@@ -56,8 +90,38 @@ class MainViewModel : ViewModel() {
         val currentState = _uiState.value
         _uiState.value = currentState.copy(currentAddress = city)
 
-        // TODO: 여기서 API 담당자가 만든 '진짜 날씨 가져오는 함수'를 호출해야 함
-        // searchWeatherByCity(city)
+        viewModelScope.launch(Dispatchers.IO) {
+            val coordinates = getCoordinatesFromCityName(context, city)
+            if (coordinates != null) {
+                Log.d("MainViewModel", "Selected City: $city, Lat: ${coordinates.first}, Lon: ${coordinates.second}")
+                // TODO: 여기서 위도(coordinates.first), 경도(coordinates.second)를 사용하여 날씨 API 호출
+                // searchWeatherByCoordinates(coordinates.first, coordinates.second)
+            } else {
+                Log.e("MainViewModel", "Failed to get coordinates for $city")
+            }
+        }
+    }
+
+    // Geocoder를 사용하여 주소를 위도, 경도로 변환하는 함수
+    private fun getCoordinatesFromCityName(context: Context, cityName: String): Pair<Double, Double>? {
+        return try {
+            // Geocoder가 존재하는지 확인 (일부 기기 미지원 가능성)
+            if (!Geocoder.isPresent()) return null
+
+            val geocoder = Geocoder(context, Locale.KOREA)
+            // 안드로이드 13(API 33) 이상부터는 리스너 방식이 권장되지만, 하위 호환성을 위해 동기 방식 사용 (Dispatchers.IO에서 호출)
+            val addresses = geocoder.getFromLocationName(cityName, 1)
+            
+            if (!addresses.isNullOrEmpty()) {
+                val location = addresses[0]
+                Pair(location.latitude, location.longitude)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     // 가짜 데이터 로드 (UI 테스트용)

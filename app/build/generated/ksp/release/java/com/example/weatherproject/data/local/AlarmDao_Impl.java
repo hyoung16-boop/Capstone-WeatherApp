@@ -2,8 +2,6 @@ package com.example.weatherproject.data.local;
 
 import android.database.Cursor;
 import android.os.CancellationSignal;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
@@ -41,95 +39,97 @@ public final class AlarmDao_Impl implements AlarmDao {
 
   private final EntityDeletionOrUpdateAdapter<AlarmEntity> __updateAdapterOfAlarmEntity;
 
-  public AlarmDao_Impl(@NonNull final RoomDatabase __db) {
+  public AlarmDao_Impl(RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfAlarmEntity = new EntityInsertionAdapter<AlarmEntity>(__db) {
       @Override
-      @NonNull
-      protected String createQuery() {
+      public String createQuery() {
         return "INSERT OR REPLACE INTO `alarms` (`id`,`hour`,`minute`,`days`,`selectedDate`,`isEnabled`) VALUES (nullif(?, 0),?,?,?,?,?)";
       }
 
       @Override
-      protected void bind(@NonNull final SupportSQLiteStatement statement,
-          @NonNull final AlarmEntity entity) {
-        statement.bindLong(1, entity.getId());
-        statement.bindLong(2, entity.getHour());
-        statement.bindLong(3, entity.getMinute());
-        final String _tmp = __converters.fromList(entity.getDays());
-        statement.bindString(4, _tmp);
-        if (entity.getSelectedDate() == null) {
-          statement.bindNull(5);
+      public void bind(SupportSQLiteStatement stmt, AlarmEntity value) {
+        stmt.bindLong(1, value.getId());
+        stmt.bindLong(2, value.getHour());
+        stmt.bindLong(3, value.getMinute());
+        final String _tmp = __converters.fromList(value.getDays());
+        if (_tmp == null) {
+          stmt.bindNull(4);
         } else {
-          statement.bindLong(5, entity.getSelectedDate());
+          stmt.bindString(4, _tmp);
         }
-        final int _tmp_1 = entity.isEnabled() ? 1 : 0;
-        statement.bindLong(6, _tmp_1);
+        if (value.getSelectedDate() == null) {
+          stmt.bindNull(5);
+        } else {
+          stmt.bindLong(5, value.getSelectedDate());
+        }
+        final int _tmp_1 = value.isEnabled() ? 1 : 0;
+        stmt.bindLong(6, _tmp_1);
       }
     };
     this.__deletionAdapterOfAlarmEntity = new EntityDeletionOrUpdateAdapter<AlarmEntity>(__db) {
       @Override
-      @NonNull
-      protected String createQuery() {
+      public String createQuery() {
         return "DELETE FROM `alarms` WHERE `id` = ?";
       }
 
       @Override
-      protected void bind(@NonNull final SupportSQLiteStatement statement,
-          @NonNull final AlarmEntity entity) {
-        statement.bindLong(1, entity.getId());
+      public void bind(SupportSQLiteStatement stmt, AlarmEntity value) {
+        stmt.bindLong(1, value.getId());
       }
     };
     this.__updateAdapterOfAlarmEntity = new EntityDeletionOrUpdateAdapter<AlarmEntity>(__db) {
       @Override
-      @NonNull
-      protected String createQuery() {
+      public String createQuery() {
         return "UPDATE OR ABORT `alarms` SET `id` = ?,`hour` = ?,`minute` = ?,`days` = ?,`selectedDate` = ?,`isEnabled` = ? WHERE `id` = ?";
       }
 
       @Override
-      protected void bind(@NonNull final SupportSQLiteStatement statement,
-          @NonNull final AlarmEntity entity) {
-        statement.bindLong(1, entity.getId());
-        statement.bindLong(2, entity.getHour());
-        statement.bindLong(3, entity.getMinute());
-        final String _tmp = __converters.fromList(entity.getDays());
-        statement.bindString(4, _tmp);
-        if (entity.getSelectedDate() == null) {
-          statement.bindNull(5);
+      public void bind(SupportSQLiteStatement stmt, AlarmEntity value) {
+        stmt.bindLong(1, value.getId());
+        stmt.bindLong(2, value.getHour());
+        stmt.bindLong(3, value.getMinute());
+        final String _tmp = __converters.fromList(value.getDays());
+        if (_tmp == null) {
+          stmt.bindNull(4);
         } else {
-          statement.bindLong(5, entity.getSelectedDate());
+          stmt.bindString(4, _tmp);
         }
-        final int _tmp_1 = entity.isEnabled() ? 1 : 0;
-        statement.bindLong(6, _tmp_1);
-        statement.bindLong(7, entity.getId());
+        if (value.getSelectedDate() == null) {
+          stmt.bindNull(5);
+        } else {
+          stmt.bindLong(5, value.getSelectedDate());
+        }
+        final int _tmp_1 = value.isEnabled() ? 1 : 0;
+        stmt.bindLong(6, _tmp_1);
+        stmt.bindLong(7, value.getId());
       }
     };
   }
 
   @Override
-  public Object insertAlarm(final AlarmEntity alarm, final Continuation<? super Long> $completion) {
+  public Object insertAlarm(final AlarmEntity alarm,
+      final Continuation<? super Long> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Long>() {
       @Override
-      @NonNull
       public Long call() throws Exception {
         __db.beginTransaction();
         try {
-          final Long _result = __insertionAdapterOfAlarmEntity.insertAndReturnId(alarm);
+          long _result = __insertionAdapterOfAlarmEntity.insertAndReturnId(alarm);
           __db.setTransactionSuccessful();
           return _result;
         } finally {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, continuation);
   }
 
   @Override
-  public Object deleteAlarm(final AlarmEntity alarm, final Continuation<? super Unit> $completion) {
+  public Object deleteAlarm(final AlarmEntity alarm,
+      final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
-      @NonNull
       public Unit call() throws Exception {
         __db.beginTransaction();
         try {
@@ -140,14 +140,14 @@ public final class AlarmDao_Impl implements AlarmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, continuation);
   }
 
   @Override
-  public Object updateAlarm(final AlarmEntity alarm, final Continuation<? super Unit> $completion) {
+  public Object updateAlarm(final AlarmEntity alarm,
+      final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
-      @NonNull
       public Unit call() throws Exception {
         __db.beginTransaction();
         try {
@@ -158,16 +158,15 @@ public final class AlarmDao_Impl implements AlarmDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, continuation);
   }
 
   @Override
   public Flow<List<AlarmEntity>> getAllAlarms() {
     final String _sql = "SELECT * FROM alarms";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    return CoroutinesRoom.createFlow(__db, false, new String[] {"alarms"}, new Callable<List<AlarmEntity>>() {
+    return CoroutinesRoom.createFlow(__db, false, new String[]{"alarms"}, new Callable<List<AlarmEntity>>() {
       @Override
-      @NonNull
       public List<AlarmEntity> call() throws Exception {
         final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
         try {
@@ -178,7 +177,7 @@ public final class AlarmDao_Impl implements AlarmDao {
           final int _cursorIndexOfSelectedDate = CursorUtil.getColumnIndexOrThrow(_cursor, "selectedDate");
           final int _cursorIndexOfIsEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "isEnabled");
           final List<AlarmEntity> _result = new ArrayList<AlarmEntity>(_cursor.getCount());
-          while (_cursor.moveToNext()) {
+          while(_cursor.moveToNext()) {
             final AlarmEntity _item;
             final int _tmpId;
             _tmpId = _cursor.getInt(_cursorIndexOfId);
@@ -188,7 +187,11 @@ public final class AlarmDao_Impl implements AlarmDao {
             _tmpMinute = _cursor.getInt(_cursorIndexOfMinute);
             final List<String> _tmpDays;
             final String _tmp;
-            _tmp = _cursor.getString(_cursorIndexOfDays);
+            if (_cursor.isNull(_cursorIndexOfDays)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getString(_cursorIndexOfDays);
+            }
             _tmpDays = __converters.fromString(_tmp);
             final Long _tmpSelectedDate;
             if (_cursor.isNull(_cursorIndexOfSelectedDate)) {
@@ -217,7 +220,7 @@ public final class AlarmDao_Impl implements AlarmDao {
   }
 
   @Override
-  public Object getAlarmById(final int id, final Continuation<? super AlarmEntity> $completion) {
+  public Object getAlarmById(final int id, final Continuation<? super AlarmEntity> continuation) {
     final String _sql = "SELECT * FROM alarms WHERE id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -225,7 +228,6 @@ public final class AlarmDao_Impl implements AlarmDao {
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
     return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<AlarmEntity>() {
       @Override
-      @Nullable
       public AlarmEntity call() throws Exception {
         final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
         try {
@@ -236,7 +238,7 @@ public final class AlarmDao_Impl implements AlarmDao {
           final int _cursorIndexOfSelectedDate = CursorUtil.getColumnIndexOrThrow(_cursor, "selectedDate");
           final int _cursorIndexOfIsEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "isEnabled");
           final AlarmEntity _result;
-          if (_cursor.moveToFirst()) {
+          if(_cursor.moveToFirst()) {
             final int _tmpId;
             _tmpId = _cursor.getInt(_cursorIndexOfId);
             final int _tmpHour;
@@ -245,7 +247,11 @@ public final class AlarmDao_Impl implements AlarmDao {
             _tmpMinute = _cursor.getInt(_cursorIndexOfMinute);
             final List<String> _tmpDays;
             final String _tmp;
-            _tmp = _cursor.getString(_cursorIndexOfDays);
+            if (_cursor.isNull(_cursorIndexOfDays)) {
+              _tmp = null;
+            } else {
+              _tmp = _cursor.getString(_cursorIndexOfDays);
+            }
             _tmpDays = __converters.fromString(_tmp);
             final Long _tmpSelectedDate;
             if (_cursor.isNull(_cursorIndexOfSelectedDate)) {
@@ -267,10 +273,9 @@ public final class AlarmDao_Impl implements AlarmDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, continuation);
   }
 
-  @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();
   }
