@@ -2,25 +2,6 @@
 <incidents format="6" by="lint 8.13.0" type="incidents">
 
     <incident
-        id="PropertyEscape"
-        severity="error"
-        message="Windows file separators (`\`) and drive letter separators (&apos;:&apos;) must be escaped (`\\`) in property files; use C\\:/Users/jueun/AppData/Local/Android/Sdk">
-        <fix-replace
-            description="Escape"
-            oldString=":"
-            replacement="\:"
-            priority="0"/>
-        <location
-            file="../local.properties"
-            line="1"
-            column="10"
-            startOffset="9"
-            endLine="1"
-            endColumn="11"
-            endOffset="10"/>
-    </incident>
-
-    <incident
         id="RedundantLabel"
         severity="warning"
         message="Redundant label can be removed">
@@ -80,12 +61,12 @@
             priority="0"/>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="43"
+            line="48"
             column="20"
-            startOffset="973"
-            endLine="43"
+            startOffset="1129"
+            endLine="48"
             endColumn="66"
-            endOffset="1019"/>
+            endOffset="1175"/>
     </incident>
 
     <incident
@@ -100,12 +81,32 @@
             priority="0"/>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="44"
+            line="49"
             column="20"
-            startOffset="1040"
-            endLine="44"
+            startOffset="1196"
+            endLine="49"
             endColumn="85"
-            endOffset="1105"/>
+            endOffset="1261"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.navigation:navigation-compose than 2.8.0 is available: 2.9.6">
+        <fix-replace
+            description="Change to 2.9.6"
+            family="Update versions"
+            oldString="2.8.0"
+            replacement="2.9.6"
+            priority="0"/>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="59"
+            column="20"
+            startOffset="1752"
+            endLine="59"
+            endColumn="66"
+            endOffset="1798"/>
     </incident>
 
     <incident
@@ -169,6 +170,66 @@
     </incident>
 
     <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="226"
+            endLine="11"
+            endColumn="15"
+            endOffset="233"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="226"
+            endLine="11"
+            endColumn="15"
+            endOffset="233"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.4">
+        <fix-replace
+            description="Change to 2.8.4"
+            family="Update versions"
+            oldString="2.6.1"
+            replacement="2.8.4"
+            priority="0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="11"
+            column="8"
+            startOffset="226"
+            endLine="11"
+            endColumn="15"
+            endOffset="233"/>
+    </incident>
+
+    <incident
         id="NewerVersionAvailable"
         severity="warning"
         message="A newer version of io.coil-kt:coil-compose than 2.6.0 is available: 2.7.0">
@@ -180,12 +241,12 @@
             priority="0"/>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="45"
+            line="50"
             column="20"
-            startOffset="1126"
-            endLine="45"
+            startOffset="1282"
+            endLine="50"
             endColumn="51"
-            endOffset="1157"/>
+            endOffset="1313"/>
     </incident>
 
     <incident
@@ -234,13 +295,13 @@
         message="Unnecessary; `SDK_INT` is always >= 30">
         <fix-data conditional="true"/>
         <location
-            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/weatherproject/MainActivity.kt"
-            line="587"
-            column="9"
-            startOffset="20470"
-            endLine="587"
-            endColumn="55"
-            endOffset="20516"/>
+            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/weatherproject/util/NotificationHelper.kt"
+            line="21"
+            column="13"
+            startOffset="751"
+            endLine="21"
+            endColumn="59"
+            endOffset="797"/>
     </incident>
 
     <incident
@@ -269,8 +330,8 @@
                 priority="0">
                 <range
                     file="../gradle/libs.versions.toml"
-                    startOffset="327"
-                    endOffset="327"/>
+                    startOffset="273"
+                    endOffset="273"/>
             </fix-replace>
             <fix-replace
                 description="Replace with libs.androidx.foundation"
@@ -279,18 +340,18 @@
                 priority="0">
                 <range
                     file="${:app*projectDir}/build.gradle.kts"
-                    startOffset="973"
-                    endOffset="1019"/>
+                    startOffset="1129"
+                    endOffset="1175"/>
             </fix-replace>
         </fix-composite>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="43"
+            line="48"
             column="20"
-            startOffset="973"
-            endLine="43"
+            startOffset="1129"
+            endLine="48"
             endColumn="66"
-            endOffset="1019"/>
+            endOffset="1175"/>
     </incident>
 
     <incident
@@ -319,8 +380,8 @@
                 priority="0">
                 <range
                     file="../gradle/libs.versions.toml"
-                    startOffset="327"
-                    endOffset="327"/>
+                    startOffset="273"
+                    endOffset="273"/>
             </fix-replace>
             <fix-replace
                 description="Replace with libs.androidx.material.icons.extended.android"
@@ -329,18 +390,18 @@
                 priority="0">
                 <range
                     file="${:app*projectDir}/build.gradle.kts"
-                    startOffset="1040"
-                    endOffset="1105"/>
+                    startOffset="1196"
+                    endOffset="1261"/>
             </fix-replace>
         </fix-composite>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="44"
+            line="49"
             column="20"
-            startOffset="1040"
-            endLine="44"
+            startOffset="1196"
+            endLine="49"
             endColumn="85"
-            endOffset="1105"/>
+            endOffset="1261"/>
     </incident>
 
     <incident
@@ -369,8 +430,8 @@
                 priority="0">
                 <range
                     file="../gradle/libs.versions.toml"
-                    startOffset="327"
-                    endOffset="327"/>
+                    startOffset="654"
+                    endOffset="654"/>
             </fix-replace>
             <fix-replace
                 description="Replace with libs.coil.kt.coil.compose"
@@ -379,18 +440,68 @@
                 priority="0">
                 <range
                     file="${:app*projectDir}/build.gradle.kts"
-                    startOffset="1126"
-                    endOffset="1157"/>
+                    startOffset="1282"
+                    endOffset="1313"/>
             </fix-replace>
         </fix-composite>
         <location
             file="${:app*projectDir}/build.gradle.kts"
-            line="45"
+            line="50"
             column="20"
-            startOffset="1126"
-            endLine="45"
+            startOffset="1282"
+            endLine="50"
             endColumn="51"
-            endOffset="1157"/>
+            endOffset="1313"/>
+    </incident>
+
+    <incident
+        id="UseTomlInstead"
+        severity="warning"
+        message="Use version catalog instead">
+        <fix-composite
+            description="Replace with new library catalog declaration for navigation-compose"
+            robot="true">
+            <fix-replace
+                description="Replace with navigationComposeVersion = &quot;2.8.0&quot;..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="navigationComposeVersion = &quot;2.8.0&quot;&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="219"
+                    endOffset="219"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with navigation-compose = { module = &quot;androidx.navigation:navigation-compose&quot;, version.ref = &quot;navigationComposeVersion&quot; }..."
+                robot="true"
+                oldString="_lint_insert_begin_"
+                replacement="navigation-compose = { module = &quot;androidx.navigation:navigation-compose&quot;, version.ref = &quot;navigationComposeVersion&quot; }&#xA;"
+                priority="0">
+                <range
+                    file="../gradle/libs.versions.toml"
+                    startOffset="1926"
+                    endOffset="1926"/>
+            </fix-replace>
+            <fix-replace
+                description="Replace with libs.navigation.compose"
+                robot="true"
+                replacement="libs.navigation.compose"
+                priority="0">
+                <range
+                    file="${:app*projectDir}/build.gradle.kts"
+                    startOffset="1752"
+                    endOffset="1798"/>
+            </fix-replace>
+        </fix-composite>
+        <location
+            file="${:app*projectDir}/build.gradle.kts"
+            line="59"
+            column="20"
+            startOffset="1752"
+            endLine="59"
+            endColumn="66"
+            endOffset="1798"/>
     </incident>
 
 </incidents>

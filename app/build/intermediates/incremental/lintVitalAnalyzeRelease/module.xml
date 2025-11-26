@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="C:\save\Capstone Design\weatherapp\app"
+    dir="C:\save\cj\weatherapp\app"
     name=":app"
     type="APP"
     maven="weatherapp:app:unspecified"

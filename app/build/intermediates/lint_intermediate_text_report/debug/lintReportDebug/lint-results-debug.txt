@@ -1,14 +1,4 @@
-C:\save\Capstone Design\weatherapp\local.properties:1: Error: Windows file separators (\) and drive letter separators (':') must be escaped (\\) in property files; use C\:/Users/jueun/AppData/Local/Android/Sdk [PropertyEscape]
-sdk.dir=C:/Users/jueun/AppData/Local/Android/Sdk
-         ~
-
-   Explanation for issues of type "PropertyEscape":
-   All backslashes and colons in .property files must be escaped with a
-   backslash (). This means that when writing a Windows path, you must escape
-   the file separators, so the path MyFiles should be written as
-   key=\\My\\Files.
-
-C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:21: Warning: Redundant label can be removed [RedundantLabel]
+C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:21: Warning: Redundant label can be removed [RedundantLabel]
             android:label="@string/app_name"
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -17,7 +7,7 @@ C:\save\Capstone Design\weatherapp\app\src\main\AndroidManifest.xml:21: Warning:
    the application tag. Since the application has already specified the same
    label, the label on this activity can be omitted.
 
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:2: Warning: A newer version of com.android.application than 8.13.0 is available: 8.13.1 [AndroidGradlePluginVersion]
+C:\save\cj\weatherapp\gradle\libs.versions.toml:2: Warning: A newer version of com.android.application than 8.13.0 is available: 8.13.1 [AndroidGradlePluginVersion]
 agp = "8.13.0"
       ~~~~~~~~
 
@@ -28,21 +18,33 @@ agp = "8.13.0"
    with an older version. However, you may simply not be aware that a more
    recent version is available, and that is what this lint check helps find.
 
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:43: Warning: Upgrade androidx.compose.foundation for keyboard and mouse support [GradleDependency]
+C:\save\cj\weatherapp\app\build.gradle.kts:48: Warning: Upgrade androidx.compose.foundation for keyboard and mouse support [GradleDependency]
     implementation("androidx.compose.foundation:foundation:1.6.8")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:44: Warning: A newer version of androidx.compose.material:material-icons-extended-android than 1.6.8 is available: 1.7.8 [GradleDependency]
+C:\save\cj\weatherapp\app\build.gradle.kts:49: Warning: A newer version of androidx.compose.material:material-icons-extended-android than 1.6.8 is available: 1.7.8 [GradleDependency]
     implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:8: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.9.4 is available: 2.10.0 [GradleDependency]
+C:\save\cj\weatherapp\app\build.gradle.kts:59: Warning: A newer version of androidx.navigation:navigation-compose than 2.8.0 is available: 2.9.6 [GradleDependency]
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\save\cj\weatherapp\gradle\libs.versions.toml:8: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.9.4 is available: 2.10.0 [GradleDependency]
 lifecycleRuntimeKtx = "2.9.4"
                       ~~~~~~~
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:9: Warning: A newer version of androidx.activity:activity-compose than 1.11.0 is available: 1.12.0 [GradleDependency]
+C:\save\cj\weatherapp\gradle\libs.versions.toml:9: Warning: A newer version of androidx.activity:activity-compose than 1.11.0 is available: 1.12.0 [GradleDependency]
 activityCompose = "1.11.0"
                   ~~~~~~~~
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:10: Warning: A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.11.01 [GradleDependency]
+C:\save\cj\weatherapp\gradle\libs.versions.toml:10: Warning: A newer version of androidx.compose:compose-bom than 2024.09.00 is available: 2025.11.01 [GradleDependency]
 composeBom = "2024.09.00"
              ~~~~~~~~~~~~
+C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.4 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.4 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.4 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
 
    Explanation for issues of type "GradleDependency":
    This detector looks for usages of libraries where the version you are using
@@ -51,13 +53,13 @@ composeBom = "2024.09.00"
    However, you may simply not be aware that a more recent version is
    available, and that is what this lint check helps find.
 
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:45: Warning: A newer version of io.coil-kt:coil-compose than 2.6.0 is available: 2.7.0 [NewerVersionAvailable]
+C:\save\cj\weatherapp\app\build.gradle.kts:50: Warning: A newer version of io.coil-kt:coil-compose than 2.6.0 is available: 2.7.0 [NewerVersionAvailable]
     implementation("io.coil-kt:coil-compose:2.6.0")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.2.21 [NewerVersionAvailable]
+C:\save\cj\weatherapp\gradle\libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.2.21 [NewerVersionAvailable]
 kotlin = "2.0.21"
          ~~~~~~~~
-C:\save\Capstone Design\weatherapp\gradle\libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.2.21 [NewerVersionAvailable]
+C:\save\cj\weatherapp\gradle\libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.plugin.compose than 2.0.21 is available: 2.2.21 [NewerVersionAvailable]
 kotlin = "2.0.21"
          ~~~~~~~~
 
@@ -69,9 +71,9 @@ kotlin = "2.0.21"
    MavenCentral dependency, and connects to the library every time, which
    makes it more flexible but also much slower.
 
-C:\save\Capstone Design\weatherapp\app\src\main\java\com\example\weatherproject\MainActivity.kt:587: Warning: Unnecessary; SDK_INT is always >= 30 [ObsoleteSdkInt]
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\save\cj\weatherapp\app\src\main\java\com\example\weatherproject\util\NotificationHelper.kt:21: Warning: Unnecessary; SDK_INT is always >= 30 [ObsoleteSdkInt]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "ObsoleteSdkInt":
    This check flags version checks that are not necessary, because the
@@ -82,25 +84,25 @@ C:\save\Capstone Design\weatherapp\app\src\main\java\com\example\weatherproject\
    where the version qualifier is less than or equal to the minSdkVersion,
    where the contents should be merged into the best folder.
 
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:3: Warning: The resource R.color.purple_200 appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:3: Warning: The resource R.color.purple_200 appears to be unused [UnusedResources]
     <color name="purple_200">#FFBB86FC</color>
            ~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:4: Warning: The resource R.color.purple_500 appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:4: Warning: The resource R.color.purple_500 appears to be unused [UnusedResources]
     <color name="purple_500">#FF6200EE</color>
            ~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:5: Warning: The resource R.color.purple_700 appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:5: Warning: The resource R.color.purple_700 appears to be unused [UnusedResources]
     <color name="purple_700">#FF3700B3</color>
            ~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:6: Warning: The resource R.color.teal_200 appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:6: Warning: The resource R.color.teal_200 appears to be unused [UnusedResources]
     <color name="teal_200">#FF03DAC5</color>
            ~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:7: Warning: The resource R.color.teal_700 appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:7: Warning: The resource R.color.teal_700 appears to be unused [UnusedResources]
     <color name="teal_700">#FF018786</color>
            ~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:8: Warning: The resource R.color.black appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:8: Warning: The resource R.color.black appears to be unused [UnusedResources]
     <color name="black">#FF000000</color>
            ~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:9: Warning: The resource R.color.white appears to be unused [UnusedResources]
+C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:9: Warning: The resource R.color.white appears to be unused [UnusedResources]
     <color name="white">#FFFFFFFF</color>
            ~~~~~~~~~~~~
 
@@ -137,15 +139,18 @@ C:\save\Capstone Design\weatherapp\app\src\main\res\values\colors.xml:9: Warning
    </lint>
    ```
 
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:43: Warning: Use version catalog instead [UseTomlInstead]
+C:\save\cj\weatherapp\app\build.gradle.kts:48: Warning: Use version catalog instead [UseTomlInstead]
     implementation("androidx.compose.foundation:foundation:1.6.8")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:44: Warning: Use version catalog instead [UseTomlInstead]
+C:\save\cj\weatherapp\app\build.gradle.kts:49: Warning: Use version catalog instead [UseTomlInstead]
     implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\Capstone Design\weatherapp\app\build.gradle.kts:45: Warning: Use version catalog instead [UseTomlInstead]
+C:\save\cj\weatherapp\app\build.gradle.kts:50: Warning: Use version catalog instead [UseTomlInstead]
     implementation("io.coil-kt:coil-compose:2.6.0")
                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\save\cj\weatherapp\app\build.gradle.kts:59: Warning: Use version catalog instead [UseTomlInstead]
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "UseTomlInstead":
    If your project is using a libs.versions.toml file, you should place all
@@ -153,4 +158,4 @@ C:\save\Capstone Design\weatherapp\app\build.gradle.kts:45: Warning: Use version
    declarations outside of the TOML file and suggests moving them (and in the
    IDE, provides a quickfix to performing the operation automatically).
 
-1 error, 21 warnings
+0 errors, 26 warnings

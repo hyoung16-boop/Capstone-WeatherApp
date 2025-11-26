@@ -6,7 +6,7 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="30"
-9        android:targetSdkVersion="36" />
+9        android:targetSdkVersion="30" />
 10
 11    <uses-permission android:name="android.permission.INTERNET" />
 11-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:4:5-67
