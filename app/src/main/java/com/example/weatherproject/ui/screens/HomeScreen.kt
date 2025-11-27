@@ -41,80 +41,89 @@ fun HomeScreen(
     // 저장된 체질 보정값
     val tempAdjustment by viewModel.tempAdjustment.collectAsState()
     
-        // 새로고침 상태
-        val isRefreshing by viewModel.isRefreshing.collectAsState()
-        val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refreshData() }) // ⬅️ refreshData()로 변경
+    // 새로고침 상태
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refreshData() })
     
-        if (showDialog) {
-            TemperaturePreferenceDialog(onDismiss = { /* 강제 설정 유도 (취소 불가) */ }) { adjustment ->
-                viewModel.saveTempAdjustment(adjustment)
-            }
+    // 카드 확장 상태 (화면 이동 대신 사용)
+    var isDetailExpanded by remember { mutableStateOf(false) }
+    var isForecastExpanded by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        TemperaturePreferenceDialog(onDismiss = { /* 강제 설정 유도 (취소 불가) */ }) { adjustment ->
+            viewModel.saveTempAdjustment(adjustment)
         }
-    
-        Scaffold(
-            topBar = { 
-                WeatherTopAppBar(
-                    viewModel = viewModel, 
-                    searchViewModel = searchViewModel,
-                    navController = navController
-                ) 
-            },
-            backgroundColor = Color.Transparent
-        ) { paddingValues ->
-    
-            Box(
+    }
+
+    Scaffold(
+        topBar = { 
+            WeatherTopAppBar(
+                viewModel = viewModel, 
+                searchViewModel = searchViewModel,
+                navController = navController
+            ) 
+        },
+        backgroundColor = Color.Transparent
+    ) { paddingValues ->
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .pullRefresh(pullRefreshState)
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .pullRefresh(pullRefreshState)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    // 현재 날씨
-                    CurrentWeatherCard(
-                        weather = weatherState.currentWeather,
-                        address = weatherState.currentAddress,
-                        onClick = { navController.navigate("detail") }
-                    )
-    
-                    // 시간별 예보
-                    HourlyForecastCard(
-                        hourlyForecasts = weatherState.hourlyForecast,
-                        onClick = { navController.navigate("forecast") }
-                    )
-    
-                    // 옷차림 추천 (보정값 전달)
-                    ClothingRecommendationCard(
-                        feelsLike = weatherState.currentWeather.feelsLike,
-                        tempAdjustment = tempAdjustment
-                    )
-    
-                                    // ⭐️ 개선된 CCTV 카드 (주변 2개만 보여주기)
-                                    NearbyCctvCard(
-                                        cctvList = weatherState.cctvList.take(2), // 상위 2개만 전달
-                                        onMoreClick = { navController.navigate("cctv") },
-                                        onCctvClick = { cctv -> 
-                                            // TODO: 썸네일 클릭 시 해당 CCTV의 전체 화면/스트리밍 화면으로 이동
-                                            // 예: navController.navigate("cctv_detail/${cctv.id}")
-                                        }
-                                    )                    
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-    
-                // 새로고침 인디케이터 (디자인 개선)
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    backgroundColor = Color.White, // 배경은 깔끔한 흰색
-                    contentColor = Color(0xFF2563EB) // 아이콘은 진한 파란색
+                // 현재 날씨 (클릭 시 상세 정보 펼쳐짐)
+                CurrentWeatherCard(
+                    weather = weatherState.currentWeather,
+                    address = weatherState.currentAddress,
+                    details = weatherState.weatherDetails, // 상세 데이터 전달
+                    isExpanded = isDetailExpanded,
+                    onClick = { isDetailExpanded = !isDetailExpanded } // 토글
                 )
+
+                // 시간별 예보 (클릭 시 주간 예보 펼쳐짐)
+                HourlyForecastCard(
+                    hourlyForecasts = weatherState.hourlyForecast,
+                    weeklyForecasts = weatherState.weeklyForecast, // 주간 데이터 전달
+                    isExpanded = isForecastExpanded,
+                    onClick = { isForecastExpanded = !isForecastExpanded } // 토글
+                )
+
+                // 옷차림 추천 (보정값 전달)
+                ClothingRecommendationCard(
+                    feelsLike = weatherState.currentWeather.feelsLike,
+                    tempAdjustment = tempAdjustment
+                )
+
+                // ⭐️ 개선된 CCTV 카드 (주변 2개만 보여주기)
+                NearbyCctvCard(
+                    cctvList = weatherState.cctvList.take(2), // 상위 2개만 전달
+                    onMoreClick = { navController.navigate("cctv") },
+                    onCctvClick = { cctv -> 
+                        // TODO: 썸네일 클릭 시 해당 CCTV의 전체 화면/스트리밍 화면으로 이동
+                    }
+                )
+                
+                Spacer(modifier = Modifier.height(32.dp))
             }
-        }}
+
+            // 새로고침 인디케이터 (디자인 개선)
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = Color.White, // 배경은 깔끔한 흰색
+                contentColor = Color(0xFF2563EB) // 아이콘은 진한 파란색
+            )
+        }
+    }
+}
 
 @Composable
 fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit) {

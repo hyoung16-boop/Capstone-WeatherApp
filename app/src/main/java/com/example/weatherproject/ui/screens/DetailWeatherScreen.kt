@@ -49,12 +49,13 @@ fun DetailWeatherScreen(weatherState: WeatherState, navController: NavController
             CurrentWeatherCard(
                 weather = weatherState.currentWeather,
                 address = weatherState.currentAddress,
-                onClick = { } // 상세 화면에서는 클릭 동작 없음
+                details = weatherState.weatherDetails, // 상세 정보 전달
+                isExpanded = true, // 상세 화면이므로 항상 펼침
+                onClick = { } 
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            WeatherDetailCard(details = weatherState.weatherDetails)
+            // 기존 WeatherDetailCard는 CurrentWeatherCard 내부에 포함되었으므로 제거하거나, 
+            // 중복 표시를 피하기 위해 여기서는 제거함.
         }
     }
 }

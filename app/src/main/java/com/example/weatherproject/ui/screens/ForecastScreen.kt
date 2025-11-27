@@ -45,16 +45,15 @@ fun ForecastScreen(weatherState: WeatherState, navController: NavController) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // 시간별 예보
+            // 시간별 예보 (주간 예보 포함)
             HourlyForecastCard(
                 hourlyForecasts = weatherState.hourlyForecast,
-                onClick = { } // 예보 화면에서는 클릭 동작 없음
+                weeklyForecasts = weatherState.weeklyForecast, // 주간 예보 전달
+                isExpanded = true, // 예보 화면이므로 항상 펼침
+                onClick = { } 
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // 주간 예보
-            WeeklyForecastCard(weeklyForecasts = weatherState.weeklyForecast)
+            // 기존 WeeklyForecastCard는 제거
         }
     }
 }
