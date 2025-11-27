@@ -103,19 +103,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val current = _uiState.value.currentWeather
                 val details = _uiState.value.weatherDetails
 
-                // 체감 온도 재계산
+                // 체감 온도 재계산 (값과 이유를 함께 받아옴)
                 val windSpeed = details.wind.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
                 val humidity = details.humidity.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
                 
-                val newFeelsLikeInt = calculateFeelsLike(newTempInt.toDouble(), windSpeed, humidity)
-                val newFeelsLikeStr = "${newFeelsLikeInt}°"
+                val (newFeelsLikeInt, reason) = calculateFeelsLike(newTempInt.toDouble(), windSpeed, humidity)
+                // 이유가 있으면 괄호로 감싸고, 없으면 그냥 둠
+                val reasonText = if (reason.isNotEmpty()) "($reason)" else ""
+                val newFeelsLikeStr = "${newFeelsLikeInt}° $reasonText"
                 
                 // 1. 현재 날씨 상태 업데이트
                 val updatedCurrentWeather = current.copy(
                     iconUrl = randomWeather.first, 
-                    description = randomWeather.third, // 한글 설명 사용
+                    description = randomWeather.third, 
                     temperature = newTempStr,
-                    feelsLike = "체감: $newFeelsLikeStr"
+                    feelsLike = "체감: $newFeelsLikeStr" 
                 )
 
                 // 2. 시간별 예보의 첫 번째 항목("지금")도 현재 날씨와 동기화
@@ -138,7 +140,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _uiState.value = _uiState.value.copy(
                     currentWeather = updatedCurrentWeather,
                     weatherDetails = details.copy(
-                        feelsLike = newFeelsLikeStr
+                        feelsLike = newFeelsLikeInt.toString() + "°"
                     ),
                     hourlyForecast = updatedHourlyList
                 )
@@ -150,25 +152,36 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // 체감 온도 계산 로직 (약식)
-    private fun calculateFeelsLike(temp: Double, wind: Double, humidity: Double): Int {
-        return when {
-            // 겨울철 (10도 이하): 바람이 불수록 체감온도 뚝 떨어짐 (Wind Chill)
-            temp <= 10.0 -> {
-                val v = if(wind < 4.8) 4.8 else wind
-                val vPow = Math.pow(v, 0.16)
-                (13.12 + 0.6215 * temp - 11.37 * vPow + 0.3965 * temp * vPow).toInt()
-            }
-            // 여름철 (25도 이상): 습도가 높으면 체감온도 상승
-            temp >= 25.0 -> {
-                val humidityEffect = (humidity - 40) / 10.0 * 0.5
-                (temp + humidityEffect).toInt()
-            }
-            // 그 외: 바람 불면 약간 쌀쌀하게
-            else -> {
-                (temp - (wind / 10.0)).toInt()
-            }
+    // 체감 온도 계산 로직 (표준 공식 적용)
+    private fun calculateFeelsLike(temp: Double, wind: Double, humidity: Double): Pair<Int, String> {
+        // 1. 겨울철 (10도 이하, 풍속 4.8km/h 이상) - JAG/TI 공식 (Wind Chill)
+        if (temp <= 10.0 && wind >= 4.8) {
+            val vPow = Math.pow(wind, 0.16)
+            val result = (13.12 + 0.6215 * temp - 11.37 * vPow + 0.3965 * temp * vPow).toInt()
+            return Pair(result, "바람이 불어 더 춥게 느껴져요")
         }
+        
+        // 2. 여름철 (25도 이상) - 습도 영향 (Heat Index 약식 적용)
+        if (temp >= 25.0) {
+             // 섭씨 -> 화씨 변환
+            val tf = temp * 9.0 / 5.0 + 32.0
+            val rh = humidity
+            
+            // Heat Index Formula (Rothfusz Regression)
+            val hiF = -42.379 + 2.04901523 * tf + 10.14333127 * rh - 0.22475541 * tf * rh - 
+                      0.00683783 * tf * tf - 0.05481717 * rh * rh + 0.00122874 * tf * tf * rh + 
+                      0.00085282 * tf * rh * rh - 0.00000199 * tf * tf * rh * rh
+            
+            // 화씨 -> 섭씨 복귀
+            val hiC = (hiF - 32.0) * 5.0 / 9.0
+            
+            val result = hiC.toInt()
+            val reason = if (result > temp) "습도가 높아 더 덥게 느껴져요" else ""
+            return Pair(result, reason)
+        }
+
+        // 그 외 (봄/가을)
+        return Pair(temp.toInt(), "")
     }
 
     fun refreshMyLocation() {

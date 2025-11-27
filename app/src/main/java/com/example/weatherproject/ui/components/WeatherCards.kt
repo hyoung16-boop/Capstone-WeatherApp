@@ -432,20 +432,28 @@ fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClic
 
 
 @Composable
-fun ClothingRecommendationCard(feelsLike: String, tempAdjustment: Int) {
-    val rawTemp = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
-    val adjustedTemp = rawTemp + tempAdjustment
+fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjustment: Int) {
+    val rawCurrent = currentTemp.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
+    val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
+    
+    // 실제 기온과 체감 온도의 차이가 1도 이하면 보정값 무시 (0으로 처리)
+    val finalAdjustment = if (Math.abs(rawCurrent - rawFeelsLike) <= 1) 0 else tempAdjustment
+    
+    val adjustedTemp = rawFeelsLike + finalAdjustment
+    
     val recommendationText = when {
-        adjustedTemp >= 28 -> "민소매, 반팔, 반바지, 원피스"
-        adjustedTemp >= 23 -> "반팔, 얇은 셔츠, 반바지, 면바지"
-        adjustedTemp >= 20 -> "얇은 가디건, 긴팔, 면바지, 청바지"
-        adjustedTemp >= 17 -> "얇은 니트, 맨투맨, 가디건, 청바지"
-        adjustedTemp >= 12 -> "자켓, 가디건, 야상, 스타킹, 청바지, 면바지"
-        adjustedTemp >= 9 -> "자켓, 트렌치코트, 야상, 니트, 청바지, 스타킹"
-        adjustedTemp >= 5 -> "코트, 가죽자켓, 히트텍, 니트, 레깅스"
-        else -> "패딩, 두꺼운 코트, 목도리, 기모제품"
+        adjustedTemp >= 28 -> "푹푹 찌는 무더위예요. 민소매나 린넨 소재처럼 통기성이 좋은 시원한 옷차림이 좋아요."
+        adjustedTemp >= 23 -> "조금 더울 수 있는 날씨예요. 가벼운 반팔 티셔츠나 얇은 셔츠를 추천드려요."
+        adjustedTemp >= 20 -> "활동하기 딱 좋은 날씨네요! 긴팔 티셔츠나 셔츠에 얇은 가디건을 걸치면 좋아요."
+        adjustedTemp >= 17 -> "아침저녁으로 쌀쌀해요. 맨투맨이나 니트, 혹은 입고 벗기 편한 가벼운 외투를 챙기세요."
+        adjustedTemp >= 12 -> "찬 바람이 느껴져요. 자켓이나 야상 점퍼, 도톰한 가디건으로 보온에 신경 써주세요."
+        adjustedTemp >= 9 -> "꽤 쌀쌀한 날씨입니다. 트렌치코트나 두께감 있는 점퍼를 입고, 목을 따뜻하게 해주세요."
+        adjustedTemp >= 5 -> "본격적인 추위가 시작됐어요. 코트 안에도 따뜻한 니트나 히트텍을 챙겨 입으시는 게 좋겠어요."
+        else -> "매우 추운 날씨입니다! 두꺼운 패딩과 목도리, 장갑 등으로 꽁꽁 싸매서 체온을 지키세요."
     }
-    val adjustmentText = if (tempAdjustment > 0) "(더위 많이 탐)" else if (tempAdjustment < 0) "(추위 많이 탐)" else ""
+    
+    val adjustmentText = if (finalAdjustment > 0) "(더위 많이 탐)" else if (finalAdjustment < 0) "(추위 많이 탐)" else ""
+    
     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), backgroundColor = Color.White.copy(alpha = 0.3f), elevation = 0.dp) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -456,7 +464,7 @@ fun ClothingRecommendationCard(feelsLike: String, tempAdjustment: Int) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(text = recommendationText, fontSize = 16.sp, color = Color.White)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "체감 온도: $feelsLike (보정: ${if(tempAdjustment > 0) "+" else ""}$tempAdjustment)", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+            Text(text = "체감 온도: $feelsLike (보정: ${if(finalAdjustment > 0) "+" else ""}$finalAdjustment)", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
         }
     }
 }

@@ -136,6 +136,7 @@ fun HomeScreen(
 
                 // 옷차림 추천 (보정값 전달)
                 ClothingRecommendationCard(
+                    currentTemp = weatherState.currentWeather.temperature, // 현재 기온 전달
                     feelsLike = weatherState.currentWeather.feelsLike,
                     tempAdjustment = tempAdjustment
                 )
