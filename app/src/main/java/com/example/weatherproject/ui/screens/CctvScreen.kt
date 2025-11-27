@@ -11,7 +11,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.CameraAlt
+// import androidx.compose.material.icons.filled.CameraAlt
+import com.example.weatherproject.ui.icons.MyCameraAlt
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.*
@@ -78,48 +79,55 @@ fun CctvScreen(
 
     Scaffold(
         topBar = {
-            // 검색바가 포함된 커스텀 TopBar (WeatherTopAppBar와 유사하지만 뒤로가기 포함)
+            // 검색바가 포함된 커스텀 TopBar (TopAppBar 대신 Row 사용으로 높이 제한 해결)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .zIndex(1f)
             ) {
                 Column {
-                    TopAppBar(
-                        backgroundColor = Color.Transparent,
-                        contentColor = Color.White,
-                        elevation = 0.dp,
-                        navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기", tint = Color.White)
-                            }
-                        },
-                        title = {
-                            OutlinedTextField(
-                                value = searchText,
-                                onValueChange = { searchViewModel.onSearchTextChange(it) },
-                                label = { Text("CCTV 위치 검색", color = Color.White.copy(alpha = 0.7f)) },
-                                singleLine = true,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search), // ⬅️ 추가
-                                keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }), // ⬅️ 추가
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    textColor = Color.White,
-                                    focusedBorderColor = Color.White,
-                                    unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
-                                    cursorColor = Color.White,
-                                    focusedLabelColor = Color.White,
-                                    unfocusedLabelColor = Color.White.copy(alpha = 0.7f)
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        },
-                        actions = {
-                            // 중복 아이콘 삭제됨
-                            IconButton(onClick = { viewModel.refreshMyLocation() }) {
-                                Icon(Icons.Default.LocationOn, "현재 위치")
-                            }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp) // 넉넉한 높이
+                            .padding(horizontal = 4.dp, vertical = 8.dp), // NavigationIcon 공간 고려하여 padding 조정
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // 뒤로가기 버튼
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기", tint = Color.White)
                         }
-                    )
+
+                        // 검색 입력창 (가중치 부여)
+                        OutlinedTextField(
+                            value = searchText,
+                            onValueChange = { searchViewModel.onSearchTextChange(it) },
+                            label = { Text("CCTV 위치 검색", color = Color.White.copy(alpha = 0.7f)) },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = Color.White,
+                                focusedBorderColor = Color.White,
+                                unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
+                                cursorColor = Color.White,
+                                focusedLabelColor = Color.White,
+                                unfocusedLabelColor = Color.White.copy(alpha = 0.7f)
+                            ),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
+                        )
+
+                        // 현재 위치 버튼
+                        IconButton(onClick = { 
+                            android.widget.Toast.makeText(context, "주변 CCTV를 탐색합니다...", android.widget.Toast.LENGTH_SHORT).show()
+                            viewModel.fetchCurrentLocationCctvs() 
+                        }) {
+                            Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)
+                        }
+                    }
 
                     // 검색 결과 리스트 (WeatherTopAppBar와 동일 로직)
                     if (searchResults.isNotEmpty()) {
@@ -220,7 +228,7 @@ fun CctvListItem(cctv: CctvInfo) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.CameraAlt,
+                    imageVector = Icons.Default.MyCameraAlt,
                     contentDescription = null,
                     tint = Color.Gray
                 )

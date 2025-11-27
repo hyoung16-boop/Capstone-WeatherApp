@@ -15,7 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.CameraAlt
+// import androidx.compose.material.icons.filled.CameraAlt
+import com.example.weatherproject.ui.icons.MyCameraAlt
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
@@ -376,7 +377,7 @@ fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClic
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "CCTV", tint = Color.White)
+                    Icon(imageVector = Icons.Filled.MyCameraAlt, contentDescription = "CCTV", tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "주변 도로 상황", 

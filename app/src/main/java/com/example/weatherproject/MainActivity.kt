@@ -35,7 +35,7 @@ import androidx.compose.foundation.shape.CircleShape // ⬅️ '점'을 그리�
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.CameraAlt
+// import androidx.compose.material.icons.filled.CameraAlt // 제거
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.Card
@@ -83,6 +83,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherproject.ui.WeatherNavHost
 
 
+import androidx.compose.ui.graphics.Brush // 추가
+
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
@@ -100,9 +102,13 @@ class MainActivity : ComponentActivity() {
             WeatherProjectTheme {
                 val weatherState by mainViewModel.uiState.collectAsState()
                 
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFF60A5FA) // 연한 파란색
+                // 날씨에 따른 배경 그라데이션 가져오기
+                val backgroundBrush = getWeatherGradient(weatherState.currentWeather.iconUrl) // iconUrl이나 description으로 판단
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(brush = backgroundBrush)
                 ) {
                     WeatherNavHost(
                         weatherState = weatherState,
@@ -114,6 +120,52 @@ class MainActivity : ComponentActivity() {
         }
     }
     
+    // 날씨 상태(아이콘 URL 등)에 따른 그라데이션 반환
+    private fun getWeatherGradient(iconUrl: String): Brush {
+        return when {
+            iconUrl.contains("01") || iconUrl.contains("sunny") -> { // 맑음 (Sunny)
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF4FC3F7), // 상단: 밝은 하늘색
+                        Color(0xFF81D4FA)  // 하단: 더 연한 하늘색
+                    )
+                )
+            }
+            iconUrl.contains("02") || iconUrl.contains("03") || iconUrl.contains("04") || iconUrl.contains("cloud") -> { // 흐림 (Cloudy)
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF78909C), // 상단: 회색빛 파랑
+                        Color(0xFF90A4AE)  // 하단: 흐린 회색
+                    )
+                )
+            }
+            iconUrl.contains("09") || iconUrl.contains("10") || iconUrl.contains("rain") -> { // 비 (Rain)
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF37474F), // 상단: 어두운 남색
+                        Color(0xFF546E7A)  // 하단: 짙은 회색
+                    )
+                )
+            }
+            iconUrl.contains("11") || iconUrl.contains("13") || iconUrl.contains("50") -> { // 뇌우, 눈, 안개 등
+                 Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF455A64),
+                        Color(0xFF607D8B)
+                    )
+                )
+            }
+            else -> { // 기본 (Default) - 기존 파란색 계열 유지
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF60A5FA),
+                        Color(0xFF93C5FD)
+                    )
+                )
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         // 설정 화면 갔다 왔을 때 다시 체크 (선택 사항)

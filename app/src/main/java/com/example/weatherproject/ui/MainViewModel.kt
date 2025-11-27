@@ -87,14 +87,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 // 3. 날씨 API 호출 시늉 (실제로는 서버 요청)
                 kotlinx.coroutines.delay(500) 
                 
-                // 랜덤하게 온도 조금 바꿔서 갱신된 느낌 주기
+                // 랜덤 날씨 생성 (배경색 테스트용)
+                val weatherTypes = listOf(
+                    Triple("https://openweathermap.org/img/wn/01d@2x.png", "Clear Sky", "맑음"),
+                    Triple("https://openweathermap.org/img/wn/02d@2x.png", "Partly Cloudy", "구름 조금"),
+                    Triple("https://openweathermap.org/img/wn/03d@2x.png", "Cloudy", "흐림"),
+                    Triple("https://openweathermap.org/img/wn/10d@2x.png", "Rain", "비")
+                )
+                val randomWeather = weatherTypes.random()
+                
+                // 현재 온도 랜덤 변화
+                val newTempInt = (10..30).random()
+                val newTempStr = "${newTempInt}°"
+
                 val current = _uiState.value.currentWeather
                 val details = _uiState.value.weatherDetails
-                
-                // 현재 온도 파싱 및 랜덤 변화
-                val currentTempInt = current.temperature.replace("°", "").toIntOrNull() ?: 18
-                val newTempInt = currentTempInt + (-2..2).random() // -2 ~ +2도 변화
-                val newTempStr = "${newTempInt}°"
 
                 // 체감 온도 재계산
                 val windSpeed = details.wind.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
@@ -103,15 +110,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val newFeelsLikeInt = calculateFeelsLike(newTempInt.toDouble(), windSpeed, humidity)
                 val newFeelsLikeStr = "${newFeelsLikeInt}°"
                 
-                // 상태 업데이트 (CurrentWeather와 WeatherDetails 모두 갱신)
+                // 1. 현재 날씨 상태 업데이트
+                val updatedCurrentWeather = current.copy(
+                    iconUrl = randomWeather.first, 
+                    description = randomWeather.third, // 한글 설명 사용
+                    temperature = newTempStr,
+                    feelsLike = "체감: $newFeelsLikeStr"
+                )
+
+                // 2. 시간별 예보의 첫 번째 항목("지금")도 현재 날씨와 동기화
+                val currentHourlyList = _uiState.value.hourlyForecast
+                val updatedHourlyList = currentHourlyList.mapIndexed { index, item ->
+                    if (index == 0) {
+                        // "지금" 항목을 현재 날씨 데이터로 덮어쓰기
+                        item.copy(
+                            iconUrl = randomWeather.first,
+                            temperature = newTempStr,
+                            precipitation = if (randomWeather.second == "Rain") "5mm" else "0mm",
+                            pm10Status = if (randomWeather.second == "Rain") "좋음" else "보통"
+                        )
+                    } else {
+                        item // 나머지는 그대로 유지
+                    }
+                }
+
+                // 상태 업데이트 (CurrentWeather와 HourlyForecast 모두 갱신)
                 _uiState.value = _uiState.value.copy(
-                    currentWeather = current.copy(
-                        temperature = newTempStr,
-                        feelsLike = "체감: $newFeelsLikeStr"
-                    ),
+                    currentWeather = updatedCurrentWeather,
                     weatherDetails = details.copy(
                         feelsLike = newFeelsLikeStr
-                    )
+                    ),
+                    hourlyForecast = updatedHourlyList
                 )
             } catch (e: Exception) {
                 _errorEvent.emit(e.message ?: "알 수 없는 오류가 발생했습니다.")
@@ -146,6 +175,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshData()
     }
 
+    // 내 위치 기반 CCTV 검색 시뮬레이션
+    fun fetchCurrentLocationCctvs() {
+        viewModelScope.launch {
+            if (_isRefreshing.value) return@launch
+            _isRefreshing.value = true
+            
+            try {
+                // 1. 위치 탐색 시늉
+                val currentState = _uiState.value
+                // 실제로는 여기서 GPS로 lat, lon을 가져옴
+                
+                kotlinx.coroutines.delay(1500) // 위치 찾는 딜레이
+                
+                // 2. 내 위치 주변 CCTV 데이터 (가상 데이터 교체)
+                // 기존 데이터와 다르게 "내 위치" 느낌이 나는 데이터로 구성
+                val myLocationCctvs = listOf(
+                    CctvInfo("99", "내 위치 (집 앞)", "0.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                    CctvInfo("98", "동네 사거리", "0.3km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                    CctvInfo("97", "지하철역 입구", "0.7km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                    CctvInfo("96", "대로변 (버스정류장)", "1.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                    CctvInfo("95", "구청 앞 교차로", "1.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", "")
+                )
+
+                _uiState.value = currentState.copy(
+                    currentAddress = "내 위치 (자동 갱신됨)",
+                    cctvList = myLocationCctvs
+                )
+                
+            } catch (e: Exception) {
+                _errorEvent.emit("위치 정보를 가져오는데 실패했습니다.")
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
+    }
+
     fun updateWeatherByLocation(city: String, lat: Double, lon: Double) {
         val currentState = _uiState.value
         _uiState.value = currentState.copy(currentAddress = city)
@@ -154,11 +219,59 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun loadFakeData() {
-        // OpenWeather 공식 아이콘 주소
-        val iconSunny = "http://openweathermap.org/img/wn/01d@2x.png"
-        val iconPartlyCloudy = "http://openweathermap.org/img/wn/02d@2x.png"
-        val iconCloudy = "http://openweathermap.org/img/wn/03d@2x.png"
-        val iconRain = "http://openweathermap.org/img/wn/10d@2x.png"
+        // OpenWeather 공식 아이콘 주소 (HTTPS 적용)
+        val iconSunny = "https://openweathermap.org/img/wn/01d@2x.png"
+        val iconPartlyCloudy = "https://openweathermap.org/img/wn/02d@2x.png"
+        val iconCloudy = "https://openweathermap.org/img/wn/03d@2x.png"
+        val iconRain = "https://openweathermap.org/img/wn/10d@2x.png"
+
+        // 현재 시간 기준 시간별 예보 생성
+        val currentCal = java.util.Calendar.getInstance()
+        val hourlyList = mutableListOf<HourlyForecast>()
+        val hourFormat = java.text.SimpleDateFormat("HH:00", Locale.getDefault())
+
+        // "지금" 추가 (현재 날씨 상태 기반)
+        hourlyList.add(HourlyForecast("지금", iconPartlyCloudy, "18°", "0mm", "보통"))
+
+        // 이후 23시간 추가 (랜덤 데이터)
+        for (i in 1..23) {
+            currentCal.add(java.util.Calendar.HOUR_OF_DAY, 1)
+            val timeStr = hourFormat.format(currentCal.time)
+            
+            // 밤/낮에 따라 아이콘 대충 변화 주기 (오전 6시~오후 6시: 해, 그 외: 달/구름)
+            val hour = currentCal.get(java.util.Calendar.HOUR_OF_DAY)
+            val icon = if (hour in 6..18) iconSunny else iconCloudy
+            val temp = "${(10..22).random()}°" // 온도는 10~22도 사이 랜덤
+            
+            // 강수량도 가끔 있게
+            val rain = if ((0..5).random() == 0) "5mm" else "0mm"
+            val pm = if (rain != "0mm") "좋음" else "보통"
+            
+            hourlyList.add(HourlyForecast(timeStr, icon, temp, rain, pm))
+        }
+
+        // 현재 날짜 기준 주간 예보 생성 (랜덤 데이터)
+        val weeklyCal = java.util.Calendar.getInstance()
+        val weeklyList = mutableListOf<WeeklyForecast>()
+        val dateFormat = java.text.SimpleDateFormat("MM/dd (E)", Locale.getDefault()) 
+
+        for (i in 0..6) {
+            val dateStr = dateFormat.format(weeklyCal.time)
+            // 3일에 한번 비, 2일에 한번 흐림 등 랜덤 패턴
+            val icon = if (i % 3 == 0) iconRain else if (i % 2 == 0) iconCloudy else iconSunny
+            
+            weeklyList.add(
+                WeeklyForecast(
+                    date = dateStr,
+                    iconUrl = icon,
+                    pm10Status = "미세먼지 ${listOf("좋음", "보통", "나쁨").random()}",
+                    precipitation = "${(0..40).random()}mm",
+                    minTemp = "${(5..15).random()}°",
+                    maxTemp = "${(18..25).random()}°"
+                )
+            )
+            weeklyCal.add(java.util.Calendar.DAY_OF_YEAR, 1)
+        }
 
         _uiState.value = WeatherState(
             currentAddress = "서울, 대한민국",
@@ -166,7 +279,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             currentWeather = CurrentWeather(
                 iconUrl = iconPartlyCloudy,
                 temperature = "18°",
-                description = "Partly Cloudy",
+                description = "구름 조금",
                 maxTemp = "최고: 22°",
                 minTemp = "14°",
                 feelsLike = "체감: 17°"
@@ -184,36 +297,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 uvIndex = "5"
             ),
 
-            hourlyForecast = listOf(
-                HourlyForecast("지금", iconPartlyCloudy, "18°", "0mm", "보통"),
-                HourlyForecast("15:00", iconSunny, "20°", "0mm", "보통"),
-                HourlyForecast("16:00", iconSunny, "21°", "0mm", "보통"),
-                HourlyForecast("17:00", iconSunny, "21°", "0mm", "보통"),
-                HourlyForecast("18:00", iconCloudy, "19°", "10mm", "보통"),
-                HourlyForecast("19:00", iconRain, "17°", "20mm", "좋음"),
-                HourlyForecast("20:00", iconRain, "16°", "30mm", "좋음"),
-                HourlyForecast("21:00", iconCloudy, "15°", "10mm", "좋음"),
-                HourlyForecast("22:00", iconPartlyCloudy, "14°", "0mm", "좋음"),
-                HourlyForecast("23:00", iconPartlyCloudy, "13°", "0mm", "좋음"),
-                HourlyForecast("00:00", iconPartlyCloudy, "12°", "0mm", "좋음"),
-                HourlyForecast("01:00", iconPartlyCloudy, "11°", "0mm", "좋음"),
-                HourlyForecast("02:00", iconPartlyCloudy, "10°", "0mm", "좋음"),
-                HourlyForecast("03:00", iconSunny, "9°", "0mm", "좋음"),
-                HourlyForecast("04:00", iconSunny, "8°", "0mm", "좋음"),
-                HourlyForecast("05:00", iconSunny, "8°", "0mm", "좋음"),
-                HourlyForecast("06:00", iconPartlyCloudy, "9°", "0mm", "보통"),
-                HourlyForecast("07:00", iconSunny, "11°", "0mm", "보통")
-            ),
+            hourlyForecast = hourlyList,
 
-            weeklyForecast = listOf(
-                WeeklyForecast(date = "11/17 (월)", iconSunny, "미세먼지 보통", "0mm", "15°", "23°"),
-                WeeklyForecast(date = "11/18 (화)", iconPartlyCloudy, "미세먼지 나쁨", "0mm", "16°", "24°"),
-                WeeklyForecast(date = "11/19 (수)", iconCloudy, "미세먼지 나쁨", "0mm", "14°", "22°"),
-                WeeklyForecast(date = "11/20 (목)", iconRain, "미세먼지 좋음", "25mm", "13°", "20°"),
-                WeeklyForecast(date = "11/21 (금)", iconRain, "미세먼지 좋음", "40mm", "12°", "19°"),
-                WeeklyForecast(date = "11/22 (토)", iconSunny, "미세먼지 보통", "0mm", "13°", "22°"),
-                WeeklyForecast(date = "11/23 (일)", iconPartlyCloudy, "미세먼지 보통", "0mm", "15°", "24°")
-            ),
+            weeklyForecast = weeklyList,
             
             // ⭐️ 근처 CCTV (더미 데이터 12개)
             cctvList = listOf(

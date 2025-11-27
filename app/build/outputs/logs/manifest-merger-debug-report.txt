@@ -30,7 +30,6 @@ MERGED from [androidx.compose.animation:animation:1.3.3] C:\Users\jueun\.gradle\
 MERGED from [androidx.compose.foundation:foundation-layout:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\8b4a7fb6a64cc5729be1d5f7830e38c4\transformed\foundation-layout-1.3.1\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.accompanist:accompanist-drawablepainter:0.25.1] C:\Users\jueun\.gradle\caches\8.13\transforms\9441e6261bd81de2e2ef4c603f1ebc4e\transformed\accompanist-drawablepainter-0.25.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.compose.animation:animation-core:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\db8fd12baeda06e4e5f3195e2f983041\transformed\animation-core-1.3.3\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.compose.material:material-icons-extended:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\a7fd7350c6254c930b4db43dbb5095b4\transformed\material-icons-extended-1.3.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.material:material-icons-core:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\016bde1ce1bc9b92c21d771805050c4d\transformed\material-icons-core-1.3.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.ui:ui-tooling-data:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\f9544e13d11aaecc68ca2fe6aa151539\transformed\ui-tooling-data-1.3.3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.ui:ui:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\52555ca39baab884b57431fa8662e57f\transformed\ui-1.3.3\AndroidManifest.xml:17:1-22:12
@@ -218,8 +217,6 @@ MERGED from [com.google.accompanist:accompanist-drawablepainter:0.25.1] C:\Users
 MERGED from [com.google.accompanist:accompanist-drawablepainter:0.25.1] C:\Users\jueun\.gradle\caches\8.13\transforms\9441e6261bd81de2e2ef4c603f1ebc4e\transformed\accompanist-drawablepainter-0.25.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.animation:animation-core:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\db8fd12baeda06e4e5f3195e2f983041\transformed\animation-core-1.3.3\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.animation:animation-core:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\db8fd12baeda06e4e5f3195e2f983041\transformed\animation-core-1.3.3\AndroidManifest.xml:20:5-44
-MERGED from [androidx.compose.material:material-icons-extended:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\a7fd7350c6254c930b4db43dbb5095b4\transformed\material-icons-extended-1.3.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.compose.material:material-icons-extended:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\a7fd7350c6254c930b4db43dbb5095b4\transformed\material-icons-extended-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material:material-icons-core:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\016bde1ce1bc9b92c21d771805050c4d\transformed\material-icons-core-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material:material-icons-core:1.3.1] C:\Users\jueun\.gradle\caches\8.13\transforms\016bde1ce1bc9b92c21d771805050c4d\transformed\material-icons-core-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.ui:ui-tooling-data:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\f9544e13d11aaecc68ca2fe6aa151539\transformed\ui-tooling-data-1.3.3\AndroidManifest.xml:20:5-44

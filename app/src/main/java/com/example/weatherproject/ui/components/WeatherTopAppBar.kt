@@ -43,41 +43,46 @@ fun WeatherTopAppBar(
             .zIndex(1f)
     ) {
         Column {
-            TopAppBar(
-                backgroundColor = Color.Transparent,
-                contentColor = Color.White,
-                elevation = 0.dp,
-                title = {
-                    OutlinedTextField(
-                        value = searchText,
-                        onValueChange = { searchViewModel.onSearchTextChange(it) },
-                        label = { Text("도시 검색", color = Color.White.copy(alpha = 0.7f)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search), // ⬅️ 검색 버튼 표시
-                        keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }), // ⬅️ 클릭 시 검색 실행
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = Color.White,
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
-                            cursorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.White.copy(alpha = 0.7f)
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 8.dp)
-                    )
-                },
-                actions = {
-                    // 중복 아이콘 삭제됨 (LocationOn 하나만 유지)
+            // TopAppBar 대신 커스텀 Row 사용 (높이 제한 해결)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp) // 넉넉한 높이 확보
+                    .padding(horizontal = 16.dp, vertical = 8.dp), // 상하좌우 여백
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // 검색 입력창 (가중치 부여로 남은 공간 차지)
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = { searchViewModel.onSearchTextChange(it) },
+                    label = { Text("도시 검색", color = Color.White.copy(alpha = 0.7f)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
+                        cursorColor = Color.White,
+                        focusedLabelColor = Color.White,
+                        unfocusedLabelColor = Color.White.copy(alpha = 0.7f)
+                    ),
+                    modifier = Modifier
+                        .weight(1f) // 아이콘 공간 제외하고 꽉 채우기
+                        .padding(end = 8.dp)
+                )
+
+                // 아이콘 버튼들 (Row로 묶음)
+                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                     IconButton(onClick = { viewModel.refreshMyLocation() }) {
-                        Icon(Icons.Default.LocationOn, "현재 위치")
+                        Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)
                     }
                     IconButton(onClick = { navController.navigate("alarm_list") }) {
-                        Icon(Icons.Default.Notifications, "알림 설정")
+                        Icon(Icons.Default.Notifications, "알림 설정", tint = Color.White)
                     }
                 }
-            )
+            }
 
             if (searchResults.isNotEmpty()) {
                 LazyColumn(
