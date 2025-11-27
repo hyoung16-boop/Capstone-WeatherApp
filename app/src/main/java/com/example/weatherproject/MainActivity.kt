@@ -71,6 +71,7 @@ import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.data.WeeklyForecast
 import com.example.weatherproject.ui.MainViewModel
+import com.example.weatherproject.ui.SearchViewModel
 
 import com.example.weatherproject.ui.theme.WeatherProjectTheme
 import androidx.navigation.NavController
@@ -84,27 +85,49 @@ import com.example.weatherproject.ui.WeatherNavHost
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 앱 시작 시 권한 및 GPS 체크
+        checkLocationSettings()
+        
         setContent {
             val context = LocalContext.current
 
-
-
             WeatherProjectTheme {
-                val weatherState by viewModel.uiState.collectAsState()
-                // Navigation.kt의 WeatherNavHost를 직접 호출하는 대신, 여기에서 NavController를 생성하고 WeatherApp으로 전달
-                val navController = rememberNavController()
-
+                val weatherState by mainViewModel.uiState.collectAsState()
+                
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xFF60A5FA) // 연한 파란색
                 ) {
-                    WeatherNavHost(weatherState = weatherState, viewModel = viewModel)
+                    WeatherNavHost(
+                        weatherState = weatherState,
+                        viewModel = mainViewModel,
+                        searchViewModel = searchViewModel
+                    )
                 }
             }
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // 설정 화면 갔다 왔을 때 다시 체크 (선택 사항)
+        // if (!com.example.weatherproject.util.LocationPermissionHelper.isGpsEnabled(this)) { ... }
+    }
+
+    private fun checkLocationSettings() {
+        if (!com.example.weatherproject.util.LocationPermissionHelper.hasLocationPermission(this)) {
+            com.example.weatherproject.util.LocationPermissionHelper.requestLocationPermission(this)
+        } else if (!com.example.weatherproject.util.LocationPermissionHelper.isGpsEnabled(this)) {
+            com.example.weatherproject.util.LocationPermissionHelper.showGpsSettingDialog(this)
+        } else {
+            // 권한도 있고 GPS도 켜져 있으면 -> 초기 데이터 로드 (현재는 가짜 데이터라 자동 로드됨)
+            // mainViewModel.refreshData() 
         }
     }
     companion object {

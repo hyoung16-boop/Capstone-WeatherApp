@@ -4,11 +4,12 @@ package com.example.weatherproject.data
 
 // 메인 화면 전체의 상태를 담는 '틀'
 data class WeatherState(
-    val currentAddress: String = "서울, 대한민국",
+    val currentAddress: String = "로딩 중...",
     val currentWeather: CurrentWeather = CurrentWeather(),
     val weatherDetails: WeatherDetails = WeatherDetails(),
     val hourlyForecast: List<HourlyForecast> = emptyList(),
-    val weeklyForecast: List<WeeklyForecast> = emptyList()
+    val weeklyForecast: List<WeeklyForecast> = emptyList(),
+    val cctvList: List<CctvInfo> = emptyList() // 추가된 필드
 )
 
 // "현재 날씨" 카드 '틀'

@@ -1,5 +1,3 @@
-// MainViewModel.kt (전체 코드 - 18시간 예보 + 검색 기능 포함)
-
 package com.example.weatherproject.ui
 
 import android.app.Application
@@ -20,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
+import com.example.weatherproject.data.CctvInfo
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,14 +27,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // 메인 날씨 상태 (UI가 바라보는 데이터)
     private val _uiState = MutableStateFlow(WeatherState())
     val uiState: StateFlow<WeatherState> = _uiState
-
-    // 검색 결과 리스트
-    private val _searchResults = MutableStateFlow<List<String>>(emptyList())
-    val searchResults = _searchResults.asStateFlow()
-
-    // 사용자가 입력 중인 검색어
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
+    
+    // 새로고침 상태
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
 
     // 체질 보정값
     private val _tempAdjustment = MutableStateFlow(0)
@@ -64,69 +59,46 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _showSetupDialog.value = false
     }
 
-    // ⭐️ 검색어가 바뀔 때마다 호출되는 함수
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
+    // 날씨 및 위치 데이터 통합 새로고침
+    fun refreshData() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            
+            // 1. 위치 갱신 시늉 (실제로는 GPS 요청)
+            val currentState = _uiState.value
+            _uiState.value = currentState.copy(currentAddress = "위치 재탐색 중...")
+            
+            kotlinx.coroutines.delay(1000) // GPS 딜레이
+            
+            _uiState.value = currentState.copy(currentAddress = "서울, 대한민국 (갱신됨)")
 
-        if (text.length > 0) {
-            // 가짜 검색 결과 (나중에 API 연동 시 교체)
-            _searchResults.value = listOf(
-                "$text",
-                "$text 시",
-                "$text 구",
-                "$text 동"
+            // 2. 날씨 API 호출 시늉 (실제로는 서버 요청)
+            kotlinx.coroutines.delay(500) // API 딜레이
+            
+            // 랜덤하게 온도 조금 바꿔서 갱신된 느낌 주기
+            val current = _uiState.value.currentWeather
+            val newTemp = (current.temperature.replace("°", "").toInt() + (-1..1).random()).toString() + "°"
+            
+            _uiState.value = _uiState.value.copy(
+                currentWeather = current.copy(temperature = newTemp)
             )
-        } else {
-            _searchResults.value = emptyList()
+            
+            _isRefreshing.value = false
         }
     }
 
-    // ⭐️ 도시를 클릭했을 때 호출되는 함수
-    fun onCitySelected(context: Context, city: String) {
-        _searchText.value = "" // 검색창 비우기
-        _searchResults.value = emptyList() // 리스트 숨기기
+    fun refreshMyLocation() {
+        refreshData()
+    }
 
-        // (가짜) 선택한 도시로 주소 업데이트
+    fun updateWeatherByLocation(city: String, lat: Double, lon: Double) {
         val currentState = _uiState.value
         _uiState.value = currentState.copy(currentAddress = city)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val coordinates = getCoordinatesFromCityName(context, city)
-            if (coordinates != null) {
-                Log.d("MainViewModel", "Selected City: $city, Lat: ${coordinates.first}, Lon: ${coordinates.second}")
-                // TODO: 여기서 위도(coordinates.first), 경도(coordinates.second)를 사용하여 날씨 API 호출
-                // searchWeatherByCoordinates(coordinates.first, coordinates.second)
-            } else {
-                Log.e("MainViewModel", "Failed to get coordinates for $city")
-            }
-        }
+        Log.d("MainViewModel", "Weather update requested for: $city ($lat, $lon)")
+        // TODO: API Call
     }
 
-    // Geocoder를 사용하여 주소를 위도, 경도로 변환하는 함수
-    private fun getCoordinatesFromCityName(context: Context, cityName: String): Pair<Double, Double>? {
-        return try {
-            // Geocoder가 존재하는지 확인 (일부 기기 미지원 가능성)
-            if (!Geocoder.isPresent()) return null
-
-            val geocoder = Geocoder(context, Locale.KOREA)
-            // 안드로이드 13(API 33) 이상부터는 리스너 방식이 권장되지만, 하위 호환성을 위해 동기 방식 사용 (Dispatchers.IO에서 호출)
-            val addresses = geocoder.getFromLocationName(cityName, 1)
-            
-            if (!addresses.isNullOrEmpty()) {
-                val location = addresses[0]
-                Pair(location.latitude, location.longitude)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    // 가짜 데이터 로드 (UI 테스트용)
     private fun loadFakeData() {
-
         // OpenWeather 공식 아이콘 주소
         val iconSunny = "http://openweathermap.org/img/wn/01d@2x.png"
         val iconPartlyCloudy = "http://openweathermap.org/img/wn/02d@2x.png"
@@ -157,7 +129,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 uvIndex = "5"
             ),
 
-            // ⭐️ 시간별 예보 (18시간으로 늘림)
             hourlyForecast = listOf(
                 HourlyForecast("지금", iconPartlyCloudy, "18°", "0mm", "보통"),
                 HourlyForecast("15:00", iconSunny, "20°", "0mm", "보통"),
@@ -171,7 +142,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 HourlyForecast("23:00", iconPartlyCloudy, "13°", "0mm", "좋음"),
                 HourlyForecast("00:00", iconPartlyCloudy, "12°", "0mm", "좋음"),
                 HourlyForecast("01:00", iconPartlyCloudy, "11°", "0mm", "좋음"),
-                // ⭐️ 추가된 6시간 (새벽~아침)
                 HourlyForecast("02:00", iconPartlyCloudy, "10°", "0mm", "좋음"),
                 HourlyForecast("03:00", iconSunny, "9°", "0mm", "좋음"),
                 HourlyForecast("04:00", iconSunny, "8°", "0mm", "좋음"),
@@ -180,7 +150,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 HourlyForecast("07:00", iconSunny, "11°", "0mm", "보통")
             ),
 
-            // 주간 예보 (7일)
             weeklyForecast = listOf(
                 WeeklyForecast(date = "11/17 (월)", iconSunny, "미세먼지 보통", "0mm", "15°", "23°"),
                 WeeklyForecast(date = "11/18 (화)", iconPartlyCloudy, "미세먼지 나쁨", "0mm", "16°", "24°"),
@@ -189,19 +158,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 WeeklyForecast(date = "11/21 (금)", iconRain, "미세먼지 좋음", "40mm", "12°", "19°"),
                 WeeklyForecast(date = "11/22 (토)", iconSunny, "미세먼지 보통", "0mm", "13°", "22°"),
                 WeeklyForecast(date = "11/23 (일)", iconPartlyCloudy, "미세먼지 보통", "0mm", "15°", "24°")
+            ),
+            
+            // ⭐️ 근처 CCTV (더미 데이터 12개)
+            cctvList = listOf(
+                CctvInfo("1", "강남대로 (신논현역)", "0.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("2", "테헤란로 (역삼역)", "0.8km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("3", "경부고속도로 (반포IC)", "1.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("4", "올림픽대로 (청담대교)", "2.3km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("5", "강변북로 (동작대교)", "3.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("6", "잠실대교 남단", "4.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("7", "한남대교 북단", "5.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("8", "성수대교 남단", "5.8km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("9", "영동대교 북단", "6.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("10", "청담대교 남단", "6.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("11", "분당수서로 (탄천IC)", "7.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
+                CctvInfo("12", "서울외곽순환 (송파IC)", "8.0km", "https://www.utic.go.kr/img/cctv_sample.jpg", "")
             )
         )
-    }
-
-    // 위치 담당자용 껍데기 함수
-    fun refreshMyLocation() {
-        // TODO: GPS 로직 구현 필요
-        val currentState = _uiState.value
-        _uiState.value = currentState.copy(currentAddress = "서울시 강남구 (갱신됨)")
-    }
-
-    // API 담당자용 껍데기 함수
-    fun searchWeatherByCity(city: String) {
-        // TODO: API 로직 구현 필요
     }
 }
