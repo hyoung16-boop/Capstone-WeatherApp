@@ -58,100 +58,101 @@
 33-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:17:9-54
 34        android:supportsRtl="true"
 34-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:18:9-35
-35        android:theme="@style/Theme.WeatherProject" >
-35-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:19:9-52
-36        <activity
-36-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:20:9-30:20
-37            android:name="com.example.weatherproject.MainActivity"
-37-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:21:13-41
-38            android:exported="true"
-38-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:22:13-36
-39            android:label="@string/app_name"
-39-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:23:13-45
-40            android:theme="@style/Theme.WeatherProject" >
-40-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:24:13-56
-41            <intent-filter>
-41-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:25:13-29:29
-42                <action android:name="android.intent.action.MAIN" />
-42-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:17-69
-42-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:25-66
-43
-44                <category android:name="android.intent.category.LAUNCHER" />
-44-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:28:17-77
-44-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:28:27-74
-45            </intent-filter>
-46        </activity>
-47
-48        <receiver
-48-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:32:9-34:40
-49            android:name="com.example.weatherproject.receiver.AlarmReceiver"
-49-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:33:13-51
-50            android:exported="false" />
-50-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:34:13-37
-51
-52        <activity
-52-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:23:9-25:39
-53            android:name="androidx.compose.ui.tooling.PreviewActivity"
-53-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:24:13-71
-54            android:exported="true" />
-54-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:25:13-36
-55        <activity
-55-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:23:9-25:39
-56            android:name="androidx.activity.ComponentActivity"
-56-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:24:13-63
-57            android:exported="true" />
-57-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:25:13-36
-58
-59        <service
-59-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:25:9-28:40
-60            android:name="androidx.room.MultiInstanceInvalidationService"
-60-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:26:13-74
-61            android:directBootAware="true"
-61-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:27:13-43
-62            android:exported="false" />
-62-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:28:13-37
-63
-64        <provider
-64-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:25:9-33:20
-65            android:name="androidx.startup.InitializationProvider"
-65-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:26:13-67
-66            android:authorities="com.example.weatherproject.androidx-startup"
-66-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:27:13-68
-67            android:exported="false" >
-67-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:28:13-37
-68            <meta-data
-68-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:30:13-32:52
-69                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-69-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:31:17-85
-70                android:value="androidx.startup" />
-70-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:32:17-49
-71        </provider>
-72
-73        <receiver
-73-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:35:9-47:20
-74            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-74-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:36:13-76
-75            android:directBootAware="false"
-75-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:37:13-44
-76            android:enabled="true"
-76-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:38:13-35
-77            android:exported="true"
-77-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:39:13-36
-78            android:permission="android.permission.DUMP" >
-78-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:40:13-57
-79            <intent-filter>
-79-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:41:13-43:29
-80                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-80-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:42:17-91
-80-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:42:25-88
-81            </intent-filter>
-82            <intent-filter>
-82-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:44:13-46:29
-83                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-83-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:45:17-85
-83-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:45:25-82
-84            </intent-filter>
-85        </receiver>
-86    </application>
-87
-88</manifest>
+35        android:testOnly="true"
+36        android:theme="@style/Theme.WeatherProject" >
+36-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:19:9-52
+37        <activity
+37-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:20:9-30:20
+38            android:name="com.example.weatherproject.MainActivity"
+38-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:21:13-41
+39            android:exported="true"
+39-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:22:13-36
+40            android:label="@string/app_name"
+40-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:23:13-45
+41            android:theme="@style/Theme.WeatherProject" >
+41-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:24:13-56
+42            <intent-filter>
+42-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:25:13-29:29
+43                <action android:name="android.intent.action.MAIN" />
+43-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:17-69
+43-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:26:25-66
+44
+45                <category android:name="android.intent.category.LAUNCHER" />
+45-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:28:17-77
+45-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:28:27-74
+46            </intent-filter>
+47        </activity>
+48
+49        <receiver
+49-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:32:9-34:40
+50            android:name="com.example.weatherproject.receiver.AlarmReceiver"
+50-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:33:13-51
+51            android:exported="false" />
+51-->C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:34:13-37
+52
+53        <activity
+53-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:23:9-25:39
+54            android:name="androidx.compose.ui.tooling.PreviewActivity"
+54-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:24:13-71
+55            android:exported="true" />
+55-->[androidx.compose.ui:ui-tooling:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\940a1cde811878a74be798e5ac8f8de1\transformed\ui-tooling-1.3.3\AndroidManifest.xml:25:13-36
+56        <activity
+56-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:23:9-25:39
+57            android:name="androidx.activity.ComponentActivity"
+57-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:24:13-63
+58            android:exported="true" />
+58-->[androidx.compose.ui:ui-test-manifest:1.3.3] C:\Users\jueun\.gradle\caches\8.13\transforms\a6d626ede8cd54748c8629757143d247\transformed\ui-test-manifest-1.3.3\AndroidManifest.xml:25:13-36
+59
+60        <service
+60-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:25:9-28:40
+61            android:name="androidx.room.MultiInstanceInvalidationService"
+61-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:26:13-74
+62            android:directBootAware="true"
+62-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:27:13-43
+63            android:exported="false" />
+63-->[androidx.room:room-runtime:2.4.3] C:\Users\jueun\.gradle\caches\8.13\transforms\b0735362cf40e3b22deb6a6911a45868\transformed\room-runtime-2.4.3\AndroidManifest.xml:28:13-37
+64
+65        <provider
+65-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:25:9-33:20
+66            android:name="androidx.startup.InitializationProvider"
+66-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:26:13-67
+67            android:authorities="com.example.weatherproject.androidx-startup"
+67-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:27:13-68
+68            android:exported="false" >
+68-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:28:13-37
+69            <meta-data
+69-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:30:13-32:52
+70                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+70-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:31:17-85
+71                android:value="androidx.startup" />
+71-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:32:17-49
+72        </provider>
+73
+74        <receiver
+74-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:35:9-47:20
+75            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+75-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:36:13-76
+76            android:directBootAware="false"
+76-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:37:13-44
+77            android:enabled="true"
+77-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:38:13-35
+78            android:exported="true"
+78-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:39:13-36
+79            android:permission="android.permission.DUMP" >
+79-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:40:13-57
+80            <intent-filter>
+80-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:41:13-43:29
+81                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+81-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:42:17-91
+81-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:42:25-88
+82            </intent-filter>
+83            <intent-filter>
+83-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:44:13-46:29
+84                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+84-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:45:17-85
+84-->[androidx.profileinstaller:profileinstaller:1.2.1] C:\Users\jueun\.gradle\caches\8.13\transforms\f01d1d13eaa775866aa152ab137c9dcf\transformed\profileinstaller-1.2.1\AndroidManifest.xml:45:25-82
+85            </intent-filter>
+86        </receiver>
+87    </application>
+88
+89</manifest>

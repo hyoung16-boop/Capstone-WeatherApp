@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 import com.example.weatherproject.data.CctvInfo
@@ -40,6 +41,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _showSetupDialog = MutableStateFlow(false)
     val showSetupDialog = _showSetupDialog.asStateFlow()
 
+    // 에러 메시지 (일회성 이벤트)
+    private val _errorEvent = kotlinx.coroutines.flow.MutableSharedFlow<String>()
+    val errorEvent = _errorEvent.asSharedFlow()
+
     init {
         loadFakeData()
         checkUserPreference()
@@ -62,28 +67,78 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // 날씨 및 위치 데이터 통합 새로고침
     fun refreshData() {
         viewModelScope.launch {
+            if (_isRefreshing.value) return@launch // 이미 진행 중이면 무시
             _isRefreshing.value = true
             
-            // 1. 위치 갱신 시늉 (실제로는 GPS 요청)
-            val currentState = _uiState.value
-            _uiState.value = currentState.copy(currentAddress = "위치 재탐색 중...")
-            
-            kotlinx.coroutines.delay(1000) // GPS 딜레이
-            
-            _uiState.value = currentState.copy(currentAddress = "서울, 대한민국 (갱신됨)")
+            try {
+                // 1. 위치 갱신 시늉 (실제로는 GPS 요청)
+                val currentState = _uiState.value
+                // 로딩 중임을 알리기 위해 주소만 살짝 변경하거나, UI에서 isRefreshing으로 처리
+                
+                kotlinx.coroutines.delay(2000) // 2초 딜레이 (로딩 시뮬레이션)
 
-            // 2. 날씨 API 호출 시늉 (실제로는 서버 요청)
-            kotlinx.coroutines.delay(500) // API 딜레이
-            
-            // 랜덤하게 온도 조금 바꿔서 갱신된 느낌 주기
-            val current = _uiState.value.currentWeather
-            val newTemp = (current.temperature.replace("°", "").toInt() + (-1..1).random()).toString() + "°"
-            
-            _uiState.value = _uiState.value.copy(
-                currentWeather = current.copy(temperature = newTemp)
-            )
-            
-            _isRefreshing.value = false
+                // 2. 랜덤 에러 발생 테스트 (20% 확률)
+                if ((1..5).random() == 1) {
+                    throw Exception("네트워크 연결이 불안정합니다. 다시 시도해주세요.")
+                }
+                
+                _uiState.value = currentState.copy(currentAddress = "서울, 대한민국 (갱신됨)")
+
+                // 3. 날씨 API 호출 시늉 (실제로는 서버 요청)
+                kotlinx.coroutines.delay(500) 
+                
+                // 랜덤하게 온도 조금 바꿔서 갱신된 느낌 주기
+                val current = _uiState.value.currentWeather
+                val details = _uiState.value.weatherDetails
+                
+                // 현재 온도 파싱 및 랜덤 변화
+                val currentTempInt = current.temperature.replace("°", "").toIntOrNull() ?: 18
+                val newTempInt = currentTempInt + (-2..2).random() // -2 ~ +2도 변화
+                val newTempStr = "${newTempInt}°"
+
+                // 체감 온도 재계산
+                val windSpeed = details.wind.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
+                val humidity = details.humidity.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
+                
+                val newFeelsLikeInt = calculateFeelsLike(newTempInt.toDouble(), windSpeed, humidity)
+                val newFeelsLikeStr = "${newFeelsLikeInt}°"
+                
+                // 상태 업데이트 (CurrentWeather와 WeatherDetails 모두 갱신)
+                _uiState.value = _uiState.value.copy(
+                    currentWeather = current.copy(
+                        temperature = newTempStr,
+                        feelsLike = "체감: $newFeelsLikeStr"
+                    ),
+                    weatherDetails = details.copy(
+                        feelsLike = newFeelsLikeStr
+                    )
+                )
+            } catch (e: Exception) {
+                _errorEvent.emit(e.message ?: "알 수 없는 오류가 발생했습니다.")
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
+    }
+
+    // 체감 온도 계산 로직 (약식)
+    private fun calculateFeelsLike(temp: Double, wind: Double, humidity: Double): Int {
+        return when {
+            // 겨울철 (10도 이하): 바람이 불수록 체감온도 뚝 떨어짐 (Wind Chill)
+            temp <= 10.0 -> {
+                val v = if(wind < 4.8) 4.8 else wind
+                val vPow = Math.pow(v, 0.16)
+                (13.12 + 0.6215 * temp - 11.37 * vPow + 0.3965 * temp * vPow).toInt()
+            }
+            // 여름철 (25도 이상): 습도가 높으면 체감온도 상승
+            temp >= 25.0 -> {
+                val humidityEffect = (humidity - 40) / 10.0 * 0.5
+                (temp + humidityEffect).toInt()
+            }
+            // 그 외: 바람 불면 약간 쌀쌀하게
+            else -> {
+                (temp - (wind / 10.0)).toInt()
+            }
         }
     }
 

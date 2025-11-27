@@ -1,5 +1,10 @@
 package com.example.weatherproject.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,7 +48,20 @@ fun HomeScreen(
     
     // 새로고침 상태
     val isRefreshing by viewModel.isRefreshing.collectAsState()
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refreshData() })
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing, 
+        onRefresh = { viewModel.refreshData() }
+    )
+    
+    // 에러 스낵바 처리를 위한 상태
+    val scaffoldState = rememberScaffoldState()
+    
+    // 에러 이벤트 감지
+    LaunchedEffect(true) {
+        viewModel.errorEvent.collect { message ->
+            scaffoldState.snackbarHostState.showSnackbar(message)
+        }
+    }
     
     // 카드 확장 상태 (화면 이동 대신 사용)
     var isDetailExpanded by remember { mutableStateOf(false) }
@@ -56,6 +74,7 @@ fun HomeScreen(
     }
 
     Scaffold(
+        scaffoldState = scaffoldState, // 스낵바 사용을 위해 추가
         topBar = { 
             WeatherTopAppBar(
                 viewModel = viewModel, 
@@ -78,6 +97,26 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                // 로딩 중일 때 안내 텍스트 표시 (긴 로딩 대응)
+                AnimatedVisibility(
+                    visible = isRefreshing,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "최신 날씨 정보를 불러오는 중입니다...",
+                            color = Color.White,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+
                 // 현재 날씨 (클릭 시 상세 정보 펼쳐짐)
                 CurrentWeatherCard(
                     weather = weatherState.currentWeather,
@@ -119,7 +158,8 @@ fun HomeScreen(
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
                 backgroundColor = Color.White, // 배경은 깔끔한 흰색
-                contentColor = Color(0xFF2563EB) // 아이콘은 진한 파란색
+                contentColor = Color(0xFF2563EB), // 아이콘은 진한 파란색
+                scale = true // ⬅️ 안 당길 때는 숨기기 (크기 0)
             )
         }
     }

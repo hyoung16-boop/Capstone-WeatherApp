@@ -101,8 +101,16 @@ fun CurrentWeatherCard(
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(text = weather.description, fontSize = 16.sp, color = Color.White)
-                    Text(text = "${weather.maxTemp} / ${weather.minTemp}", fontSize = 16.sp, color = Color.White)
+                    Text(
+                        text = weather.description, 
+                        fontSize = 16.sp, 
+                        color = Color.White
+                    )
+                    Text(
+                        text = "${weather.maxTemp} / ${weather.minTemp}", 
+                        fontSize = 16.sp, 
+                        color = Color.White
+                    )
                     Text(text = weather.feelsLike, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
                 }
             }
@@ -356,36 +364,71 @@ fun PmGaugeItem(label: String, value: String) {
 
 @Composable
 fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), backgroundColor = Color.White.copy(alpha = 0.3f), elevation = 0.dp) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
+        backgroundColor = Color.White.copy(alpha = 0.3f), 
+        elevation = 0.dp
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(), 
+                horizontalArrangement = Arrangement.SpaceBetween, 
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Filled.CameraAlt, contentDescription = "CCTV", tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "주변 도로 상황", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(
+                        text = "주변 도로 상황", 
+                        fontSize = 18.sp, 
+                        fontWeight = FontWeight.Bold, 
+                        color = Color.White
+                    )
                 }
-                Text(text = "더보기 >", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f), modifier = Modifier.clickable { onMoreClick() })
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(cctvList) { cctv -> CctvThumbnailItem(cctv = cctv, onClick = { onCctvClick(cctv) }) }
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // 텍스트 리스트 형태 (썸네일 제거)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                cctvList.forEach { cctv ->
+                     Row(
+                         modifier = Modifier
+                             .fillMaxWidth()
+                             .background(Color.Black.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
+                             .clickable { onCctvClick(cctv) } // 여기서는 상세 페이지 이동이 아니므로, 그냥 둬도 무방하나 
+                                                              // 사용자가 '목록으로 가야 볼 수 있다'는 걸 인지하도록
+                                                              // onMoreClick()을 호출하게 하거나, 토스트를 띄울 수도 있음.
+                                                              // 현재 로직상 onCctvClick은 동작 X (TODO 상태). 
+                                                              // UX상 목록 화면으로 가는게 자연스러움.
+                             .padding(12.dp),
+                         horizontalArrangement = Arrangement.SpaceBetween,
+                         verticalAlignment = Alignment.CenterVertically
+                     ) {
+                         Text(text = cctv.roadName, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                         Text(text = cctv.distance, color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp)
+                     }
+                }
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                // 전체 보기 버튼
+                Button(
+                    onClick = { onMoreClick() },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White.copy(alpha = 0.2f)),
+                    elevation = ButtonDefaults.elevation(0.dp)
+                ) {
+                    Text("CCTV 목록 전체 보기", color = Color.White)
+                }
             }
         }
     }
 }
 
-@Composable
-fun CctvThumbnailItem(cctv: CctvInfo, onClick: () -> Unit) {
-    Column(modifier = Modifier.width(140.dp).clickable { onClick() }) {
-        Box(modifier = Modifier.height(80.dp).fillMaxWidth().background(Color.Black.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp)), contentAlignment = Alignment.Center) {
-            Icon(imageVector = Icons.Default.CameraAlt, contentDescription = null, tint = Color.White.copy(alpha = 0.5f), modifier = Modifier.size(32.dp))
-            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "재생", tint = Color.White, modifier = Modifier.size(24.dp))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = cctv.roadName, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-        Text(text = cctv.distance, fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f))
-    }
-}
+// CctvThumbnailItem은 더 이상 사용하지 않으므로 삭제하거나 주석 처리 가능하지만, 
+// 깔끔하게 제거하고 필요한 경우 CctvScreen에서 자체적으로 구현하도록 함.
+// (현재 CctvScreen은 자체 구현체를 사용하고 있지 않고 이 파일의 컴포넌트를 참조하지 않는 것으로 보임 - CctvListItem 별도 존재)
+
 
 @Composable
 fun ClothingRecommendationCard(feelsLike: String, tempAdjustment: Int) {
