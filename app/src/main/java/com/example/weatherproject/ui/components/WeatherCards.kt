@@ -1,5 +1,5 @@
 package com.example.weatherproject.ui.components
-
+import com.example.weatherproject.data.CctvInfo
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherproject.R
-import com.example.weatherproject.data.CctvInfo
 import com.example.weatherproject.data.CurrentWeather
 import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
@@ -364,7 +363,7 @@ fun PmGaugeItem(label: String, value: String) {
 }
 
 @Composable
-fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
+fun NearbyCctvCard(cctvList: List<  CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
         backgroundColor = Color.White.copy(alpha = 0.3f), 
@@ -441,15 +440,40 @@ fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjus
     
     val adjustedTemp = rawFeelsLike + finalAdjustment
     
-    val recommendationText = when {
-        adjustedTemp >= 28 -> "푹푹 찌는 무더위예요. 민소매나 린넨 소재처럼 통기성이 좋은 시원한 옷차림이 좋아요."
-        adjustedTemp >= 23 -> "조금 더울 수 있는 날씨예요. 가벼운 반팔 티셔츠나 얇은 셔츠를 추천드려요."
-        adjustedTemp >= 20 -> "활동하기 딱 좋은 날씨네요! 긴팔 티셔츠나 셔츠에 얇은 가디건을 걸치면 좋아요."
-        adjustedTemp >= 17 -> "아침저녁으로 쌀쌀해요. 맨투맨이나 니트, 혹은 입고 벗기 편한 가벼운 외투를 챙기세요."
-        adjustedTemp >= 12 -> "찬 바람이 느껴져요. 자켓이나 야상 점퍼, 도톰한 가디건으로 보온에 신경 써주세요."
-        adjustedTemp >= 9 -> "꽤 쌀쌀한 날씨입니다. 트렌치코트나 두께감 있는 점퍼를 입고, 목을 따뜻하게 해주세요."
-        adjustedTemp >= 5 -> "본격적인 추위가 시작됐어요. 코트 안에도 따뜻한 니트나 히트텍을 챙겨 입으시는 게 좋겠어요."
-        else -> "매우 추운 날씨입니다! 두꺼운 패딩과 목도리, 장갑 등으로 꽁꽁 싸매서 체온을 지키세요."
+    // 추천 멘트와 아이템 리스트를 쌍(Pair)으로 정의
+    val (recommendationText, items) = when {
+        adjustedTemp >= 28 -> Pair(
+            "푹푹 찌는 무더위예요. 민소매나 린넨 소재처럼 통기성이 좋은 시원한 옷차림이 좋아요.",
+            listOf("민소매", "반바지", "원피스", "린넨 셔츠", "샌들")
+        )
+        adjustedTemp >= 23 -> Pair(
+            "조금 더울 수 있는 날씨예요. 가벼운 반팔 티셔츠나 얇은 셔츠를 추천드려요.",
+            listOf("반팔 티셔츠", "얇은 셔츠", "반바지", "면바지")
+        )
+        adjustedTemp >= 20 -> Pair(
+            "활동하기 딱 좋은 날씨네요! 긴팔 티셔츠나 셔츠에 얇은 가디건을 걸치면 좋아요.",
+            listOf("긴팔 티셔츠", "셔츠", "가디건", "면바지", "청바지")
+        )
+        adjustedTemp >= 17 -> Pair(
+            "아침저녁으로 쌀쌀해요. 맨투맨이나 니트, 혹은 입고 벗기 편한 가벼운 외투를 챙기세요.",
+            listOf("니트", "맨투맨", "후드티", "가디건", "청바지", "슬랙스")
+        )
+        adjustedTemp >= 12 -> Pair(
+            "찬 바람이 느껴져요. 자켓이나 야상 점퍼, 도톰한 가디건으로 보온에 신경 써주세요.",
+            listOf("자켓", "야상", "트렌치코트", "니트", "스타킹")
+        )
+        adjustedTemp >= 9 -> Pair(
+            "꽤 쌀쌀한 날씨입니다. 트렌치코트나 두께감 있는 점퍼를 입고, 목을 따뜻하게 해주세요.",
+            listOf("트렌치코트", "라이더자켓", "기모 후드", "니트")
+        )
+        adjustedTemp >= 5 -> Pair(
+            "본격적인 추위가 시작됐어요. 코트 안에도 따뜻한 니트나 히트텍을 챙겨 입으시는 게 좋겠어요.",
+            listOf("코트", "가죽자켓", "히트텍", "기모 바지", "레깅스")
+        )
+        else -> Pair(
+            "매우 추운 날씨입니다! 두꺼운 패딩과 목도리, 장갑 등으로 꽁꽁 싸매서 체온을 지키세요.",
+            listOf("롱패딩", "숏패딩", "목도리", "장갑", "털모자", "방한화")
+        )
     }
     
     val adjustmentText = if (finalAdjustment > 0) "(더위 많이 탐)" else if (finalAdjustment < 0) "(추위 많이 탐)" else ""
@@ -463,8 +487,30 @@ fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjus
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(text = recommendationText, fontSize = 16.sp, color = Color.White)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // 추천 아이템 태그 (가로 스크롤)
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(items) { item ->
+                    ClothingItemChip(text = item)
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
             Text(text = "체감 온도: $feelsLike (보정: ${if(finalAdjustment > 0) "+" else ""}$finalAdjustment)", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+        }
+    }
+}
+
+@Composable
+fun ClothingItemChip(text: String) {
+    Surface(
+        color = Color.White.copy(alpha = 0.2f),
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.height(32.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 12.dp)) {
+            Text(text = text, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
 }
@@ -480,10 +526,44 @@ fun HourlyForecastItem(forecast: HourlyForecast) {
 
 @Composable
 fun WeeklyForecastItem(forecast: WeeklyForecast) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = forecast.date, fontSize = 14.sp, color = Color.White, modifier = Modifier.weight(2.3f))
-        Text(text = forecast.pm10Status, fontSize = 13.sp, color = Color.White, modifier = Modifier.weight(2.5f))
-        Text(text = forecast.precipitation, fontSize = 13.sp, color = Color.White, modifier = Modifier.weight(1.2f))
-        Text(text = "${forecast.minTemp} / ${forecast.maxTemp}", fontSize = 15.sp, color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.weight(2f))
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // ✅ day 사용 (date 대신)
+        Text(
+            text = forecast.day,
+            fontSize = 14.sp,
+            color = Color.White,
+            modifier = Modifier.weight(2.3f)
+        )
+
+        // ✅ 아이콘 표시 (pm10Status 대신)
+        AsyncImage(
+            model = forecast.iconUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .size(32.dp)
+                .weight(2.5f)
+        )
+
+        // ✅ 강수확률 또는 빈 값 (precipitation은 주간예보에 없음)
+        Text(
+            text = "",
+            fontSize = 13.sp,
+            color = Color.White,
+            modifier = Modifier.weight(1.2f)
+        )
+
+        // ✅ 최저/최고 온도
+        Text(
+            text = "${forecast.minTemp} / ${forecast.maxTemp}",
+            fontSize = 15.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(2f)
+        )
     }
 }

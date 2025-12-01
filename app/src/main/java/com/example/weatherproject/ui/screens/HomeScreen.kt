@@ -36,51 +36,44 @@ import com.example.weatherproject.ui.components.WeatherTopAppBar
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    weatherState: WeatherState, 
-    navController: NavController, 
+    weatherState: WeatherState,
+    navController: NavController,
     viewModel: MainViewModel,
     searchViewModel: SearchViewModel
 ) {
-    // 최초 설문 다이얼로그 표시 여부
     val showDialog by viewModel.showSetupDialog.collectAsState()
-    // 저장된 체질 보정값
     val tempAdjustment by viewModel.tempAdjustment.collectAsState()
-    
-    // 새로고침 상태
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing, 
+        refreshing = isRefreshing,
         onRefresh = { viewModel.refreshData() }
     )
-    
-    // 에러 스낵바 처리를 위한 상태
+
     val scaffoldState = rememberScaffoldState()
-    
-    // 에러 이벤트 감지
+
     LaunchedEffect(true) {
         viewModel.errorEvent.collect { message ->
             scaffoldState.snackbarHostState.showSnackbar(message)
         }
     }
-    
-    // 카드 확장 상태 (화면 이동 대신 사용)
+
     var isDetailExpanded by remember { mutableStateOf(false) }
     var isForecastExpanded by remember { mutableStateOf(false) }
 
     if (showDialog) {
-        TemperaturePreferenceDialog(onDismiss = { /* 강제 설정 유도 (취소 불가) */ }) { adjustment ->
+        TemperaturePreferenceDialog(onDismiss = { }) { adjustment ->
             viewModel.saveTempAdjustment(adjustment)
         }
     }
 
     Scaffold(
-        scaffoldState = scaffoldState, // 스낵바 사용을 위해 추가
-        topBar = { 
+        scaffoldState = scaffoldState,
+        topBar = {
             WeatherTopAppBar(
-                viewModel = viewModel, 
+                viewModel = viewModel,
                 searchViewModel = searchViewModel,
                 navController = navController
-            ) 
+            )
         },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
@@ -97,7 +90,6 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // 로딩 중일 때 안내 텍스트 표시 (긴 로딩 대응)
                 AnimatedVisibility(
                     visible = isRefreshing,
                     enter = expandVertically() + fadeIn(),
@@ -117,50 +109,45 @@ fun HomeScreen(
                     }
                 }
 
-                // 현재 날씨 (클릭 시 상세 정보 펼쳐짐)
+                // ⭐️ address 사용
                 CurrentWeatherCard(
                     weather = weatherState.currentWeather,
-                    address = weatherState.currentAddress,
-                    details = weatherState.weatherDetails, // 상세 데이터 전달
+                    address = weatherState.address,
+                    details = weatherState.weatherDetails,
                     isExpanded = isDetailExpanded,
-                    onClick = { isDetailExpanded = !isDetailExpanded } // 토글
+                    onClick = { isDetailExpanded = !isDetailExpanded }
                 )
 
-                // 시간별 예보 (클릭 시 주간 예보 펼쳐짐)
                 HourlyForecastCard(
                     hourlyForecasts = weatherState.hourlyForecast,
-                    weeklyForecasts = weatherState.weeklyForecast, // 주간 데이터 전달
+                    weeklyForecasts = weatherState.weeklyForecast,
                     isExpanded = isForecastExpanded,
-                    onClick = { isForecastExpanded = !isForecastExpanded } // 토글
+                    onClick = { isForecastExpanded = !isForecastExpanded }
                 )
 
-                // 옷차림 추천 (보정값 전달)
                 ClothingRecommendationCard(
-                    currentTemp = weatherState.currentWeather.temperature, // 현재 기온 전달
+                    currentTemp = weatherState.currentWeather.temperature,
                     feelsLike = weatherState.currentWeather.feelsLike,
                     tempAdjustment = tempAdjustment
                 )
 
-                // ⭐️ 개선된 CCTV 카드 (주변 2개만 보여주기)
+                // ⭐️ 빈 리스트로 대체
                 NearbyCctvCard(
-                    cctvList = weatherState.cctvList.take(2), // 상위 2개만 전달
+                    cctvList = emptyList(),
                     onMoreClick = { navController.navigate("cctv") },
-                    onCctvClick = { cctv -> 
-                        // TODO: 썸네일 클릭 시 해당 CCTV의 전체 화면/스트리밍 화면으로 이동
-                    }
+                    onCctvClick = { cctv -> }
                 )
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
             }
 
-            // 새로고침 인디케이터 (디자인 개선)
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = Color.White, // 배경은 깔끔한 흰색
-                contentColor = Color(0xFF2563EB), // 아이콘은 진한 파란색
-                scale = true // ⬅️ 안 당길 때는 숨기기 (크기 0)
+                backgroundColor = Color.White,
+                contentColor = Color(0xFF2563EB),
+                scale = true
             )
         }
     }
@@ -194,7 +181,6 @@ fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit)
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 슬라이더 라벨
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -204,18 +190,17 @@ fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit)
                     Text("더위 많이", fontSize = 12.sp, color = Color.Red)
                 }
 
-                // 슬라이더 (-3 ~ +3)
                 Slider(
                     value = sliderPosition,
                     onValueChange = { sliderPosition = it },
                     valueRange = -3f..3f,
-                    steps = 5, // -3, -2, -1, 0, 1, 2, 3 (총 7개 값, steps는 중간 단계 개수이므로 5)
+                    steps = 5,
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colors.primary,
                         activeTrackColor = MaterialTheme.colors.primary
                     )
                 )
-                
+
                 Text(
                     text = "보정값: ${sliderPosition.toInt()}",
                     fontWeight = FontWeight.Bold,

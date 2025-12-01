@@ -1,5 +1,3 @@
-// MainActivity.kt (10단계: '주간 예보' 한 줄 버그까지 수정한 최종본)
-
 package com.example.weatherproject
 
 import androidx.activity.viewModels
@@ -7,10 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.app.NotificationCompat // showFullScreenNotification에서 사용될 수 있음
-import androidx.core.content.ContextCompat // showFullScreenNotification에서 사용될 수 있음
+import android.Manifest
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background // ⬅️ '점'을 그리기 위해 필요
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,17 +26,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.LazyColumn // LazyColumn 임포트 추가
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape // ⬅️ '점'을 그리기 위해 필요
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-// import androidx.compose.material.icons.filled.CameraAlt // 제거
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.Card
@@ -55,7 +55,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip // ⬅️ '점'을 그리기 위해 필요
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -82,28 +82,39 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherproject.ui.WeatherNavHost
 
-
-import androidx.compose.ui.graphics.Brush // 추가
+import androidx.compose.ui.graphics.Brush
 
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val searchViewModel: SearchViewModel by viewModels()
 
+    // 위치 권한 요청 런처
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            mainViewModel.getCurrentLocationOnce()
+            mainViewModel.startLocationTracking()
+            Toast.makeText(this, "위치 권한이 허용되었습니다", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "위치 권한이 필요합니다", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // 앱 시작 시 권한 및 GPS 체크
-        checkLocationSettings()
-        
+
+        // 앱 시작 시 위치 권한 확인 및 요청
+        checkAndRequestLocationPermission()
+
         setContent {
             val context = LocalContext.current
 
             WeatherProjectTheme {
                 val weatherState by mainViewModel.uiState.collectAsState()
-                
-                // 날씨에 따른 배경 그라데이션 가져오기
-                val backgroundBrush = getWeatherGradient(weatherState.currentWeather.iconUrl) // iconUrl이나 description으로 판단
+
+                val backgroundBrush = getWeatherGradient(weatherState.currentWeather.iconUrl)
 
                 Box(
                     modifier = Modifier
@@ -119,7 +130,19 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    
+
+    private fun checkAndRequestLocationPermission() {
+        when {
+            mainViewModel.hasLocationPermission() -> {
+                mainViewModel.getCurrentLocationOnce()
+                mainViewModel.startLocationTracking()
+            }
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
     // 날씨 상태(아이콘 URL 등)에 따른 그라데이션 반환
     private fun getWeatherGradient(iconUrl: String): Brush {
         return when {
@@ -148,7 +171,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
             iconUrl.contains("11") || iconUrl.contains("13") || iconUrl.contains("50") -> { // 뇌우, 눈, 안개 등
-                 Brush.verticalGradient(
+                Brush.verticalGradient(
                     colors = listOf(
                         Color(0xFF455A64),
                         Color(0xFF607D8B)
@@ -169,7 +192,6 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         // 설정 화면 갔다 왔을 때 다시 체크 (선택 사항)
-        // if (!com.example.weatherproject.util.LocationPermissionHelper.isGpsEnabled(this)) { ... }
     }
 
     private fun checkLocationSettings() {
@@ -177,11 +199,9 @@ class MainActivity : ComponentActivity() {
             com.example.weatherproject.util.LocationPermissionHelper.requestLocationPermission(this)
         } else if (!com.example.weatherproject.util.LocationPermissionHelper.isGpsEnabled(this)) {
             com.example.weatherproject.util.LocationPermissionHelper.showGpsSettingDialog(this)
-        } else {
-            // 권한도 있고 GPS도 켜져 있으면 -> 초기 데이터 로드 (현재는 가짜 데이터라 자동 로드됨)
-            // mainViewModel.refreshData() 
         }
     }
+
     companion object {
         // This function creates and shows the full-screen notification
         fun showFullScreenNotification(context: Context, weatherState: WeatherState) {
@@ -192,10 +212,9 @@ class MainActivity : ComponentActivity() {
                 weather.feelsLike,
                 weather.description
             )
-            
+
             // Use the helper class
             com.example.weatherproject.util.NotificationHelper.showNotification(context, "현재 날씨", notificationContent)
         }
     }
 }
-

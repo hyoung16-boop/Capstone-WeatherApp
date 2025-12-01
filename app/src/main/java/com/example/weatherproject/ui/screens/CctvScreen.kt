@@ -1,5 +1,6 @@
 package com.example.weatherproject.ui.screens
 
+import com.example.weatherproject.data.CctvInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-// import androidx.compose.material.icons.filled.CameraAlt
 import com.example.weatherproject.ui.icons.MyCameraAlt
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
@@ -25,35 +25,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.weatherproject.data.CctvInfo
 import com.example.weatherproject.ui.MainViewModel
 import com.example.weatherproject.ui.SearchViewModel
-
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
-
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 
 @Composable
 fun CctvScreen(
     navController: NavController,
     viewModel: MainViewModel,
-    searchViewModel: SearchViewModel // 검색 기능 복구를 위해 추가
+    searchViewModel: SearchViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val allCctvList = uiState.cctvList
-    
+
+    // CCTV 상태 가져오기
+    val cctvInfo by viewModel.cctvInfo.collectAsState()
+    val cctvError by viewModel.cctvError.collectAsState()
+
+    // CCTV 리스트 (단일 CCTV를 리스트로 변환)
+    val allCctvList = cctvInfo?.let { listOf(it) } ?: emptyList()
+
     // 페이징 상태: 처음에 4개만 보여줌
     var visibleCount by remember { mutableStateOf(4) }
     val displayList = allCctvList.take(visibleCount)
-    
+
     // 검색 관련 상태
     val searchText by searchViewModel.searchText.collectAsState()
     val searchResults by searchViewModel.searchResults.collectAsState()
     val context = LocalContext.current
+
+    // 화면 진입 시 CCTV 데이터 로드
+    LaunchedEffect(Unit) {
+        viewModel.fetchCurrentLocationCctvs()
+    }
 
     // 스크롤 감지
     val listState = rememberLazyListState()
@@ -62,24 +73,21 @@ fun CctvScreen(
             val layoutInfo = listState.layoutInfo
             val totalItems = layoutInfo.totalItemsCount
             if (totalItems == 0) return@derivedStateOf false
-            
+
             val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             lastVisibleItemIndex >= totalItems - 1
         }
     }
 
-    // 바닥에 닿으면 더 로드 (무한 스크롤 효과)
+    // 바닥에 닿으면 더 로드
     LaunchedEffect(isAtBottom.value) {
         if (isAtBottom.value && visibleCount < allCctvList.size) {
-            // 잠시 딜레이 후 로드하는 척 (사용자가 인지할 수 있게)
-            // kotlinx.coroutines.delay(500) 
             visibleCount += 4
         }
     }
 
     Scaffold(
         topBar = {
-            // 검색바가 포함된 커스텀 TopBar (TopAppBar 대신 Row 사용으로 높이 제한 해결)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -89,8 +97,8 @@ fun CctvScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(80.dp) // 넉넉한 높이
-                            .padding(horizontal = 4.dp, vertical = 8.dp), // NavigationIcon 공간 고려하여 padding 조정
+                            .height(80.dp)
+                            .padding(horizontal = 4.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -99,7 +107,7 @@ fun CctvScreen(
                             Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기", tint = Color.White)
                         }
 
-                        // 검색 입력창 (가중치 부여)
+                        // 검색 입력창
                         OutlinedTextField(
                             value = searchText,
                             onValueChange = { searchViewModel.onSearchTextChange(it) },
@@ -121,15 +129,15 @@ fun CctvScreen(
                         )
 
                         // 현재 위치 버튼
-                        IconButton(onClick = { 
+                        IconButton(onClick = {
                             android.widget.Toast.makeText(context, "주변 CCTV를 탐색합니다...", android.widget.Toast.LENGTH_SHORT).show()
-                            viewModel.fetchCurrentLocationCctvs() 
+                            viewModel.fetchCurrentLocationCctvs()
                         }) {
                             Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)
                         }
                     }
 
-                    // 검색 결과 리스트 (WeatherTopAppBar와 동일 로직)
+                    // 검색 결과 리스트
                     if (searchResults.isNotEmpty()) {
                         LazyColumn(
                             modifier = Modifier
@@ -145,13 +153,12 @@ fun CctvScreen(
                                         .clickable {
                                             searchViewModel.onCitySelected(context, city) { lat, lon ->
                                                 viewModel.updateWeatherByLocation(city, lat, lon)
-                                                // TODO: CCTV도 해당 지역으로 갱신해야 함
                                             }
                                         }
                                         .padding(16.dp),
                                     color = Color.Black,
-                                    maxLines = 1, // ⬅️ 한 줄 제한
-                                    overflow = TextOverflow.Ellipsis // ⬅️ 말줄임표(...) 처리
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Divider(color = Color.LightGray.copy(alpha = 0.5f))
                             }
@@ -162,39 +169,133 @@ fun CctvScreen(
         },
         backgroundColor = Color.Transparent
     ) { paddingValues ->
-        LazyColumn(
-            state = listState,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            itemsIndexed(displayList) { index, cctv ->
-                CctvListItem(cctv = cctv)
-            }
-
-            // 하단 안내 문구 (더 데이터가 남았을 때만 표시)
-            if (visibleCount < allCctvList.size) {
-                item {
+            // 로딩/에러/데이터 상태 처리
+            when {
+                // 에러 상태
+                cctvError != null -> {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
                             Text(
-                                text = "밀어서 더 보기",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 14.sp
+                                text = "⚠️",
+                                fontSize = 48.sp,
+                                color = Color.White
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = null,
-                                tint = Color.White.copy(alpha = 0.8f)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = cctvError ?: "알 수 없는 오류",
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 32.dp)
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Button(
+                                onClick = { viewModel.fetchCurrentLocationCctvs() },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+                            ) {
+                                Text("다시 시도", color = Color.Black)
+                            }
+                        }
+                    }
+                }
+
+                // 데이터 있음
+                allCctvList.isNotEmpty() -> {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(vertical = 16.dp)
+                    ) {
+                        itemsIndexed(displayList) { index, cctv ->
+                            CctvListItem(
+                                cctv = cctv,
+                                onClick = {
+                                    Log.d("CctvScreen", "CCTV 클릭: ${cctv.cctvName}, URL: ${cctv.cctvUrl}")
+
+                                    if (cctv.cctvUrl.isNotEmpty()) {
+                                        try {
+                                            // ✅ Base64로 URL 인코딩 (특수문자 안전하게 처리)
+                                            val encodedUrl = android.util.Base64.encodeToString(
+                                                cctv.cctvUrl.toByteArray(),
+                                                android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP
+                                            )
+                                            navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
+                                        } catch (e: Exception) {
+                                            Log.e("CctvScreen", "Navigation 실패: ${e.message}", e)
+                                            android.widget.Toast.makeText(
+                                                context,
+                                                "CCTV 재생 실패: ${e.message}",
+                                                android.widget.Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    } else {
+                                        android.widget.Toast.makeText(
+                                            context,
+                                            "CCTV URL이 없습니다",
+                                            android.widget.Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            )
+                        }
+
+                        // 하단 안내 문구
+                        if (visibleCount < allCctvList.size) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = "밀어서 더 보기",
+                                            color = Color.White.copy(alpha = 0.8f),
+                                            fontSize = 14.sp
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Icon(
+                                            imageVector = Icons.Default.KeyboardArrowDown,
+                                            contentDescription = null,
+                                            tint = Color.White.copy(alpha = 0.8f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 로딩 상태
+                else -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator(color = Color.White)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "주변 CCTV를 검색 중...",
+                                color = Color.White,
+                                fontSize = 16.sp
                             )
                         }
                     }
@@ -205,21 +306,23 @@ fun CctvScreen(
 }
 
 @Composable
-fun CctvListItem(cctv: CctvInfo) {
+fun CctvListItem(
+    cctv: CctvInfo,
+    onClick: () -> Unit  // ✅ 클릭 콜백 추가
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color.White.copy(alpha = 0.8f),
+        backgroundColor = Color.White.copy(alpha = 0.9f),
         elevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .clickable { /* TODO: 영상 재생 */ }
+            .clickable(onClick = onClick)  // ✅ 클릭 이벤트 연결
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 썸네일 (플레이스홀더)
+            // 썸네일
             Box(
                 modifier = Modifier
                     .size(120.dp, 80.dp)
@@ -230,14 +333,8 @@ fun CctvListItem(cctv: CctvInfo) {
                 Icon(
                     imageVector = Icons.Default.MyCameraAlt,
                     contentDescription = null,
-                    tint = Color.Gray
-                )
-                // 재생 버튼 오버레이
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
+                    tint = Color.Gray,
+                    modifier = Modifier.size(40.dp)
                 )
             }
 
@@ -248,20 +345,68 @@ fun CctvListItem(cctv: CctvInfo) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
+                // CCTV 이름
                 Text(
-                    text = cctv.roadName,
+                    text = cctv.cctvName,
                     fontSize = 16.sp,
                     color = Color.Black,
-                    maxLines = 1,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 도로명
+                if (cctv.roadName.isNotEmpty()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = cctv.roadName,
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "거리: ${cctv.distance}",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+
+                // 타입과 거리
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = cctv.type,
+                        fontSize = 13.sp,
+                        color = Color.Gray
+                    )
+
+                    if (cctv.distance.isNotEmpty()) {
+                        Text(
+                            text = cctv.distance,
+                            fontSize = 13.sp,
+                            color = Color.Blue,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
+
+            // 재생 아이콘
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "영상 보기",
+                tint = Color.Blue,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

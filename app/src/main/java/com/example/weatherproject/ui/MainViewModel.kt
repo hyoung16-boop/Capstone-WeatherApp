@@ -1,34 +1,52 @@
 package com.example.weatherproject.ui
 
+import android.Manifest
 import android.app.Application
-import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.Location
+import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherproject.data.CctvInfo
 import com.example.weatherproject.data.CurrentWeather
 import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.data.WeeklyForecast
+import com.example.weatherproject.network.RetrofitClient
+import com.example.weatherproject.network.CurrentWeatherResponse
+import com.example.weatherproject.network.HourlyForecastResponse
+import com.example.weatherproject.network.WeeklyForecastResponse
+import com.example.weatherproject.util.GpsTransfer
 import com.example.weatherproject.util.PreferenceManager
+import com.google.android.gms.location.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
-import com.example.weatherproject.data.CctvInfo
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    companion object {
+        private const val TAG = "MainViewModel"
+    }
 
     private val preferenceManager = PreferenceManager(application)
 
     // 메인 날씨 상태 (UI가 바라보는 데이터)
     private val _uiState = MutableStateFlow(WeatherState())
     val uiState: StateFlow<WeatherState> = _uiState
-    
+
     // 새로고침 상태
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
@@ -45,8 +63,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _errorEvent = kotlinx.coroutines.flow.MutableSharedFlow<String>()
     val errorEvent = _errorEvent.asSharedFlow()
 
+    // 🆕 CCTV 상태
+    private val _cctvInfo = MutableStateFlow<CctvInfo?>(null)
+    val cctvInfo: StateFlow<CctvInfo?> = _cctvInfo
+
+    private val _cctvError = MutableStateFlow<String?>(null)
+    val cctvError: StateFlow<String?> = _cctvError
+
+    // 위치 관련
+    private val fusedLocationClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application)
+
+    private var locationCallback: LocationCallback? = null
+
+    private val _currentLocation = MutableStateFlow<Location?>(null)
+    val currentLocation: StateFlow<Location?> = _currentLocation
+
+    private val _isTrackingLocation = MutableStateFlow(false)
+    val isTrackingLocation: StateFlow<Boolean> = _isTrackingLocation
+
+    private val geocoder = Geocoder(application, Locale.KOREAN)
+
     init {
-        loadFakeData()
         checkUserPreference()
     }
 
@@ -64,86 +102,432 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _showSetupDialog.value = false
     }
 
-    // 날씨 및 위치 데이터 통합 새로고침
-    fun refreshData() {
-        viewModelScope.launch {
-            if (_isRefreshing.value) return@launch // 이미 진행 중이면 무시
-            _isRefreshing.value = true
-            
-            try {
-                // 1. 위치 갱신 시늉 (실제로는 GPS 요청)
-                val currentState = _uiState.value
-                // 로딩 중임을 알리기 위해 주소만 살짝 변경하거나, UI에서 isRefreshing으로 처리
-                
-                kotlinx.coroutines.delay(2000) // 2초 딜레이 (로딩 시뮬레이션)
+    // 위치 권한 확인
+    fun hasLocationPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            getApplication(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
-                // 2. 랜덤 에러 발생 테스트 (20% 확률)
-                if ((1..5).random() == 1) {
-                    throw Exception("네트워크 연결이 불안정합니다. 다시 시도해주세요.")
+    // 한 번만 위치 가져오기
+    fun getCurrentLocationOnce() {
+        if (!hasLocationPermission()) {
+            return
+        }
+
+        try {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.let {
+                    _currentLocation.value = it
+                    getAddressFromLocation(it.latitude, it.longitude)
+
+                    // 위치를 받으면 즉시 날씨 데이터 가져오기
+                    fetchWeatherFromServer(it.latitude, it.longitude)
+
+                    // UI 상태에도 위도/경도 반영
+                    _uiState.value = _uiState.value.copy(
+                        latitude = it.latitude,
+                        longitude = it.longitude
+                    )
                 }
-                
-                _uiState.value = currentState.copy(currentAddress = "서울, 대한민국 (갱신됨)")
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            viewModelScope.launch {
+                _errorEvent.emit("위치 정보를 가져올 수 없습니다.")
+            }
+        }
+    }
 
-                // 3. 날씨 API 호출 시늉 (실제로는 서버 요청)
-                kotlinx.coroutines.delay(500) 
-                
-                // 랜덤 날씨 생성 (배경색 테스트용)
-                val weatherTypes = listOf(
-                    Triple("https://openweathermap.org/img/wn/01d@2x.png", "Clear Sky", "맑음"),
-                    Triple("https://openweathermap.org/img/wn/02d@2x.png", "Partly Cloudy", "구름 조금"),
-                    Triple("https://openweathermap.org/img/wn/03d@2x.png", "Cloudy", "흐림"),
-                    Triple("https://openweathermap.org/img/wn/10d@2x.png", "Rain", "비")
-                )
-                val randomWeather = weatherTypes.random()
-                
-                // 현재 온도 랜덤 변화
-                val newTempInt = (10..30).random()
-                val newTempStr = "${newTempInt}°"
+    // 실시간 위치 추적 시작
+    fun startLocationTracking() {
+        if (!hasLocationPermission()) {
+            return
+        }
 
-                val current = _uiState.value.currentWeather
-                val details = _uiState.value.weatherDetails
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            60000L // 60초마다 업데이트
+        ).apply {
+            setMinUpdateIntervalMillis(30000L) // 최소 30초
+        }.build()
 
-                // 체감 온도 재계산 (값과 이유를 함께 받아옴)
-                val windSpeed = details.wind.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
-                val humidity = details.humidity.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
-                
-                val (newFeelsLikeInt, reason) = calculateFeelsLike(newTempInt.toDouble(), windSpeed, humidity)
-                // 이유가 있으면 괄호로 감싸고, 없으면 그냥 둠
-                val reasonText = if (reason.isNotEmpty()) "($reason)" else ""
-                val newFeelsLikeStr = "${newFeelsLikeInt}° $reasonText"
-                
-                // 1. 현재 날씨 상태 업데이트
-                val updatedCurrentWeather = current.copy(
-                    iconUrl = randomWeather.first, 
-                    description = randomWeather.third, 
-                    temperature = newTempStr,
-                    feelsLike = "체감: $newFeelsLikeStr" 
-                )
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.lastLocation?.let { location ->
+                    _currentLocation.value = location
+                    getAddressFromLocation(location.latitude, location.longitude)
 
-                // 2. 시간별 예보의 첫 번째 항목("지금")도 현재 날씨와 동기화
-                val currentHourlyList = _uiState.value.hourlyForecast
-                val updatedHourlyList = currentHourlyList.mapIndexed { index, item ->
-                    if (index == 0) {
-                        // "지금" 항목을 현재 날씨 데이터로 덮어쓰기
-                        item.copy(
-                            iconUrl = randomWeather.first,
-                            temperature = newTempStr,
-                            precipitation = if (randomWeather.second == "Rain") "5mm" else "0mm",
-                            pm10Status = if (randomWeather.second == "Rain") "좋음" else "보통"
-                        )
-                    } else {
-                        item // 나머지는 그대로 유지
+                    // 위치 업데이트되면 날씨도 업데이트
+                    fetchWeatherFromServer(location.latitude, location.longitude)
+
+                    // UI 상태에도 위도/경도 반영
+                    _uiState.value = _uiState.value.copy(
+                        latitude = location.latitude,
+                        longitude = location.longitude
+                    )
+                }
+            }
+        }
+
+        try {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback!!,
+                Looper.getMainLooper()
+            )
+            _isTrackingLocation.value = true
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            viewModelScope.launch {
+                _errorEvent.emit("위치 추적을 시작할 수 없습니다.")
+            }
+        }
+    }
+
+    // 위치 추적 중지
+    fun stopLocationTracking() {
+        locationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
+        }
+        _isTrackingLocation.value = false
+    }
+
+    // 위도/경도 → 주소 변환
+    private fun getAddressFromLocation(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            try {
+                val address = withContext(Dispatchers.IO) {
+                    try {
+                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                        if (!addresses.isNullOrEmpty()) {
+                            val addr = addresses[0]
+
+                            buildString {
+                                // 시/도
+                                addr.adminArea?.let {
+                                    val simplified = it.replace("특별시", "시")
+                                        .replace("광역시", "시")
+                                        .replace("특별자치시", "시")
+                                        .replace("특별자치도", "도")
+                                    append(simplified)
+                                }
+
+                                // 구/군
+                                val district = addr.subLocality ?: addr.locality ?: addr.subAdminArea
+                                if (district != null) {
+                                    append(" ")
+                                    append(district)
+                                }
+
+                                // 동/읍/면
+                                val neighborhood = addr.thoroughfare ?: addr.subThoroughfare
+                                if (neighborhood != null) {
+                                    append(" ")
+                                    append(neighborhood)
+                                }
+
+                                // 주소가 비어있으면 전체 주소에서 추출
+                                if (isEmpty() || length < 5) {
+                                    val fullAddress = addr.getAddressLine(0)
+                                    if (fullAddress != null) {
+                                        val parts = fullAddress.split(" ")
+                                        val result = mutableListOf<String>()
+
+                                        for (part in parts) {
+                                            when {
+                                                part.contains("특별시") || part.contains("광역시") || part.endsWith("시") -> {
+                                                    result.add(part.replace("특별시", "시")
+                                                        .replace("광역시", "시")
+                                                        .replace("특별자치시", "시"))
+                                                }
+                                                part.endsWith("구") || part.endsWith("군") -> {
+                                                    result.add(part)
+                                                }
+                                                part.endsWith("동") || part.endsWith("읍") || part.endsWith("면") -> {
+                                                    result.add(part)
+                                                    break
+                                                }
+                                            }
+                                        }
+
+                                        if (result.isNotEmpty()) {
+                                            clear()
+                                            append(result.joinToString(" "))
+                                        }
+                                    }
+                                }
+
+                                // 그래도 없으면 최소한 시/도라도
+                                if (isEmpty()) {
+                                    addr.adminArea?.let {
+                                        append(it.replace("특별시", "시")
+                                            .replace("광역시", "시")
+                                            .replace("특별자치시", "시")
+                                            .replace("특별자치도", "도"))
+                                    }
+                                }
+                            }
+                        } else {
+                            "위치 정보 없음"
+                        }
+                    } catch (e: IOException) {
+                        Log.e("Geocoder", "에러: ${e.message}")
+                        "위치 확인 중..."
                     }
                 }
 
-                // 상태 업데이트 (CurrentWeather와 HourlyForecast 모두 갱신)
-                _uiState.value = _uiState.value.copy(
-                    currentWeather = updatedCurrentWeather,
-                    weatherDetails = details.copy(
-                        feelsLike = newFeelsLikeInt.toString() + "°"
-                    ),
-                    hourlyForecast = updatedHourlyList
+                // 최종 주소
+                val finalAddress = if (address.isBlank() || address == "위치 정보 없음") {
+                    "위치: ${String.format("%.4f", latitude)}, ${String.format("%.4f", longitude)}"
+                } else {
+                    address
+                }
+
+                _uiState.value = _uiState.value.copy(address = finalAddress)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiState.value = _uiState.value.copy(address = "위치 확인 실패")
+            }
+        }
+    }
+
+    // 서버에서 날씨 데이터 가져오기
+    private fun fetchWeatherFromServer(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            try {
+                // 1. GPS 좌표 → 격자 좌표 변환
+                val (nx, ny) = GpsTransfer.convertToGrid(lat, lon)
+                Log.d(TAG, "GPS($lat, $lon) → Grid($nx, $ny)")
+
+                // 2. 현재 날씨 API 호출
+                val currentResponse = withContext(Dispatchers.IO) {
+                    RetrofitClient.weatherApi.getCurrentWeather(nx, ny)
+                }
+
+                // 🔍 서버 응답 로그
+                Log.d(TAG, "========================================")
+                Log.d(TAG, "서버 응답 전체: $currentResponse")
+                Log.d(TAG, "기온: ${currentResponse?.weather?.temp}°C")
+                Log.d(TAG, "습도: ${currentResponse?.weather?.humidity}%")
+                Log.d(TAG, "하늘 상태: ${currentResponse?.weather?.skyCondition}")
+                Log.d(TAG, "강수 형태: ${currentResponse?.weather?.precipitationType}")
+                Log.d(TAG, "최고기온: ${currentResponse?.weather?.maxTemp}°C")
+                Log.d(TAG, "최저기온: ${currentResponse?.weather?.minTemp}°C")
+                Log.d(TAG, "========================================")
+
+                // 3. 시간별 예보 API 호출
+                val hourlyResponse = withContext(Dispatchers.IO) {
+                    RetrofitClient.weatherApi.getHourlyForecast(nx, ny)
+                }
+
+                // 4. 주간 예보 API 호출
+                val weeklyResponse = withContext(Dispatchers.IO) {
+                    RetrofitClient.weatherApi.getWeeklyForecast(nx, ny)
+                }
+
+                // 5. 데이터 변환 및 UI 업데이트
+                updateUiWithServerData(currentResponse, hourlyResponse, weeklyResponse)
+
+            } catch (e: Exception) {
+                Log.e(TAG, "API 호출 실패: ${e.message}", e)
+                _errorEvent.emit("날씨 정보를 가져올 수 없습니다: ${e.message}")
+            }
+        }
+    }
+
+    // 서버 응답 데이터를 UI 상태로 변환
+    private fun updateUiWithServerData(
+        currentData: CurrentWeatherResponse?,
+        hourlyData: HourlyForecastResponse?,
+        weeklyData: WeeklyForecastResponse?
+    ) {
+        try {
+            val weather = currentData?.weather
+
+            // 현재 날씨 변환
+            val currentWeather = CurrentWeather(
+                iconUrl = getWeatherIconUrl(weather?.skyCondition ?: "맑음", weather?.precipitationType ?: "없음"),
+                temperature = "${weather?.temp?.toInt() ?: 0}°",
+                description = weather?.skyCondition ?: "정보 없음",
+                maxTemp = "${weather?.maxTemp?.toInt() ?: 0}°",
+                minTemp = "${weather?.minTemp?.toInt() ?: 0}°",
+                feelsLike = "${weather?.temp?.toInt() ?: 0}°"
+            )
+
+            // 상세 날씨 변환
+            val weatherDetails = WeatherDetails(
+                feelsLike = "${weather?.temp?.toInt() ?: 0}°",
+                humidity = "${weather?.humidity?.toInt() ?: 0}%",
+                precipitation = "${weather?.rainfall ?: 0.0} mm",
+                wind = "${weather?.windSpeed ?: 0.0} m/s",
+                pm10 = weather?.pm10 ?: "정보없음",
+                pm25 = weather?.pm25 ?: "정보없음",
+                pressure = "1013 hPa",
+                visibility = "10 km",
+                uvIndex = "5"
+            )
+
+            // 시간별 예보 변환
+            val hourlyForecast = hourlyData?.weather?.take(24)?.map { item ->
+                HourlyForecast(
+                    time = formatTime(item.time),
+                    iconUrl = getWeatherIconUrl(item.sky, item.pty),
+                    temperature = "${item.temp?.toInt() ?: 0}°"
                 )
+            } ?: emptyList()
+
+            // 주간 예보 변환
+            val weeklyForecast = weeklyData?.weather?.map { item ->
+                WeeklyForecast(
+                    day = formatDate(item.date),
+                    iconUrl = getWeatherIconUrl(item.skyAm, "없음"),
+                    maxTemp = "${item.maxTemp?.toInt() ?: 0}°",
+                    minTemp = "${item.minTemp?.toInt() ?: 0}°"
+                )
+            } ?: emptyList()
+
+            // UI 상태 업데이트
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                currentWeather = currentWeather,
+                weatherDetails = weatherDetails,
+                hourlyForecast = hourlyForecast,
+                weeklyForecast = weeklyForecast
+            )
+
+            Log.d(TAG, "날씨 데이터 업데이트 완료")
+        } catch (e: Exception) {
+            Log.e(TAG, "날씨 데이터 변환 실패", e)
+            _uiState.value = _uiState.value.copy(
+                isLoading = false
+            )
+        }
+    }
+
+    // 날씨 상태에 따른 아이콘 URL 반환
+    private fun getWeatherIconUrl(sky: String, pty: String): String {
+        return when {
+            pty.contains("비") || pty.contains("소나기") -> "https://openweathermap.org/img/wn/10d@2x.png"
+            pty.contains("눈") -> "https://openweathermap.org/img/wn/13d@2x.png"
+            sky.contains("맑음") -> "https://openweathermap.org/img/wn/01d@2x.png"
+            sky.contains("구름조금") || sky.contains("구름많음") -> "https://openweathermap.org/img/wn/02d@2x.png"
+            sky.contains("흐림") -> "https://openweathermap.org/img/wn/03d@2x.png"
+            else -> "https://openweathermap.org/img/wn/01d@2x.png"
+        }
+    }
+
+    // 시간 포맷 (0900 → 09:00)
+    private fun formatTime(time: String): String {
+        return if (time.length == 4) {
+            "${time.substring(0, 2)}:${time.substring(2, 4)}"
+        } else {
+            time
+        }
+    }
+
+    // 날짜 포맷 (20231128 → 11/28 (화))
+    private fun formatDate(date: String): String {
+        return try {
+            val sdf = SimpleDateFormat("yyyyMMdd", Locale.KOREAN)
+            val parsedDate = sdf.parse(date)
+            val outputFormat = SimpleDateFormat("MM/dd (E)", Locale.KOREAN)
+            outputFormat.format(parsedDate ?: date)
+        } catch (e: Exception) {
+            date
+        }
+    }
+
+    // 🆕 CCTV 데이터 가져오기
+    fun fetchCurrentLocationCctvs() {
+        viewModelScope.launch {
+            try {
+                val location = _currentLocation.value
+                if (location == null) {
+                    _cctvError.value = "위치 정보를 가져올 수 없습니다."
+                    return@launch
+                }
+
+                Log.d(TAG, "CCTV 검색: Lat=${location.latitude}, Lng=${location.longitude}")
+
+                // CCTV API 호출
+                val response = withContext(Dispatchers.IO) {
+                    RetrofitClient.weatherApi.getNearbyCctv(
+                        lat = location.latitude,
+                        lng = location.longitude
+                    )
+                }
+
+                Log.d(TAG, "========================================")
+                Log.d(TAG, "CCTV 응답: $response")
+                Log.d(TAG, "========================================")
+
+                if (response.status == "success") {
+                    // 거리 계산 (현재 위치와 CCTV 위치 사이)
+                    val distance = calculateDistance(
+                        location.latitude,
+                        location.longitude,
+                        response.cctvLat.toDoubleOrNull() ?: 0.0,
+                        response.cctvLng.toDoubleOrNull() ?: 0.0
+                    )
+
+                    // 도로명 추출 (CCTV 이름에서 첫 단어)
+                    val roadName = response.cctvName.split(" ").firstOrNull() ?: ""
+
+                    // CctvInfo 생성
+                    val cctvInfo = CctvInfo(
+                        cctvName = response.cctvName,
+                        cctvUrl = response.cctvUrl,
+                        type = response.cctvType,
+                        roadName = roadName,
+                        distance = String.format("%.1fkm", distance),
+                        latitude = response.cctvLat,
+                        longitude = response.cctvLng
+                    )
+
+                    _cctvInfo.value = cctvInfo
+                    _cctvError.value = null
+
+                    Log.d(TAG, "CCTV 정보 업데이트 완료: ${cctvInfo.cctvName}")
+                } else {
+                    _cctvError.value = "CCTV 정보를 가져올 수 없습니다."
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "CCTV API 호출 실패: ${e.message}", e)
+                _cctvError.value = "CCTV 정보를 가져올 수 없습니다: ${e.message}"
+            }
+        }
+    }
+
+    // 🆕 거리 계산 함수 (Haversine formula)
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371.0 // 지구 반지름 (km)
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        return r * c
+    }
+
+    // 날씨 및 위치 데이터 통합 새로고침
+    fun refreshData() {
+        viewModelScope.launch {
+            if (_isRefreshing.value) return@launch
+            _isRefreshing.value = true
+
+            try {
+                // 현재 위치로 날씨 다시 가져오기
+                _currentLocation.value?.let { location ->
+                    fetchWeatherFromServer(location.latitude, location.longitude)
+                } ?: run {
+                    getCurrentLocationOnce()
+                }
+
             } catch (e: Exception) {
                 _errorEvent.emit(e.message ?: "알 수 없는 오류가 발생했습니다.")
             } finally {
@@ -152,183 +536,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // 체감 온도 계산 로직 (표준 공식 적용)
-    private fun calculateFeelsLike(temp: Double, wind: Double, humidity: Double): Pair<Int, String> {
-        // 1. 겨울철 (10도 이하, 풍속 4.8km/h 이상) - JAG/TI 공식 (Wind Chill)
-        if (temp <= 10.0 && wind >= 4.8) {
-            val vPow = Math.pow(wind, 0.16)
-            val result = (13.12 + 0.6215 * temp - 11.37 * vPow + 0.3965 * temp * vPow).toInt()
-            return Pair(result, "바람이 불어 더 춥게 느껴져요")
-        }
-        
-        // 2. 여름철 (25도 이상) - 습도 영향 (Heat Index 약식 적용)
-        if (temp >= 25.0) {
-             // 섭씨 -> 화씨 변환
-            val tf = temp * 9.0 / 5.0 + 32.0
-            val rh = humidity
-            
-            // Heat Index Formula (Rothfusz Regression)
-            val hiF = -42.379 + 2.04901523 * tf + 10.14333127 * rh - 0.22475541 * tf * rh - 
-                      0.00683783 * tf * tf - 0.05481717 * rh * rh + 0.00122874 * tf * tf * rh + 
-                      0.00085282 * tf * rh * rh - 0.00000199 * tf * tf * rh * rh
-            
-            // 화씨 -> 섭씨 복귀
-            val hiC = (hiF - 32.0) * 5.0 / 9.0
-            
-            val result = hiC.toInt()
-            val reason = if (result > temp) "습도가 높아 더 덥게 느껴져요" else ""
-            return Pair(result, reason)
-        }
-
-        // 그 외 (봄/가을)
-        return Pair(temp.toInt(), "")
-    }
-
     fun refreshMyLocation() {
-        refreshData()
-    }
-
-    // 내 위치 기반 CCTV 검색 시뮬레이션
-    fun fetchCurrentLocationCctvs() {
-        viewModelScope.launch {
-            if (_isRefreshing.value) return@launch
-            _isRefreshing.value = true
-            
-            try {
-                // 1. 위치 탐색 시늉
-                val currentState = _uiState.value
-                // 실제로는 여기서 GPS로 lat, lon을 가져옴
-                
-                kotlinx.coroutines.delay(1500) // 위치 찾는 딜레이
-                
-                // 2. 내 위치 주변 CCTV 데이터 (가상 데이터 교체)
-                // 기존 데이터와 다르게 "내 위치" 느낌이 나는 데이터로 구성
-                val myLocationCctvs = listOf(
-                    CctvInfo("99", "내 위치 (집 앞)", "0.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                    CctvInfo("98", "동네 사거리", "0.3km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                    CctvInfo("97", "지하철역 입구", "0.7km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                    CctvInfo("96", "대로변 (버스정류장)", "1.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                    CctvInfo("95", "구청 앞 교차로", "1.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", "")
-                )
-
-                _uiState.value = currentState.copy(
-                    currentAddress = "내 위치 (자동 갱신됨)",
-                    cctvList = myLocationCctvs
-                )
-                
-            } catch (e: Exception) {
-                _errorEvent.emit("위치 정보를 가져오는데 실패했습니다.")
-            } finally {
-                _isRefreshing.value = false
-            }
-        }
+        getCurrentLocationOnce()
     }
 
     fun updateWeatherByLocation(city: String, lat: Double, lon: Double) {
+        fetchWeatherFromServer(lat, lon)
         val currentState = _uiState.value
-        _uiState.value = currentState.copy(currentAddress = city)
-        Log.d("MainViewModel", "Weather update requested for: $city ($lat, $lon)")
-        // TODO: API Call
+        _uiState.value = currentState.copy(address = city)
     }
 
-    private fun loadFakeData() {
-        // OpenWeather 공식 아이콘 주소 (HTTPS 적용)
-        val iconSunny = "https://openweathermap.org/img/wn/01d@2x.png"
-        val iconPartlyCloudy = "https://openweathermap.org/img/wn/02d@2x.png"
-        val iconCloudy = "https://openweathermap.org/img/wn/03d@2x.png"
-        val iconRain = "https://openweathermap.org/img/wn/10d@2x.png"
-
-        // 현재 시간 기준 시간별 예보 생성
-        val currentCal = java.util.Calendar.getInstance()
-        val hourlyList = mutableListOf<HourlyForecast>()
-        val hourFormat = java.text.SimpleDateFormat("HH:00", Locale.getDefault())
-
-        // "지금" 추가 (현재 날씨 상태 기반)
-        hourlyList.add(HourlyForecast("지금", iconPartlyCloudy, "18°", "0mm", "보통"))
-
-        // 이후 23시간 추가 (랜덤 데이터)
-        for (i in 1..23) {
-            currentCal.add(java.util.Calendar.HOUR_OF_DAY, 1)
-            val timeStr = hourFormat.format(currentCal.time)
-            
-            // 밤/낮에 따라 아이콘 대충 변화 주기 (오전 6시~오후 6시: 해, 그 외: 달/구름)
-            val hour = currentCal.get(java.util.Calendar.HOUR_OF_DAY)
-            val icon = if (hour in 6..18) iconSunny else iconCloudy
-            val temp = "${(10..22).random()}°" // 온도는 10~22도 사이 랜덤
-            
-            // 강수량도 가끔 있게
-            val rain = if ((0..5).random() == 0) "5mm" else "0mm"
-            val pm = if (rain != "0mm") "좋음" else "보통"
-            
-            hourlyList.add(HourlyForecast(timeStr, icon, temp, rain, pm))
-        }
-
-        // 현재 날짜 기준 주간 예보 생성 (랜덤 데이터)
-        val weeklyCal = java.util.Calendar.getInstance()
-        val weeklyList = mutableListOf<WeeklyForecast>()
-        val dateFormat = java.text.SimpleDateFormat("MM/dd (E)", Locale.getDefault()) 
-
-        for (i in 0..6) {
-            val dateStr = dateFormat.format(weeklyCal.time)
-            // 3일에 한번 비, 2일에 한번 흐림 등 랜덤 패턴
-            val icon = if (i % 3 == 0) iconRain else if (i % 2 == 0) iconCloudy else iconSunny
-            
-            weeklyList.add(
-                WeeklyForecast(
-                    date = dateStr,
-                    iconUrl = icon,
-                    pm10Status = "미세먼지 ${listOf("좋음", "보통", "나쁨").random()}",
-                    precipitation = "${(0..40).random()}mm",
-                    minTemp = "${(5..15).random()}°",
-                    maxTemp = "${(18..25).random()}°"
-                )
-            )
-            weeklyCal.add(java.util.Calendar.DAY_OF_YEAR, 1)
-        }
-
-        _uiState.value = WeatherState(
-            currentAddress = "서울, 대한민국",
-
-            currentWeather = CurrentWeather(
-                iconUrl = iconPartlyCloudy,
-                temperature = "18°",
-                description = "구름 조금",
-                maxTemp = "최고: 22°",
-                minTemp = "14°",
-                feelsLike = "체감: 17°"
-            ),
-
-            weatherDetails = WeatherDetails(
-                feelsLike = "17°",
-                humidity = "65%",
-                precipitation = "0 mm",
-                wind = "12 km/h",
-                pm10 = "45 µg/m³",
-                pm25 = "18 µg/m³",
-                pressure = "1013 hPa",
-                visibility = "10 km",
-                uvIndex = "5"
-            ),
-
-            hourlyForecast = hourlyList,
-
-            weeklyForecast = weeklyList,
-            
-            // ⭐️ 근처 CCTV (더미 데이터 12개)
-            cctvList = listOf(
-                CctvInfo("1", "강남대로 (신논현역)", "0.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("2", "테헤란로 (역삼역)", "0.8km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("3", "경부고속도로 (반포IC)", "1.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("4", "올림픽대로 (청담대교)", "2.3km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("5", "강변북로 (동작대교)", "3.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("6", "잠실대교 남단", "4.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("7", "한남대교 북단", "5.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("8", "성수대교 남단", "5.8km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("9", "영동대교 북단", "6.1km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("10", "청담대교 남단", "6.5km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("11", "분당수서로 (탄천IC)", "7.2km", "https://www.utic.go.kr/img/cctv_sample.jpg", ""),
-                CctvInfo("12", "서울외곽순환 (송파IC)", "8.0km", "https://www.utic.go.kr/img/cctv_sample.jpg", "")
-            )
-        )
+    override fun onCleared() {
+        super.onCleared()
+        stopLocationTracking()
     }
 }

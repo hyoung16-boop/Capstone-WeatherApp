@@ -11,15 +11,13 @@ import com.example.weatherproject.ui.screens.DetailWeatherScreen
 import com.example.weatherproject.ui.screens.ForecastScreen
 import com.example.weatherproject.ui.screens.HomeScreen
 import com.example.weatherproject.ui.screens.CctvScreen
-
-// SettingsScreen, CctvScreen 등은 같은 패키지(ui)에 있는 다른 파일에 정의되어 있으므로
-// 별도 import 없이 바로 사용 가능하거나, 필요시 import가 자동으로 처리됩니다.
-// 만약 패키지가 다르다면 import가 필요합니다. 
-// 확인 결과 모두 `com.example.weatherproject.ui` 패키지에 있으므로 import 불필요.
+import com.example.weatherproject.ui.screens.CctvPlayerScreen  // ✅ 추가
+import java.net.URLDecoder  // ✅ 추가
+import java.nio.charset.StandardCharsets  // ✅ 추가
 
 @Composable
 fun WeatherNavHost(
-    weatherState: WeatherState, 
+    weatherState: WeatherState,
     viewModel: MainViewModel,
     searchViewModel: SearchViewModel
 ) {
@@ -50,13 +48,41 @@ fun WeatherNavHost(
             SettingsScreen(navController = navController)
         }
         composable("cctv") {
-            // ViewModel 전달
             CctvScreen(
-                navController = navController, 
+                navController = navController,
                 viewModel = viewModel,
                 searchViewModel = searchViewModel
             )
         }
+
+        // ✅ CCTV Player 화면 추가
+        composable(
+            route = "cctvPlayer/{cctvName}/{cctvUrl}",
+            arguments = listOf(
+                navArgument("cctvName") { type = NavType.StringType },
+                navArgument("cctvUrl") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val cctvName = backStackEntry.arguments?.getString("cctvName") ?: ""
+            val encodedUrl = backStackEntry.arguments?.getString("cctvUrl") ?: ""
+
+            // ✅ Base64 디코딩
+            val cctvUrl = try {
+                String(
+                    android.util.Base64.decode(encodedUrl, android.util.Base64.URL_SAFE),
+                    Charsets.UTF_8
+                )
+            } catch (e: Exception) {
+                ""
+            }
+
+            CctvPlayerScreen(
+                navController = navController,
+                cctvName = cctvName,
+                cctvUrl = cctvUrl
+            )
+        }
+
         composable("alarm_list") {
             AlarmListScreen(navController = navController)
         }

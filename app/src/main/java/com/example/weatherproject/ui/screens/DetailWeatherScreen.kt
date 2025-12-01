@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.ui.components.CurrentWeatherCard
-import com.example.weatherproject.ui.components.WeatherDetailCard
 
 @Composable
 fun DetailWeatherScreen(weatherState: WeatherState, navController: NavController) {
@@ -24,7 +23,6 @@ fun DetailWeatherScreen(weatherState: WeatherState, navController: NavController
                 title = { Text("상세 날씨 정보", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        // ArrowForward를 180도 회전하여 뒤로가기 아이콘으로 사용
                         Icon(
                             imageVector = Icons.Default.ArrowForward,
                             contentDescription = "뒤로 가기",
@@ -46,16 +44,14 @@ fun DetailWeatherScreen(weatherState: WeatherState, navController: NavController
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            // ⭐️ address 사용
             CurrentWeatherCard(
                 weather = weatherState.currentWeather,
-                address = weatherState.currentAddress,
-                details = weatherState.weatherDetails, // 상세 정보 전달
-                isExpanded = true, // 상세 화면이므로 항상 펼침
-                onClick = { } 
+                address = weatherState.address,
+                details = weatherState.weatherDetails,
+                isExpanded = true,
+                onClick = { }
             )
-            
-            // 기존 WeatherDetailCard는 CurrentWeatherCard 내부에 포함되었으므로 제거하거나, 
-            // 중복 표시를 피하기 위해 여기서는 제거함.
         }
     }
 }
