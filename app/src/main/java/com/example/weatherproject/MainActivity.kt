@@ -70,6 +70,7 @@ import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.data.WeeklyForecast
+import com.example.weatherproject.ui.CctvViewModel
 import com.example.weatherproject.ui.MainViewModel
 import com.example.weatherproject.ui.SearchViewModel
 
@@ -84,18 +85,21 @@ import com.example.weatherproject.ui.WeatherNavHost
 
 import androidx.compose.ui.graphics.Brush
 
+import com.example.weatherproject.util.LocationPermissionHelper
+
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val searchViewModel: SearchViewModel by viewModels()
+    private val cctvViewModel: CctvViewModel by viewModels()
 
     // 위치 권한 요청 런처
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            mainViewModel.getCurrentLocationOnce()
-            mainViewModel.startLocationTracking()
+            // 권한이 허용되면 GPS 상태를 다시 확인
+            checkGpsAndFetchLocation()
             Toast.makeText(this, "위치 권한이 허용되었습니다", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "위치 권한이 필요합니다", Toast.LENGTH_SHORT).show()
@@ -123,23 +127,30 @@ class MainActivity : ComponentActivity() {
                 ) {
                     WeatherNavHost(
                         weatherState = weatherState,
-                        viewModel = mainViewModel,
-                        searchViewModel = searchViewModel
+                        mainViewModel = mainViewModel,
+                        searchViewModel = searchViewModel,
+                        cctvViewModel = cctvViewModel
                     )
                 }
             }
         }
     }
-
+    
     private fun checkAndRequestLocationPermission() {
-        when {
-            mainViewModel.hasLocationPermission() -> {
-                mainViewModel.getCurrentLocationOnce()
-                mainViewModel.startLocationTracking()
-            }
-            else -> {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+        if (mainViewModel.hasLocationPermission()) {
+            checkGpsAndFetchLocation()
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun checkGpsAndFetchLocation() {
+        if (LocationPermissionHelper.isGpsEnabled(this)) {
+            mainViewModel.getCurrentLocationOnce()
+            mainViewModel.startLocationTracking()
+        } else {
+            mainViewModel.onGpsDisabled()
+            LocationPermissionHelper.showGpsSettingDialog(this)
         }
     }
 

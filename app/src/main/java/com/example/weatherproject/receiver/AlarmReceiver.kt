@@ -3,37 +3,46 @@ package com.example.weatherproject.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.weatherproject.util.NotificationHelper
-import java.util.Calendar
+import android.util.Log
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.weatherproject.data.local.AppDatabase
+import com.example.weatherproject.util.AlarmScheduler
+import com.example.weatherproject.worker.WeatherUpdateWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val isOneTime = intent.getBooleanExtra("IS_ONE_TIME", false)
-        val days = intent.getStringArrayListExtra("ALARM_DAYS")
-
-        if (!isOneTime && days != null && days.isNotEmpty()) {
-            val calendar = Calendar.getInstance()
-            val todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-            val todayString = when (todayDayOfWeek) {
-                Calendar.SUNDAY -> "일"
-                Calendar.MONDAY -> "월"
-                Calendar.TUESDAY -> "화"
-                Calendar.WEDNESDAY -> "수"
-                Calendar.THURSDAY -> "목"
-                Calendar.FRIDAY -> "금"
-                Calendar.SATURDAY -> "토"
-                else -> ""
-            }
-            
-            if (!days.contains(todayString)) {
-                return
-            }
+        val alarmId = intent.getIntExtra("ALARM_ID", -1)
+        if (alarmId == -1) {
+            Log.e("AlarmReceiver", "Invalid alarmId received")
+            return
         }
 
-        NotificationHelper.showNotification(
-            context, 
-            "설정된 알람", 
-            "설정하신 시간입니다. 지금 날씨를 확인해보세요!"
-        )
+        Log.d("AlarmReceiver", "Alarm received with ID: $alarmId. Enqueuing worker.")
+
+        // 1. Worker에게 작업 요청
+        val workRequest = OneTimeWorkRequestBuilder<WeatherUpdateWorker>().build()
+        WorkManager.getInstance(context).enqueue(workRequest)
+
+        // 2. 다음 반복 알람 재예약 (DB 접근이 필요하므로 background에서 처리)
+        val pendingResult = goAsync()
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+            try {
+                val alarmDao = AppDatabase.getDatabase(context).alarmDao()
+                val alarm = alarmDao.getAlarmById(alarmId)
+                if (alarm != null && alarm.selectedDate == null) { // 반복 알람일 경우에만
+                    AlarmScheduler.schedule(context, alarm)
+                    Log.d("AlarmReceiver", "Rescheduled next alarm for repeating alarm: $alarmId")
+                }
+            } catch (e: Exception) {
+                Log.e("AlarmReceiver", "Error rescheduling alarm: $alarmId", e)
+            } finally {
+                pendingResult.finish()
+            }
+        }
     }
 }

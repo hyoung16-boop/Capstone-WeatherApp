@@ -3,25 +3,19 @@ package com.example.weatherproject.data.local;
 import androidx.annotation.NonNull;
 import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
+import androidx.room.RoomDatabase;
 import androidx.room.RoomOpenHelper;
-import androidx.room.RoomOpenHelper.Delegate;
-import androidx.room.RoomOpenHelper.ValidationResult;
 import androidx.room.migration.AutoMigrationSpec;
 import androidx.room.migration.Migration;
 import androidx.room.util.DBUtil;
 import androidx.room.util.TableInfo;
-import androidx.room.util.TableInfo.Column;
-import androidx.room.util.TableInfo.ForeignKey;
-import androidx.room.util.TableInfo.Index;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
-import androidx.sqlite.db.SupportSQLiteOpenHelper.Callback;
-import androidx.sqlite.db.SupportSQLiteOpenHelper.Configuration;
 import java.lang.Class;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.SuppressWarnings;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,56 +29,62 @@ public final class AppDatabase_Impl extends AppDatabase {
   private volatile AlarmDao _alarmDao;
 
   @Override
-  protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(2) {
+  @NonNull
+  protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
-      public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `alarms` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `days` TEXT NOT NULL, `selectedDate` INTEGER, `isEnabled` INTEGER NOT NULL)");
-        _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f3f732d1b654f5b651dd81c97f4804f')");
+      public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS `alarms` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `days` TEXT NOT NULL, `selectedDate` INTEGER, `isEnabled` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f3f732d1b654f5b651dd81c97f4804f')");
       }
 
       @Override
-      public void dropAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("DROP TABLE IF EXISTS `alarms`");
-        if (mCallbacks != null) {
-          for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
-            mCallbacks.get(_i).onDestructiveMigration(_db);
+      public void dropAllTables(@NonNull final SupportSQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS `alarms`");
+        final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
+        if (_callbacks != null) {
+          for (RoomDatabase.Callback _callback : _callbacks) {
+            _callback.onDestructiveMigration(db);
           }
         }
       }
 
       @Override
-      protected void onCreate(SupportSQLiteDatabase _db) {
-        if (mCallbacks != null) {
-          for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
-            mCallbacks.get(_i).onCreate(_db);
+      public void onCreate(@NonNull final SupportSQLiteDatabase db) {
+        final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
+        if (_callbacks != null) {
+          for (RoomDatabase.Callback _callback : _callbacks) {
+            _callback.onCreate(db);
           }
         }
       }
 
       @Override
-      public void onOpen(SupportSQLiteDatabase _db) {
-        mDatabase = _db;
-        internalInitInvalidationTracker(_db);
-        if (mCallbacks != null) {
-          for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
-            mCallbacks.get(_i).onOpen(_db);
+      public void onOpen(@NonNull final SupportSQLiteDatabase db) {
+        mDatabase = db;
+        internalInitInvalidationTracker(db);
+        final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
+        if (_callbacks != null) {
+          for (RoomDatabase.Callback _callback : _callbacks) {
+            _callback.onOpen(db);
           }
         }
       }
 
       @Override
-      public void onPreMigrate(SupportSQLiteDatabase _db) {
-        DBUtil.dropFtsSyncTriggers(_db);
+      public void onPreMigrate(@NonNull final SupportSQLiteDatabase db) {
+        DBUtil.dropFtsSyncTriggers(db);
       }
 
       @Override
-      public void onPostMigrate(SupportSQLiteDatabase _db) {
+      public void onPostMigrate(@NonNull final SupportSQLiteDatabase db) {
       }
 
       @Override
-      protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
+      @NonNull
+      public RoomOpenHelper.ValidationResult onValidateSchema(
+          @NonNull final SupportSQLiteDatabase db) {
         final HashMap<String, TableInfo.Column> _columnsAlarms = new HashMap<String, TableInfo.Column>(6);
         _columnsAlarms.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsAlarms.put("hour", new TableInfo.Column("hour", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -95,8 +95,8 @@ public final class AppDatabase_Impl extends AppDatabase {
         final HashSet<TableInfo.ForeignKey> _foreignKeysAlarms = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesAlarms = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoAlarms = new TableInfo("alarms", _columnsAlarms, _foreignKeysAlarms, _indicesAlarms);
-        final TableInfo _existingAlarms = TableInfo.read(_db, "alarms");
-        if (! _infoAlarms.equals(_existingAlarms)) {
+        final TableInfo _existingAlarms = TableInfo.read(db, "alarms");
+        if (!_infoAlarms.equals(_existingAlarms)) {
           return new RoomOpenHelper.ValidationResult(false, "alarms(com.example.weatherproject.data.local.AlarmEntity).\n"
                   + " Expected:\n" + _infoAlarms + "\n"
                   + " Found:\n" + _existingAlarms);
@@ -104,18 +104,16 @@ public final class AppDatabase_Impl extends AppDatabase {
         return new RoomOpenHelper.ValidationResult(true, null);
       }
     }, "3f3f732d1b654f5b651dd81c97f4804f", "afbbc23760fe1f3fcc1b0829dda5c839");
-    final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
-        .name(configuration.name)
-        .callback(_openCallback)
-        .build();
-    final SupportSQLiteOpenHelper _helper = configuration.sqliteOpenHelperFactory.create(_sqliteConfig);
+    final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
+    final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
   }
 
   @Override
+  @NonNull
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
-    HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
+    final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
     return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "alarms");
   }
 
@@ -137,6 +135,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   }
 
   @Override
+  @NonNull
   protected Map<Class<?>, List<Class<?>>> getRequiredTypeConverters() {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(AlarmDao.class, AlarmDao_Impl.getRequiredConverters());
@@ -144,15 +143,18 @@ public final class AppDatabase_Impl extends AppDatabase {
   }
 
   @Override
+  @NonNull
   public Set<Class<? extends AutoMigrationSpec>> getRequiredAutoMigrationSpecs() {
     final HashSet<Class<? extends AutoMigrationSpec>> _autoMigrationSpecsSet = new HashSet<Class<? extends AutoMigrationSpec>>();
     return _autoMigrationSpecsSet;
   }
 
   @Override
+  @NonNull
   public List<Migration> getAutoMigrations(
-      @NonNull Map<Class<? extends AutoMigrationSpec>, AutoMigrationSpec> autoMigrationSpecsMap) {
-    return Arrays.asList();
+      @NonNull final Map<Class<? extends AutoMigrationSpec>, AutoMigrationSpec> autoMigrationSpecs) {
+    final List<Migration> _autoMigrations = new ArrayList<Migration>();
+    return _autoMigrations;
   }
 
   @Override

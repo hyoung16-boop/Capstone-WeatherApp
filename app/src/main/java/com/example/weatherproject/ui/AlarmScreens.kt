@@ -1,7 +1,18 @@
 package com.example.weatherproject.ui
 
+import android.Manifest
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings
 import android.widget.DatePicker
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +27,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.weatherproject.data.local.AlarmEntity
@@ -51,6 +64,64 @@ fun AlarmListScreen(
     val alarms by viewModel.alarmList.collectAsState()
     var isMasterNotificationEnabled by remember { mutableStateOf(true) }
 
+    val context = LocalContext.current
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    var hasExactAlarmPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                alarmManager.canScheduleExactAlarms()
+            } else {
+                true
+            }
+        )
+    }
+
+    // 설정 화면에서 돌아왔을 때 권한 상태를 다시 확인하기 위한 런처
+    val settingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        hasExactAlarmPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else {
+            true
+        }
+    }
+    
+    // 알림 권한 요청 런처
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                // 알림 권한 획득 후, 정확한 알람 권한 확인
+                if (hasExactAlarmPermission) {
+                    navController.navigate("alarm_edit")
+                } else {
+                    Toast.makeText(context, "알림 추가를 위해 '알림 및 리마인더' 권한을 허용해주세요.", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "알림 권한이 거부되어 알림을 추가할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+    // "알림 추가" 버튼 클릭 시 실행될 함수
+    val onAddAlarmClick = {
+        // 1. 기본 알림 권한 확인 (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } 
+        // 2. 정확한 알람 권한 확인 (Android 12+)
+        else if (!hasExactAlarmPermission) {
+            Toast.makeText(context, "정확한 알람 실행을 위해 '알림 및 리마인더' 권한이 필요합니다.", Toast.LENGTH_LONG).show()
+            // 권한이 없으면 다이얼로그나 하단 바를 통해 설정으로 유도
+        }
+        // 3. 모든 권한이 있으면 화면 이동
+        else {
+            navController.navigate("alarm_edit")
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -69,11 +140,45 @@ fun AlarmListScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { navController.navigate("alarm_edit") }) {
+                        IconButton(onClick = onAddAlarmClick) {
                             Icon(Icons.Default.Add, contentDescription = "알림 추가", tint = Color.White)
                         }
                     }
                 )
+            },
+            bottomBar = {
+                // 정확한 알람 권한이 없을 경우 안내 바 표시
+                AnimatedVisibility(visible = !hasExactAlarmPermission) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        backgroundColor = Color(0xFF37474F),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Icon(Icons.Default.Info, contentDescription = "정보", tint = Color.White)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "정확한 알람을 위해 '알림 및 리마인더' 권한이 필요합니다.",
+                                color = Color.White,
+                                fontSize = 13.sp,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            TextButton(onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    settingsLauncher.launch(intent)
+                                }
+                            }) {
+                                Text("설정", color = Color.White, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                }
             }
         ) { paddingValues ->
             Column(
@@ -135,7 +240,7 @@ fun AlarmListScreen(
                             alarm = alarm,
                             onToggle = { viewModel.toggleAlarm(alarm) },
                             onClick = { navController.navigate("alarm_edit?alarmId=${alarm.id}") },
-                            isEnabled = isMasterNotificationEnabled
+                            isEnabled = isMasterNotificationEnabled && hasExactAlarmPermission
                         )
                     }
                 }

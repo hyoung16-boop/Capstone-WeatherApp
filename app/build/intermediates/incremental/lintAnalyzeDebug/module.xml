@@ -1,15 +1,14 @@
 <lint-module
     format="1"
-    dir="C:\save\cj\weatherapp\app"
+    dir="D:\save2\1\weatherapp\app"
     name=":app"
     type="APP"
     maven="weatherapp:app:"
     agpVersion="8.1.0"
     buildFolder="build"
-    bootClassPath="C:\Users\jueun\AppData\Local\Android\Sdk\platforms\android-34\android.jar;C:\Users\jueun\AppData\Local\Android\Sdk\build-tools\33.0.1\core-lambda-stubs.jar"
+    bootClassPath="C:\Users\user\AppData\Local\Android\Sdk\platforms\android-34\android.jar;C:\Users\user\AppData\Local\Android\Sdk\build-tools\33.0.1\core-lambda-stubs.jar"
     javaSourceLevel="17"
-    compileTarget="android-34"
-    neverShrinking="true">
+    compileTarget="android-34">
   <lintOptions
       abortOnError="true"
       absolutePaths="true"

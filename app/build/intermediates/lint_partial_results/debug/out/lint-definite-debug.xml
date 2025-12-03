@@ -11,12 +11,260 @@
             attribute="label"/>
         <location
             file="${:app*debug*sourceProvider*0*manifest*0}"
-            line="21"
+            line="28"
             column="13"
-            startOffset="988"
-            endLine="21"
+            startOffset="1287"
+            endLine="28"
             endColumn="45"
-            endOffset="1020"/>
+            endOffset="1319"/>
+    </incident>
+
+    <incident
+        id="SetJavaScriptEnabled"
+        severity="warning"
+        message="Using `setJavaScriptEnabled` can introduce XSS vulnerabilities into your application, review carefully">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvDetailScreen.kt"
+            line="41"
+            column="21"
+            startOffset="1292"
+            endLine="41"
+            endColumn="54"
+            endOffset="1325"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="1"
+            column="13"
+            startOffset="12"
+            endLine="1"
+            endColumn="31"
+            endOffset="30"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="48"
+            column="14"
+            startOffset="1726"
+            endLine="48"
+            endColumn="26"
+            endOffset="1738"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="49"
+            column="14"
+            startOffset="1816"
+            endLine="49"
+            endColumn="44"
+            endOffset="1846"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="53"
+            column="54"
+            startOffset="1988"
+            endLine="53"
+            endColumn="61"
+            endOffset="1995"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="54"
+            column="18"
+            startOffset="2032"
+            endLine="54"
+            endColumn="35"
+            endOffset="2049"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="56"
+            column="13"
+            startOffset="2091"
+            endLine="56"
+            endColumn="27"
+            endOffset="2105"/>
+    </incident>
+
+    <incident
+        id="UnsafeOptInUsageError"
+        severity="error"
+        message="This declaration is opt-in and its usage should be marked with `@androidx.media3.common.util.UnstableApi` or `@OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)`">
+        <fix-alternatives>
+            <annotate
+                description="Add &apos;@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+            <annotate
+                description="Add &apos;@androidx.media3.common.util.UnstableApi&apos; annotation to &apos;CctvPlayerScreen&apos;"
+                source="@androidx.media3.common.util.UnstableApi"
+                replace="true">
+                <range
+                    file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+                    startOffset="1205"
+                    endOffset="7555"/>
+            </annotate>
+        </fix-alternatives>
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/screens/CctvPlayerScreen.kt"
+            line="139"
+            column="25"
+            startOffset="4986"
+            endLine="139"
+            endColumn="48"
+            endOffset="5009"/>
+    </incident>
+
+    <incident
+        id="StaticFieldLeak"
+        severity="warning"
+        message="This field leaks a context object">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/ui/SearchViewModel.kt"
+            line="19"
+            column="5"
+            startOffset="586"
+            endLine="19"
+            endColumn="57"
+            endOffset="638"/>
     </incident>
 
     <incident
@@ -32,6 +280,20 @@
             endLine="21"
             endColumn="59"
             endOffset="797"/>
+    </incident>
+
+    <incident
+        id="InvalidFragmentVersionForActivityResult"
+        severity="fatal"
+        message="Upgrade Fragment version to at least 1.3.0.">
+        <location
+            file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/MainActivity.kt"
+            line="97"
+            column="45"
+            startOffset="4194"
+            endLine="107"
+            endColumn="6"
+            endOffset="4582"/>
     </incident>
 
     <incident
@@ -53,117 +315,127 @@
     </incident>
 
     <incident
-        id="UseTomlInstead"
+        id="GradleDependency"
         severity="warning"
-        message="Use version catalog instead">
-        <fix-composite
-            description="Replace with new library catalog declaration for io-coil-kt-coil-compose8"
-            robot="true">
-            <fix-replace
-                description="Replace with io-coil-kt-coilCompose7 = &quot;2.2.2&quot;..."
-                robot="true"
-                oldString="_lint_insert_begin_"
-                replacement="io-coil-kt-coilCompose7 = &quot;2.2.2&quot;&#xA;">
-                <range
-                    file="../gradle/libs.versions.toml"
-                    startOffset="25"
-                    endOffset="25"/>
-            </fix-replace>
-            <fix-replace
-                description="Replace with io-coil-kt-coil-compose8 = { module = &quot;io.coil-kt:coil-compose&quot;, version.ref = &quot;io-coil-kt-coilCompose7&quot; }..."
-                robot="true"
-                oldString="_lint_insert_begin_"
-                replacement="io-coil-kt-coil-compose8 = { module = &quot;io.coil-kt:coil-compose&quot;, version.ref = &quot;io-coil-kt-coilCompose7&quot; }&#xA;">
-                <range
-                    file="../gradle/libs.versions.toml"
-                    startOffset="653"
-                    endOffset="653"/>
-            </fix-replace>
-            <fix-replace
-                description="Replace with libs.io.coil.kt.coil.compose8"
-                robot="true"
-                replacement="libs.io.coil.kt.coil.compose8">
-                <range
-                    file="${:app*projectDir}/build.gradle.kts"
-                    startOffset="1099"
-                    endOffset="1130"/>
-            </fix-replace>
-        </fix-composite>
+        message="A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.11.0">
+        <fix-replace
+            description="Change to 2.11.0"
+            family="Update versions"
+            oldString="2.9.0"
+            replacement="2.11.0"/>
         <location
-            file="${:app*projectDir}/build.gradle.kts"
-            line="48"
-            column="21"
-            startOffset="1100"
-            endLine="48"
-            endColumn="50"
-            endOffset="1129"/>
+            file="../gradle/libs.versions.toml"
+            line="20"
+            column="8"
+            startOffset="389"
+            endLine="20"
+            endColumn="15"
+            endOffset="396"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.room:room-runtime than 2.4.3 is available: 2.8.4">
+        message="A newer version of androidx.media3:media3-exoplayer than 1.3.1 is available: 1.8.0">
+        <fix-replace
+            description="Change to 1.8.0"
+            family="Update versions"
+            oldString="1.3.1"
+            replacement="1.8.0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="10"
+            startOffset="374"
+            endLine="19"
+            endColumn="17"
+            endOffset="381"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.media3:media3-ui than 1.3.1 is available: 1.8.0">
+        <fix-replace
+            description="Change to 1.8.0"
+            family="Update versions"
+            oldString="1.3.1"
+            replacement="1.8.0"/>
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="10"
+            startOffset="374"
+            endLine="19"
+            endColumn="17"
+            endOffset="381"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.4">
         <fix-replace
             description="Change to 2.8.4"
             family="Update versions"
-            oldString="2.4.3"
+            oldString="2.6.1"
             replacement="2.8.4"/>
         <location
             file="../gradle/libs.versions.toml"
             line="11"
             column="8"
-            startOffset="213"
+            startOffset="214"
             endLine="11"
             endColumn="15"
-            endOffset="220"/>
+            endOffset="221"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.room:room-compiler than 2.4.3 is available: 2.8.4">
+        message="A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.4">
         <fix-replace
             description="Change to 2.8.4"
             family="Update versions"
-            oldString="2.4.3"
+            oldString="2.6.1"
             replacement="2.8.4"/>
         <location
             file="../gradle/libs.versions.toml"
             line="11"
             column="8"
-            startOffset="213"
+            startOffset="214"
             endLine="11"
             endColumn="15"
-            endOffset="220"/>
+            endOffset="221"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.room:room-ktx than 2.4.3 is available: 2.8.4">
+        message="A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.4">
         <fix-replace
             description="Change to 2.8.4"
             family="Update versions"
-            oldString="2.4.3"
+            oldString="2.6.1"
             replacement="2.8.4"/>
         <location
             file="../gradle/libs.versions.toml"
             line="11"
             column="8"
-            startOffset="213"
+            startOffset="214"
             endLine="11"
             endColumn="15"
-            endOffset="220"/>
+            endOffset="221"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.core:core-ktx than 1.9.0 is available: 1.17.0">
+        message="A newer version of androidx.core:core-ktx than 1.13.1 is available: 1.17.0">
         <fix-replace
             description="Change to 1.17.0"
             family="Update versions"
-            oldString="1.9.0"
+            oldString="1.13.1"
             replacement="1.17.0"/>
         <location
             file="../gradle/libs.versions.toml"
@@ -171,8 +443,8 @@
             column="11"
             startOffset="53"
             endLine="4"
-            endColumn="18"
-            endOffset="60"/>
+            endColumn="19"
+            endOffset="61"/>
     </incident>
 
     <incident
@@ -188,10 +460,10 @@
             file="../gradle/libs.versions.toml"
             line="6"
             column="16"
-            startOffset="93"
+            startOffset="94"
             endLine="6"
             endColumn="23"
-            endOffset="100"/>
+            endOffset="101"/>
     </incident>
 
     <incident
@@ -207,105 +479,86 @@
             file="../gradle/libs.versions.toml"
             line="7"
             column="16"
-            startOffset="116"
+            startOffset="117"
             endLine="7"
             endColumn="23"
-            endOffset="123"/>
+            endOffset="124"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.6.0 is available: 2.10.0">
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.0 is available: 2.10.0">
         <fix-replace
             description="Change to 2.10.0"
             family="Update versions"
-            oldString="2.6.0"
+            oldString="2.8.0"
             replacement="2.10.0"/>
         <location
             file="../gradle/libs.versions.toml"
             line="8"
             column="23"
-            startOffset="146"
+            startOffset="147"
             endLine="8"
             endColumn="30"
-            endOffset="153"/>
+            endOffset="154"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.activity:activity-compose than 1.6.1 is available: 1.12.0">
+        message="A newer version of androidx.activity:activity-compose than 1.9.0 is available: 1.12.0">
         <fix-replace
             description="Change to 1.12.0"
             family="Update versions"
-            oldString="1.6.1"
+            oldString="1.9.0"
             replacement="1.12.0"/>
         <location
             file="../gradle/libs.versions.toml"
             line="9"
             column="19"
-            startOffset="172"
+            startOffset="173"
             endLine="9"
             endColumn="26"
-            endOffset="179"/>
+            endOffset="180"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.compose:compose-bom than 2023.01.00 is available: 2025.11.01">
+        message="A newer version of androidx.compose:compose-bom than 2024.05.00 is available: 2025.11.01">
         <fix-replace
             description="Change to 2025.11.01"
             family="Update versions"
-            oldString="2023.01.00"
+            oldString="2024.05.00"
             replacement="2025.11.01"/>
         <location
             file="../gradle/libs.versions.toml"
             line="10"
             column="14"
-            startOffset="193"
+            startOffset="194"
             endLine="10"
             endColumn="26"
-            endOffset="205"/>
+            endOffset="206"/>
     </incident>
 
     <incident
         id="GradleDependency"
         severity="warning"
-        message="A newer version of androidx.navigation:navigation-compose than 2.5.3 is available: 2.9.6">
+        message="A newer version of androidx.navigation:navigation-compose than 2.7.7 is available: 2.9.6">
         <fix-replace
             description="Change to 2.9.6"
             family="Update versions"
-            oldString="2.5.3"
+            oldString="2.7.7"
             replacement="2.9.6"/>
         <location
             file="../gradle/libs.versions.toml"
             line="13"
             column="14"
-            startOffset="255"
+            startOffset="257"
             endLine="13"
             endColumn="21"
-            endOffset="262"/>
-    </incident>
-
-    <incident
-        id="GradleDependency"
-        severity="warning"
-        message="A newer version of io.coil-kt:coil-compose than 2.2.2 is available: 2.6.0">
-        <fix-replace
-            description="Change to 2.6.0"
-            family="Update versions"
-            oldString="2.2.2"
-            replacement="2.6.0"/>
-        <location
-            file="${:app*projectDir}/build.gradle.kts"
-            line="48"
-            column="21"
-            startOffset="1100"
-            endLine="48"
-            endColumn="50"
-            endOffset="1129"/>
+            endOffset="264"/>
     </incident>
 
 </incidents>

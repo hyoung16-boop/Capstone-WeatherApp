@@ -7,6 +7,11 @@
                     boolean="true"/>
             </map>
     </map>
+    <map id="ScheduleExactAlarm">
+        <entry
+            name="ChecksExactAlarmPermission"
+            boolean="true"/>
+    </map>
     <map id="NotificationPermission">
         <entry
             name="source"
@@ -63,7 +68,7 @@
             endOffset="81"/>
         <entry
             name="model"
-            string="color[purple_200(D),black(D),teal_200(D),white(D),teal_700(D),purple_700(D),purple_500(D)],drawable[ic_launcher_foreground(U),ic_launcher_background(U),ic_launcher_foreground_1(R)],mipmap[ic_launcher_round(U),ic_launcher(U)],string[app_name(U)],style[Theme_WeatherProject(U)],xml[data_extraction_rules(U),backup_rules(U)];7^9,a^8^7,b^8^7;;;"/>
+            string="color[purple_200(D),black(D),teal_200(D),white(D),teal_700(D),purple_700(D),purple_500(D)],drawable[ic_launcher_foreground(U),ic_launcher_background(U)],mipmap[ic_launcher_round(U),ic_launcher(U)],string[app_name(U)],style[Theme_WeatherProject(U)],xml[network_security_config(U),data_extraction_rules(U),backup_rules(U)];9^8^7,a^8^7;;;"/>
         <location id="R.color.teal_200"
             file="${:app*debug*sourceProvider*0*resDir*0}/values/colors.xml"
             line="6"

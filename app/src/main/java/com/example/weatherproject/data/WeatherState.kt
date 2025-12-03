@@ -11,7 +11,8 @@ data class WeatherState(
     val weeklyForecast: List<WeeklyForecast> = emptyList(),
     val latitude: Double? = null,
     val longitude: Double? = null,
-    val address: String = "위치 정보 없음"
+    val address: String = "위치 정보 없음",
+    val lastUpdated: String = "업데이트 정보 없음"
 )
 
 @Immutable

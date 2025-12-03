@@ -26,11 +26,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.weatherproject.ui.CctvViewModel
 
 @Composable
 fun WeatherTopAppBar(
     viewModel: MainViewModel,
     searchViewModel: SearchViewModel,
+    cctvViewModel: CctvViewModel,
     navController: NavController
 ) {
     val searchText by searchViewModel.searchText.collectAsState()
@@ -99,6 +101,7 @@ fun WeatherTopAppBar(
                                 .clickable {
                                     searchViewModel.onCitySelected(context, city) { lat, lon ->
                                         viewModel.updateWeatherByLocation(city, lat, lon)
+                                        cctvViewModel.fetchCctvByLocation(lat, lon, null)
                                     }
                                 }
                                 .padding(16.dp),

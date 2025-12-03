@@ -37,12 +37,12 @@
       applicationId="com.example.weatherproject"
       generatedSourceFolders="build\generated\ksp\debug\java;build\generated\ksp\debug\kotlin;build\generated\ap_generated_sources\debug\out"
       generatedResourceFolders="build\generated\res\resValues\debug"
-      desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\e88bddeace0c5cadaa9f074b7f02fa55\transformed\D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="C:\Users\user\.gradle\caches\8.13\transforms\46c5791bbb1d41077a4e0a4d6834eaa1\transformed\D8BackportedDesugaredMethods.txt">
   </mainArtifact>
   <androidTestArtifact
       applicationId="com.example.weatherproject.test"
       generatedResourceFolders="build\generated\res\resValues\androidTest\debug"
-      desugaredMethodsFiles="C:\Users\jueun\.gradle\caches\8.13\transforms\e88bddeace0c5cadaa9f074b7f02fa55\transformed\D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="C:\Users\user\.gradle\caches\8.13\transforms\46c5791bbb1d41077a4e0a4d6834eaa1\transformed\D8BackportedDesugaredMethods.txt">
   </androidTestArtifact>
   <testArtifact>
   </testArtifact>

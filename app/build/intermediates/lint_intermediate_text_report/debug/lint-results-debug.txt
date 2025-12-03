@@ -1,88 +1,64 @@
-C:\save\cj\weatherapp\app\build.gradle.kts:14: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
-        targetSdk = 34
-        ~~~~~~~~~~~~~~
+D:\save2\1\weatherapp\app\lint-baseline.xml: Information: 2 errors/warnings were listed in the baseline file (lint-baseline.xml) but not found in the project; perhaps they have been fixed? Another possible explanation is that lint recently stopped analyzing (and including results from) dependent projects by default. You can turn this back on with android.lintOptions.checkDependencies=true. Unmatched issue types: ObsoleteLintCustomCheck (2) [LintBaseline]
+D:\save2\1\weatherapp\app\lint-baseline.xml: Information: 8 errors and 24 warnings were filtered out because they are listed in the baseline file, lint-baseline.xml
+ [LintBaseline]
+C:\Users\user\.gradle\caches\8.13\transforms\bb9f91d261564fa5f6e9678f5da34ff7\transformed\runtime-release\jars\lint.jar: Warning: Library lint checks reference invalid APIs; these checks will be skipped!
 
-   Explanation for issues of type "OldTargetApi":
-   When your application runs on a version of Android that is more recent than
-   your targetSdkVersion specifies that it has been tested with, various
-   compatibility modes kick in. This ensures that your application continues
-   to work, but it may look out of place. For example, if the targetSdkVersion
-   is less than 14, your app may get an option button in the UI.
+Lint found an issue registry (androidx.compose.runtime.lint.RuntimeIssueRegistry)
+which contains some references to invalid API:
+org.jetbrains.kotlin.analysis.api.session.KtAnalysisSessionProvider: org.jetbrains.kotlin.analysis.api.lifetime.KtLifetimeTokenFactory getTokenFactory()
+(Referenced from androidx/compose/runtime/lint/AutoboxingStateCreationDetector.class)
 
-   To fix this issue, set the targetSdkVersion to the highest available value.
-   Then test your app to make sure everything works correctly. You may want to
-   consult the compatibility notes to see what changes apply to each version
-   you are adding support for:
-   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
-   as well as follow this guide:
-   https://developer.android.com/distribute/best-practices/develop/target-sdk.
-   html
+Therefore, this lint check library is not included
+in analysis. This affects the following lint checks:
+AutoboxingStateValueProperty
+AutoboxingStateCreation
+CoroutineCreationDuringComposition
+FlowOperatorInvokedInComposition
+ComposableLambdaParameterNaming
+ComposableLambdaParameterPosition
+ComposableNaming
+StateFlowValueCalledInComposition
+CompositionLocalNaming
+MutableCollectionMutableState
+ProduceStateDoesNotAssignValue
+RememberReturnType
+OpaqueUnitKey
+UnrememberedMutableState
 
-   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+To use this lint check, upgrade to a more recent version
+of the library. [ObsoleteLintCustomCheck]
+C:\Users\user\.gradle\caches\8.13\transforms\111a01ad213e9792df5750ba8fc3352b\transformed\lifecycle-livedata-core-2.8.0\jars\lint.jar: Warning: Library lint checks reference invalid APIs; these checks will be skipped!
 
-C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:11: Warning: Attribute dataExtractionRules is only used in API level 31 and higher (current min is 30) [UnusedAttribute]
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lint found an issue registry (androidx.lifecycle.lint.LiveDataCoreIssueRegistry)
+which contains some references to invalid API:
+org.jetbrains.kotlin.analysis.api.session.KtAnalysisSessionProvider: org.jetbrains.kotlin.analysis.api.lifetime.KtLifetimeTokenFactory getTokenFactory()
+(Referenced from androidx/lifecycle/lint/NonNullableMutableLiveDataDetector$createUastHandler$1.class)
 
-   Explanation for issues of type "UnusedAttribute":
-   This check finds attributes set in XML files that were introduced in a
-   version newer than the oldest version targeted by your application (with
-   the minSdkVersion attribute).
+Therefore, this lint check library is not included
+in analysis. This affects the following lint checks:
+NullSafeMutableLiveData
 
-   This is not an error; the application will simply ignore the attribute.
-   However, if the attribute is important to the appearance or functionality
-   of your application, you should consider finding an alternative way to
-   achieve the same result with only available attributes, and then you can
-   optionally create a copy of the layout in a layout-vNN folder which will be
-   used on API NN or higher where you can take advantage of the newer
-   attribute.
+To use this lint check, upgrade to a more recent version
+of the library. [ObsoleteLintCustomCheck]
 
-   Note: This check does not only apply to attributes. For example, some tags
-   can be unused too, such as the new <tag> element in layouts introduced in
-   API 21.
+   Explanation for issues of type "ObsoleteLintCustomCheck":
+   Lint can be extended with "custom checks": additional checks implemented by
+   developers and libraries to for example enforce specific API usages
+   required by a library or a company coding style guideline.
 
-C:\save\cj\weatherapp\app\src\main\AndroidManifest.xml:21: Warning: Redundant label can be removed [RedundantLabel]
-            android:label="@string/app_name"
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   The Lint APIs are not yet stable, so these checks may either cause a
+   performance degradation, or stop working, or provide wrong results.
 
-   Explanation for issues of type "RedundantLabel":
-   When an activity does not have a label attribute, it will use the one from
-   the application tag. Since the application has already specified the same
-   label, the label on this activity can be omitted.
+   This warning flags custom lint checks that are found to be using obsolete
+   APIs and will need to be updated to run in the current lint environment.
 
-C:\save\cj\weatherapp\app\build.gradle.kts:48: Warning: A newer version of io.coil-kt:coil-compose than 2.2.2 is available: 2.6.0 [GradleDependency]
-    implementation("io.coil-kt:coil-compose:2.2.2")
-                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:4: Warning: A newer version of androidx.core:core-ktx than 1.9.0 is available: 1.17.0 [GradleDependency]
-coreKtx = "1.9.0"
-          ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:6: Warning: A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0 [GradleDependency]
-junitVersion = "1.1.5"
-               ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:7: Warning: A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0 [GradleDependency]
-espressoCore = "3.5.1"
-               ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:8: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.6.0 is available: 2.10.0 [GradleDependency]
-lifecycleRuntimeKtx = "2.6.0"
-                      ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:9: Warning: A newer version of androidx.activity:activity-compose than 1.6.1 is available: 1.12.0 [GradleDependency]
-activityCompose = "1.6.1"
-                  ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:10: Warning: A newer version of androidx.compose:compose-bom than 2023.01.00 is available: 2025.11.01 [GradleDependency]
-composeBom = "2023.01.00"
-             ~~~~~~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-compiler than 2.4.3 is available: 2.8.4 [GradleDependency]
-room = "2.4.3"
+   It may also flag issues found to be using a newer version of the API,
+   meaning that you need to use a newer version of lint (or Android Studio or
+   Gradle plugin etc) to work with these checks.
+
+D:\save2\1\weatherapp\gradle\libs.versions.toml:20: Warning: A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.11.0 [GradleDependency]
+work = "2.9.0"
        ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-ktx than 2.4.3 is available: 2.8.4 [GradleDependency]
-room = "2.4.3"
-       ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:11: Warning: A newer version of androidx.room:room-runtime than 2.4.3 is available: 2.8.4 [GradleDependency]
-room = "2.4.3"
-       ~~~~~~~
-C:\save\cj\weatherapp\gradle\libs.versions.toml:13: Warning: A newer version of androidx.navigation:navigation-compose than 2.5.3 is available: 2.9.6 [GradleDependency]
-navigation = "2.5.3"
-             ~~~~~~~
 
    Explanation for issues of type "GradleDependency":
    This detector looks for usages of libraries where the version you are using
@@ -91,63 +67,4 @@ navigation = "2.5.3"
    However, you may simply not be aware that a more recent version is
    available, and that is what this lint check helps find.
 
-C:\save\cj\weatherapp\app\src\main\java\com\example\weatherproject\util\NotificationHelper.kt:21: Warning: Unnecessary; SDK_INT is always >= 30 [ObsoleteSdkInt]
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-   Explanation for issues of type "ObsoleteSdkInt":
-   This check flags version checks that are not necessary, because the
-   minSdkVersion (or surrounding known API level) is already at least as high
-   as the version checked for.
-
-   Similarly, it also looks for resources in -vNN folders, such as values-v14
-   where the version qualifier is less than or equal to the minSdkVersion,
-   where the contents should be merged into the best folder.
-
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:3: Warning: The resource R.color.purple_200 appears to be unused [UnusedResources]
-    <color name="purple_200">#FFBB86FC</color>
-           ~~~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:4: Warning: The resource R.color.purple_500 appears to be unused [UnusedResources]
-    <color name="purple_500">#FF6200EE</color>
-           ~~~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:5: Warning: The resource R.color.purple_700 appears to be unused [UnusedResources]
-    <color name="purple_700">#FF3700B3</color>
-           ~~~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:6: Warning: The resource R.color.teal_200 appears to be unused [UnusedResources]
-    <color name="teal_200">#FF03DAC5</color>
-           ~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:7: Warning: The resource R.color.teal_700 appears to be unused [UnusedResources]
-    <color name="teal_700">#FF018786</color>
-           ~~~~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:8: Warning: The resource R.color.black appears to be unused [UnusedResources]
-    <color name="black">#FF000000</color>
-           ~~~~~~~~~~~~
-C:\save\cj\weatherapp\app\src\main\res\values\colors.xml:9: Warning: The resource R.color.white appears to be unused [UnusedResources]
-    <color name="white">#FFFFFFFF</color>
-           ~~~~~~~~~~~~
-
-   Explanation for issues of type "UnusedResources":
-   Unused resources make applications larger and slow down builds.
-
-
-   The unused resource check can ignore tests. If you want to include
-   resources that are only referenced from tests, consider packaging them in a
-   test source set instead.
-
-   You can include test sources in the unused resource check by setting the
-   system property lint.unused-resources.include-tests =true, and to exclude
-   them (usually for performance reasons), use
-   lint.unused-resources.exclude-tests =true.
-   ,
-
-C:\save\cj\weatherapp\app\build.gradle.kts:48: Warning: Use version catalog instead [UseTomlInstead]
-    implementation("io.coil-kt:coil-compose:2.2.2")
-                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-   Explanation for issues of type "UseTomlInstead":
-   If your project is using a libs.versions.toml file, you should place all
-   Gradle dependencies in the TOML file. This lint check looks for version
-   declarations outside of the TOML file and suggests moving them (and in the
-   IDE, provides a quickfix to performing the operation automatically).
-
-0 errors, 23 warnings
+0 errors, 3 warnings (8 errors, 24 warnings filtered by baseline lint-baseline.xml)

@@ -16,7 +16,6 @@ attr buttonSize
 attr circleCrop
 attr colorScheme
 attr controller_layout_id
-attr coordinatorLayoutStyle
 attr data
 attr dataPattern
 attr default_artwork
@@ -45,16 +44,9 @@ attr hide_on_touch
 attr imageAspectRatio
 attr imageAspectRatioAdjust
 attr keep_content_on_player_reset
-attr keylines
 attr lStar
 attr launchSingleTop
 attr layoutManager
-attr layout_anchor
-attr layout_anchorGravity
-attr layout_behavior
-attr layout_dodgeInsetEdges
-attr layout_insetEdge
-attr layout_keyline
 attr mimeType
 attr navGraph
 attr nestedScrollViewStyle
@@ -94,7 +86,6 @@ attr shutter_background_color
 attr spanCount
 attr stackFromEnd
 attr startDestination
-attr statusBarBackground
 attr surface_type
 attr targetPackage
 attr time_bar_min_update_interval
@@ -104,9 +95,15 @@ attr unplayed_color
 attr uri
 attr use_artwork
 attr use_controller
+bool enable_system_alarm_service_default
+bool enable_system_foreground_service_default
+bool enable_system_job_service_default
+bool workmanager_test_configuration
 color androidx_core_ripple_material_light
 color androidx_core_secondary_text_default_material_light
 color black
+color call_notification_answer_color
+color call_notification_decline_color
 color common_google_signin_btn_text_dark
 color common_google_signin_btn_text_dark_default
 color common_google_signin_btn_text_dark_disabled
@@ -304,6 +301,12 @@ drawable exo_styled_controls_vr
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_100tb
+drawable ic_call_answer
+drawable ic_call_answer_low
+drawable ic_call_answer_video
+drawable ic_call_answer_video_low
+drawable ic_call_decline
+drawable ic_call_decline_low
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable notification_action_background
@@ -314,6 +317,7 @@ drawable notification_bg_low_pressed
 drawable notification_bg_normal
 drawable notification_bg_normal_pressed
 drawable notification_icon_background
+drawable notification_oversize_large_icon_bg
 drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
@@ -369,17 +373,13 @@ id blocking
 id bottom
 id cancel_action
 id center
-id center_horizontal
-id center_vertical
 id chronometer
-id clip_horizontal
-id clip_vertical
 id coil_request_manager
 id compose_view_saveable_id_tag
 id consume_window_insets_tag
 id dark
 id dialog_button
-id end
+id edit_text_id
 id end_padder
 id exo_ad_overlay
 id exo_artwork
@@ -431,12 +431,11 @@ id exo_time
 id exo_track_selection_view
 id exo_vr
 id fill
-id fill_horizontal
-id fill_vertical
 id fit
 id fixed_height
 id fixed_width
 id forever
+id hide_ime_id
 id hide_in_inspector_tag
 id icon
 id icon_group
@@ -446,7 +445,6 @@ id inspection_slot_table_set
 id is_pooling_container_tag
 id italic
 id item_touch_helper_previous_elevation
-id left
 id light
 id line1
 id line3
@@ -462,12 +460,11 @@ id notification_main_column_container
 id off
 id one
 id pooling_container_listener_holder_tag
-id right
+id report_drawn
 id right_icon
 id right_side
 id spherical_gl_surface_view
 id standard
-id start
 id status_bar_latest_event_content
 id surface_view
 id tag_accessibility_actions
@@ -488,7 +485,6 @@ id text2
 id texture_view
 id time
 id title
-id top
 id video_decoder_gl_surface_view
 id view_tree_lifecycle_owner
 id view_tree_on_back_pressed_dispatcher_owner
@@ -514,6 +510,8 @@ layout exo_styled_settings_list
 layout exo_styled_settings_list_item
 layout exo_styled_sub_settings_list_item
 layout exo_track_selection_dialog
+layout ime_base_split_test_activity
+layout ime_secondary_split_test_activity
 layout notification_action
 layout notification_action_tombstone
 layout notification_media_action
@@ -535,6 +533,13 @@ plurals exo_controls_fastforward_by_amount_description
 plurals exo_controls_rewind_by_amount_description
 string androidx_startup
 string app_name
+string call_notification_answer_action
+string call_notification_answer_video_action
+string call_notification_decline_action
+string call_notification_hang_up_action
+string call_notification_incoming_text
+string call_notification_ongoing_text
+string call_notification_screening_text
 string close_drawer
 string close_sheet
 string common_google_play_services_enable_button
@@ -611,6 +616,7 @@ string exo_track_surround
 string exo_track_surround_5_point_1
 string exo_track_surround_7_point_1
 string exo_track_unknown
+string exo_track_unknown_name
 string in_progress
 string indeterminate
 string navigation_menu
@@ -621,8 +627,11 @@ string range_end
 string range_start
 string selected
 string status_bar_notification_info_overflow
+string switch_role
 string tab
 string template_percent
+string tooltip_description
+string tooltip_label
 style DialogWindowTheme
 style ExoMediaButton
 style ExoMediaButton_FastForward
@@ -671,7 +680,6 @@ style TextAppearance_Compat_Notification_Title_Media
 style Theme_WeatherProject
 style Widget_Compat_NotificationActionContainer
 style Widget_Compat_NotificationActionText
-style Widget_Support_CoordinatorLayout
 styleable ActivityNavigator android_name action data dataPattern targetPackage
 styleable AnimatedStateListDrawableCompat android_dither android_visible android_variablePadding android_constantSize android_enterFadeDuration android_exitFadeDuration
 styleable AnimatedStateListDrawableItem android_id android_drawable
@@ -679,8 +687,6 @@ styleable AnimatedStateListDrawableTransition android_drawable android_toId andr
 styleable AspectRatioFrameLayout resize_mode
 styleable Capability queryPatterns shortcutMatchRequired
 styleable ColorStateListItem android_color android_alpha android_lStar alpha lStar
-styleable CoordinatorLayout keylines statusBarBackground
-styleable CoordinatorLayout_Layout android_layout_gravity layout_anchor layout_anchorGravity layout_behavior layout_dodgeInsetEdges layout_insetEdge layout_keyline
 styleable DefaultTimeBar ad_marker_color ad_marker_width bar_gravity bar_height buffered_color played_ad_marker_color played_color scrubber_color scrubber_disabled_size scrubber_dragged_size scrubber_drawable scrubber_enabled_size touch_target_height unplayed_color
 styleable FontFamily fontProviderAuthority fontProviderCerts fontProviderFetchStrategy fontProviderFetchTimeout fontProviderPackage fontProviderQuery fontProviderSystemFontFamily
 styleable FontFamilyFont android_font android_fontWeight android_fontStyle android_ttcIndex android_fontVariationSettings font fontStyle fontVariationSettings fontWeight ttcIndex

@@ -11,15 +11,16 @@ import com.example.weatherproject.ui.screens.DetailWeatherScreen
 import com.example.weatherproject.ui.screens.ForecastScreen
 import com.example.weatherproject.ui.screens.HomeScreen
 import com.example.weatherproject.ui.screens.CctvScreen
-import com.example.weatherproject.ui.screens.CctvPlayerScreen  // ✅ 추가
-import java.net.URLDecoder  // ✅ 추가
-import java.nio.charset.StandardCharsets  // ✅ 추가
+import com.example.weatherproject.ui.screens.CctvPlayerScreen
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun WeatherNavHost(
     weatherState: WeatherState,
-    viewModel: MainViewModel,
-    searchViewModel: SearchViewModel
+    mainViewModel: MainViewModel,
+    searchViewModel: SearchViewModel,
+    cctvViewModel: CctvViewModel
 ) {
     val navController = rememberNavController()
 
@@ -28,8 +29,9 @@ fun WeatherNavHost(
             HomeScreen(
                 weatherState = weatherState,
                 navController = navController,
-                viewModel = viewModel,
-                searchViewModel = searchViewModel
+                mainViewModel = mainViewModel,
+                searchViewModel = searchViewModel,
+                cctvViewModel = cctvViewModel
             )
         }
         composable("detail") {
@@ -50,10 +52,12 @@ fun WeatherNavHost(
         composable("cctv") {
             CctvScreen(
                 navController = navController,
-                viewModel = viewModel,
-                searchViewModel = searchViewModel
+                mainViewModel = mainViewModel,
+                searchViewModel = searchViewModel,
+                cctvViewModel = cctvViewModel
             )
         }
+
 
         // ✅ CCTV Player 화면 추가
         composable(

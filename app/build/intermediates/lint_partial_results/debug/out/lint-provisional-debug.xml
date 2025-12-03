@@ -2,26 +2,27 @@
 <incidents format="6" by="lint 8.1.0" type="conditional_incidents">
 
     <incident
-        id="UnusedAttribute"
+        id="ObsoleteSdkInt"
         severity="warning"
-        message="">
-        <fix-data minSdk="ffffffffe0000000" requiresApi="ffffffffc0000000"/>
+        message="Unnecessary; SDK_INT is always >= 31">
+        <fix-replace
+            description="Delete tools:targetApi"
+            replacement="">
+            <range
+                file="${:app*debug*sourceProvider*0*manifest*0}"
+                startOffset="1117"
+                endOffset="1137"/>
+        </fix-replace>
         <location
             file="${:app*debug*sourceProvider*0*manifest*0}"
-            line="11"
+            line="21"
             column="9"
-            startOffset="534"
-            endLine="11"
-            endColumn="65"
-            endOffset="590"/>
+            startOffset="1117"
+            endLine="21"
+            endColumn="29"
+            endOffset="1137"/>
         <map>
-            <api-levels id="minSdk"
-                value="ffffffffe0000000"/>
-            <api-levels id="requiresApi"
-                value="ffffffffc0000000"/>
-            <entry
-                name="message"
-                string="Attribute `dataExtractionRules` is only used in API level 31 and higher (current min is %1$s)"/>
+            <condition minGE="ffffffffc0000000"/>
         </map>
     </incident>
 
@@ -32,12 +33,12 @@
         <fix-data missing="android.permission.POST_NOTIFICATIONS"/>
         <location
             file="${:app*debug*sourceProvider*0*javaDir*0}/com/example/weatherproject/util/NotificationHelper.kt"
-            line="49"
+            line="50"
             column="9"
-            startOffset="1903"
-            endLine="49"
+            startOffset="1992"
+            endLine="50"
             endColumn="68"
-            endOffset="1962"/>
+            endOffset="2051"/>
     </incident>
 
 </incidents>

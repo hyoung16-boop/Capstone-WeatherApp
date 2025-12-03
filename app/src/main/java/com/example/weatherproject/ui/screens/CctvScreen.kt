@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.weatherproject.ui.CctvViewModel
 import com.example.weatherproject.ui.MainViewModel
 import com.example.weatherproject.ui.SearchViewModel
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,14 +41,16 @@ import android.util.Log
 @Composable
 fun CctvScreen(
     navController: NavController,
-    viewModel: MainViewModel,
-    searchViewModel: SearchViewModel
+    mainViewModel: MainViewModel,
+    searchViewModel: SearchViewModel,
+    cctvViewModel: CctvViewModel
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val mainUiState by mainViewModel.uiState.collectAsState()
+    val currentLocation by mainViewModel.currentLocation.collectAsState()
 
-    // CCTV 상태 가져오기
-    val cctvInfo by viewModel.cctvInfo.collectAsState()
-    val cctvError by viewModel.cctvError.collectAsState()
+    // CCTV 상태 가져오기 from CctvViewModel
+    val cctvInfo by cctvViewModel.cctvInfo.collectAsState()
+    val cctvError by cctvViewModel.cctvError.collectAsState()
 
     // CCTV 리스트 (단일 CCTV를 리스트로 변환)
     val allCctvList = cctvInfo?.let { listOf(it) } ?: emptyList()
@@ -61,9 +64,11 @@ fun CctvScreen(
     val searchResults by searchViewModel.searchResults.collectAsState()
     val context = LocalContext.current
 
-    // 화면 진입 시 CCTV 데이터 로드
-    LaunchedEffect(Unit) {
-        viewModel.fetchCurrentLocationCctvs()
+    // 화면 진입 시 현재 위치 CCTV 데이터 로드
+    LaunchedEffect(currentLocation) {
+        currentLocation?.let {
+            cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+        }
     }
 
     // 스크롤 감지
@@ -131,7 +136,9 @@ fun CctvScreen(
                         // 현재 위치 버튼
                         IconButton(onClick = {
                             android.widget.Toast.makeText(context, "주변 CCTV를 탐색합니다...", android.widget.Toast.LENGTH_SHORT).show()
-                            viewModel.fetchCurrentLocationCctvs()
+                            currentLocation?.let {
+                                cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+                            }
                         }) {
                             Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)
                         }
@@ -152,7 +159,8 @@ fun CctvScreen(
                                         .fillMaxWidth()
                                         .clickable {
                                             searchViewModel.onCitySelected(context, city) { lat, lon ->
-                                                viewModel.updateWeatherByLocation(city, lat, lon)
+                                                mainViewModel.updateWeatherByLocation(city, lat, lon)
+                                                cctvViewModel.fetchCctvByLocation(lat, lon, currentLocation)
                                             }
                                         }
                                         .padding(16.dp),
@@ -201,7 +209,11 @@ fun CctvScreen(
                             )
                             Spacer(modifier = Modifier.height(24.dp))
                             Button(
-                                onClick = { viewModel.fetchCurrentLocationCctvs() },
+                                onClick = {
+                                    currentLocation?.let {
+                                        cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+                                    }
+                                },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
                             ) {
                                 Text("다시 시도", color = Color.Black)

@@ -1,4 +1,5 @@
 package com.example.weatherproject.ui.components
+
 import com.example.weatherproject.data.CctvInfo
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -15,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-// import androidx.compose.material.icons.filled.CameraAlt
 import com.example.weatherproject.ui.icons.MyCameraAlt
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -37,6 +37,7 @@ import com.example.weatherproject.data.CurrentWeather
 import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeeklyForecast
+import com.example.weatherproject.util.ClothingRecommender
 
 // 1. 현재 날씨 카드 (확장 가능)
 @Composable
@@ -111,7 +112,7 @@ fun CurrentWeatherCard(
                         fontSize = 16.sp, 
                         color = Color.White
                     )
-                    Text(text = weather.feelsLike, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+                    Text(text = "체감 ${weather.feelsLike}", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
                 }
             }
 
@@ -282,8 +283,6 @@ fun WeeklyForecastContent(weeklyForecasts: List<WeeklyForecast>) {
     }
 }
 
-// --- 기존의 독립 Card 컴포넌트들 (이제 안 쓰이지만 호환성을 위해 남겨두거나 Content를 감싸도록 수정) ---
-
 @Composable
 fun WeatherDetailCard(details: WeatherDetails) {
     Card(
@@ -313,8 +312,6 @@ fun WeeklyForecastCard(weeklyForecasts: List<WeeklyForecast>) {
     }
 }
 
-// --- 나머지 하위 컴포넌트들 (변화 없음) ---
-
 @Composable
 fun WeatherContextItem(label: String, value: String, icon: String, interpret: (Int) -> String) {
     val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
@@ -334,13 +331,16 @@ fun WeatherContextItem(label: String, value: String, icon: String, interpret: (I
 
 @Composable
 fun PmGaugeItem(label: String, value: String) {
-    val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
-    val (status, color, progress) = when {
-        rawValue <= 30 -> Triple("좋음", Color(0xFF4CAF50), rawValue / 150f)
-        rawValue <= 80 -> Triple("보통", Color(0xFFFFC107), rawValue / 150f)
-        rawValue <= 150 -> Triple("나쁨", Color(0xFFFF9800), rawValue / 150f)
-        else -> Triple("매우 나쁨", Color(0xFFF44336), 1f)
+    val displayText = if (value.isBlank()) "정보 없음" else value
+
+    val (color, progress) = when (displayText) {
+        "좋음" -> Pair(Color(0xFF4CAF50), 0.2f)
+        "보통" -> Pair(Color(0xFFFFC107), 0.5f)
+        "나쁨" -> Pair(Color(0xFFFF9800), 0.8f)
+        "매우 나쁨" -> Pair(Color(0xFFF44336), 1.0f)
+        else -> Pair(Color.Gray, 0.0f) // "정보 없음" 또는 예상치 못한 값
     }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -348,22 +348,22 @@ fun PmGaugeItem(label: String, value: String) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(text = label, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
-                    Text(text = "$value ($status)", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(text = displayText, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
-        LinearProgressIndicator(progress = progress.coerceIn(0f, 1f), color = color, backgroundColor = Color.White.copy(alpha = 0.3f), modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)))
+        LinearProgressIndicator(progress = progress, color = color, backgroundColor = Color.White.copy(alpha = 0.3f), modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)))
         Spacer(modifier = Modifier.height(4.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("0", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
-            Text("150+", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+            Text("좋음", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+            Text("매우 나쁨", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
         }
     }
 }
 
 @Composable
-fun NearbyCctvCard(cctvList: List<  CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
+fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
         backgroundColor = Color.White.copy(alpha = 0.3f), 
@@ -388,95 +388,52 @@ fun NearbyCctvCard(cctvList: List<  CctvInfo>, onMoreClick: () -> Unit, onCctvCl
             }
             Spacer(modifier = Modifier.height(12.dp))
             
-            // 텍스트 리스트 형태 (썸네일 제거)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                cctvList.forEach { cctv ->
-                     Row(
-                         modifier = Modifier
-                             .fillMaxWidth()
-                             .background(Color.Black.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
-                             .clickable { onCctvClick(cctv) } // 여기서는 상세 페이지 이동이 아니므로, 그냥 둬도 무방하나 
-                                                              // 사용자가 '목록으로 가야 볼 수 있다'는 걸 인지하도록
-                                                              // onMoreClick()을 호출하게 하거나, 토스트를 띄울 수도 있음.
-                                                              // 현재 로직상 onCctvClick은 동작 X (TODO 상태). 
-                                                              // UX상 목록 화면으로 가는게 자연스러움.
-                             .padding(12.dp),
-                         horizontalArrangement = Arrangement.SpaceBetween,
-                         verticalAlignment = Alignment.CenterVertically
-                     ) {
-                         Text(text = cctv.roadName, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                         Text(text = cctv.distance, color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp)
-                     }
+            if (cctvList.isEmpty()) {
+                Text(
+                    text = "주변에 CCTV 정보가 없습니다.",
+                    color = Color.White.copy(alpha = 0.8f),
+                    modifier = Modifier.padding(vertical = 24.dp).align(Alignment.CenterHorizontally)
+                )
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    cctvList.forEach { cctv ->
+                         Row(
+                             modifier = Modifier
+                                 .fillMaxWidth()
+                                 .background(Color.Black.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
+                                 .clickable { onCctvClick(cctv) }
+                                 .padding(12.dp),
+                             horizontalArrangement = Arrangement.SpaceBetween,
+                             verticalAlignment = Alignment.CenterVertically
+                         ) {
+                             Text(text = cctv.roadName, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                             Text(text = cctv.distance, color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp)
+                         }
+                    }
                 }
-                
-                Spacer(modifier = Modifier.height(4.dp))
-                
-                // 전체 보기 버튼
-                Button(
-                    onClick = { onMoreClick() },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White.copy(alpha = 0.2f)),
-                    elevation = ButtonDefaults.elevation(0.dp)
-                ) {
-                    Text("CCTV 목록 전체 보기", color = Color.White)
-                }
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Button(
+                onClick = { onMoreClick() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White.copy(alpha = 0.2f)),
+                elevation = ButtonDefaults.elevation(0.dp)
+            ) {
+                Text("CCTV 목록 전체 보기", color = Color.White)
             }
         }
     }
 }
 
-// CctvThumbnailItem은 더 이상 사용하지 않으므로 삭제하거나 주석 처리 가능하지만, 
-// 깔끔하게 제거하고 필요한 경우 CctvScreen에서 자체적으로 구현하도록 함.
-// (현재 CctvScreen은 자체 구현체를 사용하고 있지 않고 이 파일의 컴포넌트를 참조하지 않는 것으로 보임 - CctvListItem 별도 존재)
-
-
 @Composable
 fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjustment: Int) {
-    val rawCurrent = currentTemp.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
     val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
     
-    // 실제 기온과 체감 온도의 차이가 1도 이하면 보정값 무시 (0으로 처리)
-    val finalAdjustment = if (Math.abs(rawCurrent - rawFeelsLike) <= 1) 0 else tempAdjustment
+    val (recommendationText, items) = ClothingRecommender.getRecommendation(rawFeelsLike, tempAdjustment)
     
-    val adjustedTemp = rawFeelsLike + finalAdjustment
-    
-    // 추천 멘트와 아이템 리스트를 쌍(Pair)으로 정의
-    val (recommendationText, items) = when {
-        adjustedTemp >= 28 -> Pair(
-            "푹푹 찌는 무더위예요. 민소매나 린넨 소재처럼 통기성이 좋은 시원한 옷차림이 좋아요.",
-            listOf("민소매", "반바지", "원피스", "린넨 셔츠", "샌들")
-        )
-        adjustedTemp >= 23 -> Pair(
-            "조금 더울 수 있는 날씨예요. 가벼운 반팔 티셔츠나 얇은 셔츠를 추천드려요.",
-            listOf("반팔 티셔츠", "얇은 셔츠", "반바지", "면바지")
-        )
-        adjustedTemp >= 20 -> Pair(
-            "활동하기 딱 좋은 날씨네요! 긴팔 티셔츠나 셔츠에 얇은 가디건을 걸치면 좋아요.",
-            listOf("긴팔 티셔츠", "셔츠", "가디건", "면바지", "청바지")
-        )
-        adjustedTemp >= 17 -> Pair(
-            "아침저녁으로 쌀쌀해요. 맨투맨이나 니트, 혹은 입고 벗기 편한 가벼운 외투를 챙기세요.",
-            listOf("니트", "맨투맨", "후드티", "가디건", "청바지", "슬랙스")
-        )
-        adjustedTemp >= 12 -> Pair(
-            "찬 바람이 느껴져요. 자켓이나 야상 점퍼, 도톰한 가디건으로 보온에 신경 써주세요.",
-            listOf("자켓", "야상", "트렌치코트", "니트", "스타킹")
-        )
-        adjustedTemp >= 9 -> Pair(
-            "꽤 쌀쌀한 날씨입니다. 트렌치코트나 두께감 있는 점퍼를 입고, 목을 따뜻하게 해주세요.",
-            listOf("트렌치코트", "라이더자켓", "기모 후드", "니트")
-        )
-        adjustedTemp >= 5 -> Pair(
-            "본격적인 추위가 시작됐어요. 코트 안에도 따뜻한 니트나 히트텍을 챙겨 입으시는 게 좋겠어요.",
-            listOf("코트", "가죽자켓", "히트텍", "기모 바지", "레깅스")
-        )
-        else -> Pair(
-            "매우 추운 날씨입니다! 두꺼운 패딩과 목도리, 장갑 등으로 꽁꽁 싸매서 체온을 지키세요.",
-            listOf("롱패딩", "숏패딩", "목도리", "장갑", "털모자", "방한화")
-        )
-    }
-    
-    val adjustmentText = if (finalAdjustment > 0) "(더위 많이 탐)" else if (finalAdjustment < 0) "(추위 많이 탐)" else ""
+    val adjustmentText = if (tempAdjustment > 0) "(더위 많이 탐)" else if (tempAdjustment < 0) "(추위 많이 탐)" else ""
     
     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), backgroundColor = Color.White.copy(alpha = 0.3f), elevation = 0.dp) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -489,7 +446,6 @@ fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjus
             Text(text = recommendationText, fontSize = 16.sp, color = Color.White)
             Spacer(modifier = Modifier.height(12.dp))
             
-            // 추천 아이템 태그 (가로 스크롤)
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(items) { item ->
                     ClothingItemChip(text = item)
@@ -497,7 +453,7 @@ fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjus
             }
             
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = "체감 온도: $feelsLike (보정: ${if(finalAdjustment > 0) "+" else ""}$finalAdjustment)", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+            Text(text = "체감 온도: $feelsLike (보정: ${if(tempAdjustment > 0) "+" else ""}$tempAdjustment)", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
         }
     }
 }
@@ -532,7 +488,6 @@ fun WeeklyForecastItem(forecast: WeeklyForecast) {
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // ✅ day 사용 (date 대신)
         Text(
             text = forecast.day,
             fontSize = 14.sp,
@@ -540,7 +495,6 @@ fun WeeklyForecastItem(forecast: WeeklyForecast) {
             modifier = Modifier.weight(2.3f)
         )
 
-        // ✅ 아이콘 표시 (pm10Status 대신)
         AsyncImage(
             model = forecast.iconUrl,
             contentDescription = null,
@@ -549,7 +503,6 @@ fun WeeklyForecastItem(forecast: WeeklyForecast) {
                 .weight(2.5f)
         )
 
-        // ✅ 강수확률 또는 빈 값 (precipitation은 주간예보에 없음)
         Text(
             text = "",
             fontSize = 13.sp,
@@ -557,7 +510,6 @@ fun WeeklyForecastItem(forecast: WeeklyForecast) {
             modifier = Modifier.weight(1.2f)
         )
 
-        // ✅ 최저/최고 온도
         Text(
             text = "${forecast.minTemp} / ${forecast.maxTemp}",
             fontSize = 15.sp,

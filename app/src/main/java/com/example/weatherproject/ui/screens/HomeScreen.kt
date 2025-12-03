@@ -1,10 +1,6 @@
 package com.example.weatherproject.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,35 +21,55 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.weatherproject.data.WeatherState
+import com.example.weatherproject.ui.CctvViewModel
 import com.example.weatherproject.ui.MainViewModel
 import com.example.weatherproject.ui.SearchViewModel
-import com.example.weatherproject.ui.components.NearbyCctvCard
 import com.example.weatherproject.ui.components.ClothingRecommendationCard
 import com.example.weatherproject.ui.components.CurrentWeatherCard
 import com.example.weatherproject.ui.components.HourlyForecastCard
+import com.example.weatherproject.ui.components.NearbyCctvCard
 import com.example.weatherproject.ui.components.WeatherTopAppBar
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     weatherState: WeatherState,
     navController: NavController,
-    viewModel: MainViewModel,
-    searchViewModel: SearchViewModel
+    mainViewModel: MainViewModel,
+    searchViewModel: SearchViewModel,
+    cctvViewModel: CctvViewModel
 ) {
-    val showDialog by viewModel.showSetupDialog.collectAsState()
-    val tempAdjustment by viewModel.tempAdjustment.collectAsState()
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val showDialog by mainViewModel.showSetupDialog.collectAsState()
+    val tempAdjustment by mainViewModel.tempAdjustment.collectAsState()
+    val isRefreshing by mainViewModel.isRefreshing.collectAsState()
+    
+    val currentLocation by mainViewModel.currentLocation.collectAsState()
+    val cctvInfo by cctvViewModel.cctvInfo.collectAsState()
+    val cctvError by cctvViewModel.cctvError.collectAsState()
+
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { viewModel.refreshData() }
+        onRefresh = { 
+            mainViewModel.refreshData() 
+            currentLocation?.let { cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it) }
+        }
     )
 
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(true) {
-        viewModel.errorEvent.collect { message ->
+        mainViewModel.errorEvent.collect { message ->
             scaffoldState.snackbarHostState.showSnackbar(message)
+        }
+    }
+    
+    // 현재 위치가 변경되면 CCTV 정보 가져오기
+    LaunchedEffect(currentLocation) {
+        currentLocation?.let {
+            if (cctvInfo == null) { // 정보가 없을 때만 자동 로드
+                cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+            }
         }
     }
 
@@ -62,7 +78,7 @@ fun HomeScreen(
 
     if (showDialog) {
         TemperaturePreferenceDialog(onDismiss = { }) { adjustment ->
-            viewModel.saveTempAdjustment(adjustment)
+            mainViewModel.saveTempAdjustment(adjustment)
         }
     }
 
@@ -70,8 +86,9 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         topBar = {
             WeatherTopAppBar(
-                viewModel = viewModel,
+                viewModel = mainViewModel,
                 searchViewModel = searchViewModel,
+                cctvViewModel = cctvViewModel,
                 navController = navController
             )
         },
@@ -90,26 +107,6 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                AnimatedVisibility(
-                    visible = isRefreshing,
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "최신 날씨 정보를 불러오는 중입니다...",
-                            color = Color.White,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-
-                // ⭐️ address 사용
                 CurrentWeatherCard(
                     weather = weatherState.currentWeather,
                     address = weatherState.address,
@@ -130,13 +127,49 @@ fun HomeScreen(
                     feelsLike = weatherState.currentWeather.feelsLike,
                     tempAdjustment = tempAdjustment
                 )
+                
+                cctvInfo?.let {
+                    NearbyCctvCard(
+                        cctvList = listOf(it),
+                        onMoreClick = { navController.navigate("cctv") },
+                        onCctvClick = { cctv ->
+                            val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
+                            navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
+                        }
+                    )
+                }
+                
+                cctvError?.let { message ->
+                    Text(
+                        text = message,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
 
-                // ⭐️ 빈 리스트로 대체
-                NearbyCctvCard(
-                    cctvList = emptyList(),
-                    onMoreClick = { navController.navigate("cctv") },
-                    onCctvClick = { cctv -> }
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "데이터 제공: 기상청",
+                        fontSize = 12.sp,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        text = weatherState.lastUpdated,
+                        fontSize = 12.sp,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -192,9 +225,8 @@ fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit)
 
                 Slider(
                     value = sliderPosition,
-                    onValueChange = { sliderPosition = it },
+                    onValueChange = { sliderPosition = it.roundToInt().toFloat() },
                     valueRange = -3f..3f,
-                    steps = 5,
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colors.primary,
                         activeTrackColor = MaterialTheme.colors.primary
