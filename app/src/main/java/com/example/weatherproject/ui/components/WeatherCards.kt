@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -249,9 +250,9 @@ fun WeatherDetailContent(details: WeatherDetails) {
         // 2. 습도
         WeatherContextItem(label = "습도", value = details.humidity, icon = "💧") { rawValue ->
             when {
-                rawValue < 40 -> "건조함 (수분 섭취 필수)"
+                rawValue < 40 -> "건조함"
                 rawValue in 40..60 -> "쾌적함"
-                else -> "습함 (불쾌지수 주의)"
+                else -> "습함"
             }
         }
         Divider(color = Color.White.copy(alpha = 0.2f), modifier = Modifier.padding(vertical = 12.dp))
@@ -331,14 +332,18 @@ fun WeatherContextItem(label: String, value: String, icon: String, interpret: (I
 
 @Composable
 fun PmGaugeItem(label: String, value: String) {
-    val displayText = if (value.isBlank()) "정보 없음" else value
+    val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
+    val (status, color, progress) = when {
+        rawValue <= 30 -> Triple("좋음", Color(0xFF4CAF50), rawValue / 150f)
+        rawValue <= 80 -> Triple("보통", Color(0xFFFFC107), rawValue / 150f)
+        rawValue <= 150 -> Triple("나쁨", Color(0xFFFF9800), rawValue / 150f)
+        else -> Triple("매우 나쁨", Color(0xFFF44336), 1f)
+    }
 
-    val (color, progress) = when (displayText) {
-        "좋음" -> Pair(Color(0xFF4CAF50), 0.2f)
-        "보통" -> Pair(Color(0xFFFFC107), 0.5f)
-        "나쁨" -> Pair(Color(0xFFFF9800), 0.8f)
-        "매우 나쁨" -> Pair(Color(0xFFF44336), 1.0f)
-        else -> Pair(Color.Gray, 0.0f) // "정보 없음" 또는 예상치 못한 값
+    val recommendation = when (status) {
+        "보통" -> "건강을 위해 마스크 권고"
+        "나쁨", "매우 나쁨" -> "마스크 착용 필수"
+        else -> ""
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -348,73 +353,102 @@ fun PmGaugeItem(label: String, value: String) {
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(text = label, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
-                    Text(text = displayText, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(text = status, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
+            Text(text = recommendation, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f), fontWeight = FontWeight.Medium)
         }
         Spacer(modifier = Modifier.height(12.dp))
-        LinearProgressIndicator(progress = progress, color = color, backgroundColor = Color.White.copy(alpha = 0.3f), modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)))
+        LinearProgressIndicator(progress = progress.coerceIn(0f, 1f), color = color, backgroundColor = Color.White.copy(alpha = 0.3f), modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)))
         Spacer(modifier = Modifier.height(4.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("좋음", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
-            Text("매우 나쁨", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+            Text("0", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+            Text("150+", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
         }
     }
 }
 
 @Composable
-fun NearbyCctvCard(cctvList: List<CctvInfo>, onMoreClick: () -> Unit, onCctvClick: (CctvInfo) -> Unit) {
+fun NearbyCctvCard(
+    isLoading: Boolean,
+    cctvInfo: CctvInfo?,
+    error: String?,
+    onMoreClick: () -> Unit,
+    onCctvClick: (CctvInfo) -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
-        backgroundColor = Color.White.copy(alpha = 0.3f), 
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        backgroundColor = Color.White.copy(alpha = 0.3f),
         elevation = 0.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
-                modifier = Modifier.fillMaxWidth(), 
-                horizontalArrangement = Arrangement.SpaceBetween, 
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(imageVector = Icons.Filled.MyCameraAlt, contentDescription = "CCTV", tint = Color.White)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "주변 도로 상황", 
-                        fontSize = 18.sp, 
-                        fontWeight = FontWeight.Bold, 
+                        text = "주변 도로 상황",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
-            
-            if (cctvList.isEmpty()) {
-                Text(
-                    text = "주변에 CCTV 정보가 없습니다.",
-                    color = Color.White.copy(alpha = 0.8f),
-                    modifier = Modifier.padding(vertical = 24.dp).align(Alignment.CenterHorizontally)
-                )
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    cctvList.forEach { cctv ->
-                         Row(
-                             modifier = Modifier
-                                 .fillMaxWidth()
-                                 .background(Color.Black.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
-                                 .clickable { onCctvClick(cctv) }
-                                 .padding(12.dp),
-                             horizontalArrangement = Arrangement.SpaceBetween,
-                             verticalAlignment = Alignment.CenterVertically
-                         ) {
-                             Text(text = cctv.roadName, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                             Text(text = cctv.distance, color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp)
-                         }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp), // 콘텐츠 영역 높이 고정
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    isLoading -> {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                    cctvInfo != null -> {
+                        // 성공 시 CCTV 정보 표시
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Black.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp))
+                                .clickable { onCctvClick(cctvInfo) }
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = cctvInfo.roadName, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Text(text = cctvInfo.distance, color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp)
+                        }
+                    }
+                    error != null -> {
+                        Text(
+                            text = error,
+                            color = Color.White.copy(alpha = 0.8f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = "위치 정보 확인 후 주변 CCTV 정보를 표시합니다.",
+                            color = Color.White.copy(alpha = 0.8f),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Button(
                 onClick = { onMoreClick() },
                 modifier = Modifier.fillMaxWidth(),

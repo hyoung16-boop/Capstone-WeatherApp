@@ -331,6 +331,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d(TAG, "강수 형태: ${currentResponse?.weather?.precipitationType}")
                 Log.d(TAG, "최고기온: ${currentResponse?.weather?.maxTemp}°C")
                 Log.d(TAG, "최저기온: ${currentResponse?.weather?.minTemp}°C")
+                Log.d(TAG, "미세먼지: ${currentResponse?.weather?.pm10}")
                 Log.d(TAG, "========================================")
 
                 // 3. 시간별 예보 API 호출
@@ -389,8 +390,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 humidity = "${weather?.humidity?.toInt() ?: 0}%",
                 precipitation = "${weather?.rainfall ?: 0.0} mm",
                 wind = "${weather?.windSpeed ?: 0.0} m/s",
-                pm10 = weather?.pm10?.trim() ?: "정보없음",
-                pm25 = weather?.pm25?.trim() ?: "정보없음",
+                pm10 = weather?.pm10 ?: "정보없음",
                 pressure = "1013 hPa",
                 visibility = "10 km",
                 uvIndex = "5"

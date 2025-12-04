@@ -33,9 +33,7 @@ data class CurrentWeatherData(
     @SerializedName("강수형태")
     val precipitationType: String?,
     @SerializedName("미세먼지")  // ⭐️ 키 이름 수정
-    val pm10: String?,
-    @SerializedName("초미세먼지")  // ⭐️ 키 이름 수정
-    val pm25: String?
+    val pm10: String?
 )
 
 data class HourlyForecastResponse(

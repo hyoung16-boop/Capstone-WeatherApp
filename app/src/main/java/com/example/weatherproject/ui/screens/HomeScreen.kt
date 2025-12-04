@@ -47,6 +47,7 @@ fun HomeScreen(
     val currentLocation by mainViewModel.currentLocation.collectAsState()
     val cctvInfo by cctvViewModel.cctvInfo.collectAsState()
     val cctvError by cctvViewModel.cctvError.collectAsState()
+    val isCctvLoading by cctvViewModel.isLoading.collectAsState()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -128,27 +129,16 @@ fun HomeScreen(
                     tempAdjustment = tempAdjustment
                 )
                 
-                cctvInfo?.let {
-                    NearbyCctvCard(
-                        cctvList = listOf(it),
-                        onMoreClick = { navController.navigate("cctv") },
-                        onCctvClick = { cctv ->
-                            val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
-                            navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
-                        }
-                    )
-                }
-                
-                cctvError?.let { message ->
-                    Text(
-                        text = message,
-                        color = Color.Red,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
+                NearbyCctvCard(
+                    isLoading = isCctvLoading,
+                    cctvInfo = cctvInfo,
+                    error = cctvError,
+                    onMoreClick = { navController.navigate("cctv") },
+                    onCctvClick = { cctv ->
+                        val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
+                        navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

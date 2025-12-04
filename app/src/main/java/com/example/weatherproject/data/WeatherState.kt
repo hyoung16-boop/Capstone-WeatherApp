@@ -32,7 +32,6 @@ data class WeatherDetails(
     val precipitation: String = "-- mm",
     val wind: String = "-- m/s",
     val pm10: String = "정보없음",
-    val pm25: String = "정보없음",
     val pressure: String = "-- hPa",
     val visibility: String = "-- km",
     val uvIndex: String = "--"

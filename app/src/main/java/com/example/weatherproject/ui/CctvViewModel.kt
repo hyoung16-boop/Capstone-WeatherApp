@@ -21,8 +21,12 @@ class CctvViewModel(application: Application) : AndroidViewModel(application) {
     private val _cctvError = MutableStateFlow<String?>(null)
     val cctvError: StateFlow<String?> = _cctvError
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     fun fetchCctvByLocation(lat: Double, lon: Double, currentLocation: Location?) {
         viewModelScope.launch {
+            _isLoading.value = true
             _cctvInfo.value = null // 이전 CCTV 정보 초기화
             _cctvError.value = null // 이전 에러 초기화
 
@@ -60,6 +64,8 @@ class CctvViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 Log.e("CctvViewModel", "CCTV API 호출 실패: ${e.message}", e)
                 _cctvError.value = "CCTV 정보를 가져오는 데 실패했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }

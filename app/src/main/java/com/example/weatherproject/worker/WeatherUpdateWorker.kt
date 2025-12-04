@@ -61,7 +61,19 @@ class WeatherUpdateWorker(
             val rainText = if (rainForecast != null) "• 3시간 내에 비 소식이 있을 수 있어요. ☔️" else null
             
             // 2-3. 미세먼지
-            val pm10Text = "• 미세먼지: ${weather.pm10 ?: "정보 없음"}"
+            val pm10Value = weather.pm10
+            val pm10Status = if (pm10Value != null) {
+                val rawValue = pm10Value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
+                when {
+                    rawValue <= 30 -> "좋음"
+                    rawValue <= 80 -> "보통"
+                    rawValue <= 150 -> "나쁨"
+                    else -> "매우 나쁨"
+                }
+            } else {
+                "정보 없음"
+            }
+            val pm10Text = "• 미세먼지: $pm10Status"
             
             // 2-4. 최종 알림 콘텐츠 조합
             val notificationContent = buildString {
