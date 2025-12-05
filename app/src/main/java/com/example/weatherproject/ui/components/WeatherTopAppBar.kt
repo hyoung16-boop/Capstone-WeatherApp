@@ -101,7 +101,7 @@ fun WeatherTopAppBar(
                                 .clickable {
                                     searchViewModel.onCitySelected(context, city) { lat, lon ->
                                         viewModel.updateWeatherByLocation(city, lat, lon)
-                                        cctvViewModel.fetchCctvByLocation(lat, lon, null)
+                                        cctvViewModel.updateSelectedLocation(lat, lon, city, null)
                                     }
                                 }
                                 .padding(16.dp),

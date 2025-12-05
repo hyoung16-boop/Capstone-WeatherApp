@@ -138,7 +138,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     getAddressFromLocation(it.latitude, it.longitude)
 
                     // 위치를 받으면 즉시 날씨 데이터 가져오기
-                    fetchWeatherFromServer(it.latitude, it.longitude)
+                    viewModelScope.launch {
+                        fetchWeatherFromServer(it.latitude, it.longitude)
+                    }
 
                     // UI 상태에도 위도/경도 반영
                     _uiState.value = _uiState.value.copy(
@@ -175,7 +177,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     getAddressFromLocation(location.latitude, location.longitude)
 
                     // 위치 업데이트되면 날씨도 업데이트
-                    fetchWeatherFromServer(location.latitude, location.longitude)
+                    viewModelScope.launch {
+                        fetchWeatherFromServer(location.latitude, location.longitude)
+                    }
 
                     // UI 상태에도 위도/경도 반영
                     _uiState.value = _uiState.value.copy(
@@ -310,47 +314,45 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // 서버에서 날씨 데이터 가져오기
-    private fun fetchWeatherFromServer(lat: Double, lon: Double) {
-        viewModelScope.launch {
-            try {
-                // 1. GPS 좌표 → 격자 좌표 변환
-                val (nx, ny) = GpsTransfer.convertToGrid(lat, lon)
-                Log.d(TAG, "GPS($lat, $lon) → Grid($nx, $ny)")
+    private suspend fun fetchWeatherFromServer(lat: Double, lon: Double) {
+        try {
+            // 1. GPS 좌표 → 격자 좌표 변환
+            val (nx, ny) = GpsTransfer.convertToGrid(lat, lon)
+            Log.d(TAG, "GPS($lat, $lon) → Grid($nx, $ny)")
 
-                // 2. 현재 날씨 API 호출
-                val currentResponse = withContext(Dispatchers.IO) {
-                    RetrofitClient.weatherApi.getCurrentWeather(nx, ny)
-                }
-
-                // 🔍 서버 응답 로그
-                Log.d(TAG, "========================================")
-                Log.d(TAG, "서버 응답 전체: $currentResponse")
-                Log.d(TAG, "기온: ${currentResponse?.weather?.temp}°C")
-                Log.d(TAG, "습도: ${currentResponse?.weather?.humidity}%")
-                Log.d(TAG, "하늘 상태: ${currentResponse?.weather?.skyCondition}")
-                Log.d(TAG, "강수 형태: ${currentResponse?.weather?.precipitationType}")
-                Log.d(TAG, "최고기온: ${currentResponse?.weather?.maxTemp}°C")
-                Log.d(TAG, "최저기온: ${currentResponse?.weather?.minTemp}°C")
-                Log.d(TAG, "미세먼지: ${currentResponse?.weather?.pm10}")
-                Log.d(TAG, "========================================")
-
-                // 3. 시간별 예보 API 호출
-                val hourlyResponse = withContext(Dispatchers.IO) {
-                    RetrofitClient.weatherApi.getHourlyForecast(nx, ny)
-                }
-
-                // 4. 주간 예보 API 호출
-                val weeklyResponse = withContext(Dispatchers.IO) {
-                    RetrofitClient.weatherApi.getWeeklyForecast(nx, ny)
-                }
-
-                // 5. 데이터 변환 및 UI 업데이트
-                updateUiWithServerData(currentResponse, hourlyResponse, weeklyResponse)
-
-            } catch (e: Exception) {
-                Log.e(TAG, "API 호출 실패: ${e.message}", e)
-                _errorEvent.emit("날씨 정보를 가져올 수 없습니다: ${e.message}")
+            // 2. 현재 날씨 API 호출
+            val currentResponse = withContext(Dispatchers.IO) {
+                RetrofitClient.weatherApi.getCurrentWeather(nx, ny)
             }
+
+            // 🔍 서버 응답 로그
+            Log.d(TAG, "========================================")
+            Log.d(TAG, "서버 응답 전체: $currentResponse")
+            Log.d(TAG, "기온: ${currentResponse?.weather?.temp}°C")
+            Log.d(TAG, "습도: ${currentResponse?.weather?.humidity}%")
+            Log.d(TAG, "하늘 상태: ${currentResponse?.weather?.skyCondition}")
+            Log.d(TAG, "강수 형태: ${currentResponse?.weather?.precipitationType}")
+            Log.d(TAG, "최고기온: ${currentResponse?.weather?.maxTemp}°C")
+            Log.d(TAG, "최저기온: ${currentResponse?.weather?.minTemp}°C")
+            Log.d(TAG, "미세먼지: ${currentResponse?.weather?.pm10}")
+            Log.d(TAG, "========================================")
+
+            // 3. 시간별 예보 API 호출
+            val hourlyResponse = withContext(Dispatchers.IO) {
+                RetrofitClient.weatherApi.getHourlyForecast(nx, ny)
+            }
+
+            // 4. 주간 예보 API 호출
+            val weeklyResponse = withContext(Dispatchers.IO) {
+                RetrofitClient.weatherApi.getWeeklyForecast(nx, ny)
+            }
+
+            // 5. 데이터 변환 및 UI 업데이트
+            updateUiWithServerData(currentResponse, hourlyResponse, weeklyResponse)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "API 호출 실패: ${e.message}", e)
+            _errorEvent.emit("날씨 정보를 가져올 수 없습니다: ${e.message}")
         }
     }
 
@@ -497,9 +499,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateWeatherByLocation(city: String, lat: Double, lon: Double) {
-        fetchWeatherFromServer(lat, lon)
-        val currentState = _uiState.value
-        _uiState.value = currentState.copy(address = city, latitude = lat, longitude = lon)
+        viewModelScope.launch {
+            fetchWeatherFromServer(lat, lon)
+            val currentState = _uiState.value
+            _uiState.value = currentState.copy(address = city, latitude = lat, longitude = lon)
+        }
     }
 
     override fun onCleared() {

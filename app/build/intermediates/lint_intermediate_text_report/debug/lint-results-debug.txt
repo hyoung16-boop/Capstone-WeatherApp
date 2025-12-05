@@ -1,5 +1,5 @@
-D:\save2\1\weatherapp\app\lint-baseline.xml: Information: 2 errors/warnings were listed in the baseline file (lint-baseline.xml) but not found in the project; perhaps they have been fixed? Another possible explanation is that lint recently stopped analyzing (and including results from) dependent projects by default. You can turn this back on with android.lintOptions.checkDependencies=true. Unmatched issue types: ObsoleteLintCustomCheck (2) [LintBaseline]
-D:\save2\1\weatherapp\app\lint-baseline.xml: Information: 8 errors and 24 warnings were filtered out because they are listed in the baseline file, lint-baseline.xml
+D:\save2\2\weatherapp\app\lint-baseline.xml: Information: 4 errors/warnings were listed in the baseline file (lint-baseline.xml) but not found in the project; perhaps they have been fixed? Another possible explanation is that lint recently stopped analyzing (and including results from) dependent projects by default. You can turn this back on with android.lintOptions.checkDependencies=true. Unmatched issue types: GradleDependency (2), ObsoleteLintCustomCheck (2) [LintBaseline]
+D:\save2\2\weatherapp\app\lint-baseline.xml: Information: 8 errors and 22 warnings were filtered out because they are listed in the baseline file, lint-baseline.xml
  [LintBaseline]
 C:\Users\user\.gradle\caches\8.13\transforms\bb9f91d261564fa5f6e9678f5da34ff7\transformed\runtime-release\jars\lint.jar: Warning: Library lint checks reference invalid APIs; these checks will be skipped!
 
@@ -56,7 +56,16 @@ of the library. [ObsoleteLintCustomCheck]
    meaning that you need to use a newer version of lint (or Android Studio or
    Gradle plugin etc) to work with these checks.
 
-D:\save2\1\weatherapp\gradle\libs.versions.toml:20: Warning: A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.11.0 [GradleDependency]
+D:\save2\2\weatherapp\gradle\libs.versions.toml:9: Warning: A newer version of androidx.activity:activity-compose than 1.9.0 is available: 1.12.1 [GradleDependency]
+activityCompose = "1.9.0"
+                  ~~~~~~~
+D:\save2\2\weatherapp\gradle\libs.versions.toml:10: Warning: A newer version of androidx.compose:compose-bom than 2024.05.00 is available: 2025.12.00 [GradleDependency]
+composeBom = "2024.05.00"
+             ~~~~~~~~~~~~
+D:\save2\2\weatherapp\gradle\libs.versions.toml:14: Warning: A newer version of com.google.android.gms:play-services-location than 21.0.1 is available: 21.3.0 [GradleDependency]
+playServicesLocation = "21.0.1"
+                       ~~~~~~~~
+D:\save2\2\weatherapp\gradle\libs.versions.toml:20: Warning: A newer version of androidx.work:work-runtime-ktx than 2.9.0 is available: 2.11.0 [GradleDependency]
 work = "2.9.0"
        ~~~~~~~
 
@@ -67,4 +76,4 @@ work = "2.9.0"
    However, you may simply not be aware that a more recent version is
    available, and that is what this lint check helps find.
 
-0 errors, 3 warnings (8 errors, 24 warnings filtered by baseline lint-baseline.xml)
+0 errors, 6 warnings (8 errors, 22 warnings filtered by baseline lint-baseline.xml)

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.weatherproject.app-mergeReleaseResources-61:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.weatherproject.app-mergeReleaseResources-62:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\cbbe4e3d5a8b44cbb89f1900a70c7df8\\transformed\\core-1.13.1\\res\\values-en-rXC\\values-en-rXC.xml",

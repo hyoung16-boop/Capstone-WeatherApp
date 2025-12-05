@@ -1,6 +1,6 @@
 <lint-module
     format="1"
-    dir="D:\save2\1\weatherapp\app"
+    dir="D:\save2\2\weatherapp\app"
     name=":app"
     type="APP"
     maven="weatherapp:app:"

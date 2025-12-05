@@ -1,4 +1,4 @@
-#Wed Dec 03 13:37:14 KST 2025
-base.0=D\:\\save2\\1\\weatherapp\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+#Fri Dec 05 17:13:53 KST 2025
+base.0=D\:\\save2\\2\\weatherapp\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

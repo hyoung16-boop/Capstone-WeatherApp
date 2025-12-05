@@ -64,10 +64,13 @@ fun CctvScreen(
     val searchResults by searchViewModel.searchResults.collectAsState()
     val context = LocalContext.current
 
-    // 화면 진입 시 현재 위치 CCTV 데이터 로드
-    LaunchedEffect(currentLocation) {
-        currentLocation?.let {
-            cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+    // 화면이 처음 구성될 때, 선택된 위치가 없으면 현재 위치로 데이터를 로드
+    LaunchedEffect(Unit) {
+        if (cctvViewModel.selectedLocationInfo.value == null) {
+            currentLocation?.let {
+                val address = mainUiState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
+                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
+            }
         }
     }
 
@@ -93,12 +96,15 @@ fun CctvScreen(
 
     Scaffold(
         topBar = {
+            val selectedLocationInfo by cctvViewModel.selectedLocationInfo.collectAsState()
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .zIndex(1f)
             ) {
                 Column {
+                    // 뒤로가기, 검색, 현재위치 버튼
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -107,12 +113,9 @@ fun CctvScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // 뒤로가기 버튼
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기", tint = Color.White)
                         }
-
-                        // 검색 입력창
                         OutlinedTextField(
                             value = searchText,
                             onValueChange = { searchViewModel.onSearchTextChange(it) },
@@ -132,17 +135,40 @@ fun CctvScreen(
                                 .weight(1f)
                                 .padding(end = 8.dp)
                         )
-
-                        // 현재 위치 버튼
                         IconButton(onClick = {
                             android.widget.Toast.makeText(context, "주변 CCTV를 탐색합니다...", android.widget.Toast.LENGTH_SHORT).show()
                             currentLocation?.let {
-                                cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+                                val address = mainUiState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
+                                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
                             }
                         }) {
                             Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)
                         }
                     }
+
+                    // 현재 선택된 위치 주소 표시
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "선택된 위치",
+                            tint = Color.White.copy(alpha = 0.8f),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = selectedLocationInfo?.address ?: "위치를 검색하거나 현재 위치 버튼을 눌러주세요.",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
 
                     // 검색 결과 리스트
                     if (searchResults.isNotEmpty()) {
@@ -160,7 +186,7 @@ fun CctvScreen(
                                         .clickable {
                                             searchViewModel.onCitySelected(context, city) { lat, lon ->
                                                 mainViewModel.updateWeatherByLocation(city, lat, lon)
-                                                cctvViewModel.fetchCctvByLocation(lat, lon, currentLocation)
+                                                cctvViewModel.updateSelectedLocation(lat, lon, city, currentLocation)
                                             }
                                         }
                                         .padding(16.dp),
@@ -210,9 +236,7 @@ fun CctvScreen(
                             Spacer(modifier = Modifier.height(24.dp))
                             Button(
                                 onClick = {
-                                    currentLocation?.let {
-                                        cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
-                                    }
+                                    cctvViewModel.retryFetchCctv()
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
                             ) {

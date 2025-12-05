@@ -51,9 +51,12 @@ fun HomeScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { 
-            mainViewModel.refreshData() 
-            currentLocation?.let { cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it) }
+        onRefresh = {
+            mainViewModel.refreshData()
+            currentLocation?.let {
+                val address = weatherState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
+                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
+            }
         }
     )
 
@@ -69,7 +72,8 @@ fun HomeScreen(
     LaunchedEffect(currentLocation) {
         currentLocation?.let {
             if (cctvInfo == null) { // 정보가 없을 때만 자동 로드
-                cctvViewModel.fetchCctvByLocation(it.latitude, it.longitude, it)
+                val address = weatherState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
+                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
             }
         }
     }
@@ -170,7 +174,7 @@ fun HomeScreen(
                 modifier = Modifier.align(Alignment.TopCenter),
                 backgroundColor = Color.White,
                 contentColor = Color(0xFF2563EB),
-                scale = true
+                scale = false
             )
         }
     }
