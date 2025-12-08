@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -66,6 +67,7 @@ fun AlarmListScreen(
 
     val context = LocalContext.current
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    
     var hasExactAlarmPermission by remember {
         mutableStateOf(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -75,8 +77,7 @@ fun AlarmListScreen(
             }
         )
     }
-
-    // 설정 화면에서 돌아왔을 때 권한 상태를 다시 확인하기 위한 런처
+    
     val settingsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {
@@ -86,40 +87,64 @@ fun AlarmListScreen(
             true
         }
     }
-    
-    // 알림 권한 요청 런처
+
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+        )
+    }
+
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
-            if (isGranted) {
-                // 알림 권한 획득 후, 정확한 알람 권한 확인
-                if (hasExactAlarmPermission) {
-                    navController.navigate("alarm_edit")
-                } else {
-                    Toast.makeText(context, "알림 추가를 위해 '알림 및 리마인더' 권한을 허용해주세요.", Toast.LENGTH_LONG).show()
-                }
-            } else {
+            hasNotificationPermission = isGranted
+            if (!isGranted) {
                 Toast.makeText(context, "알림 권한이 거부되어 알림을 추가할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     )
 
-    // "알림 추가" 버튼 클릭 시 실행될 함수
+    var showPermissionDialog by remember { mutableStateOf(false) }
+
     val onAddAlarmClick = {
-        // 1. 기본 알림 권한 확인 (Android 13+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-        } 
-        // 2. 정확한 알람 권한 확인 (Android 12+)
-        else if (!hasExactAlarmPermission) {
-            Toast.makeText(context, "정확한 알람 실행을 위해 '알림 및 리마인더' 권한이 필요합니다.", Toast.LENGTH_LONG).show()
-            // 권한이 없으면 다이얼로그나 하단 바를 통해 설정으로 유도
-        }
-        // 3. 모든 권한이 있으면 화면 이동
-        else {
+        hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        } else { true }
+
+        hasExactAlarmPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else { true }
+
+        if (hasNotificationPermission && hasExactAlarmPermission) {
             navController.navigate("alarm_edit")
+        } else {
+            showPermissionDialog = true
         }
+    }
+
+    if (showPermissionDialog) {
+        PermissionRequestDialog(
+            hasNotificationPermission = hasNotificationPermission,
+            hasExactAlarmPermission = hasExactAlarmPermission,
+            onDismiss = { showPermissionDialog = false },
+            onConfirmNotification = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            },
+            onConfirmExactAlarm = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                        data = android.net.Uri.parse("package:${context.packageName}")
+                    }
+                    settingsLauncher.launch(intent)
+                }
+            }
+        )
     }
 
     Box(
@@ -147,7 +172,6 @@ fun AlarmListScreen(
                 )
             },
             bottomBar = {
-                // 정확한 알람 권한이 없을 경우 안내 바 표시
                 AnimatedVisibility(visible = !hasExactAlarmPermission) {
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -170,7 +194,9 @@ fun AlarmListScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             TextButton(onClick = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                        data = android.net.Uri.parse("package:${context.packageName}")
+                                    }
                                     settingsLauncher.launch(intent)
                                 }
                             }) {
@@ -186,7 +212,6 @@ fun AlarmListScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                // 상단: 전체 알림 스위치 및 설명
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -228,7 +253,6 @@ fun AlarmListScreen(
 
                 Divider(color = Color.White.copy(alpha = 0.3f), modifier = Modifier.padding(horizontal = 16.dp))
 
-                // 알림 목록
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -417,7 +441,6 @@ fun AlarmEditScreen(
                         AmPmButton(text = "오후", isSelected = !isAm) { isAm = false }
                     }
 
-                    // 시간 입력 TextField 커스텀 (흰색 스타일)
                     val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = Color.White,
                         focusedBorderColor = Color.White,
@@ -537,7 +560,7 @@ fun AlarmEditScreen(
                     OutlinedButton(
                         onClick = { currentAlarm?.let { viewModel.deleteAlarm(it) }; navController.popBackStack() },
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White, backgroundColor = Color.Transparent),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f)),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.5f)),
                         modifier = Modifier.fillMaxWidth(0.5f)
                     ) { Text("이 알림 삭제") }
                 }
@@ -578,5 +601,84 @@ fun DayToggleButton(day: String, isSelected: Boolean, onClick: () -> Unit) {
         elevation = ButtonDefaults.elevation(0.dp)
     ) {
         Text(text = day, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+private fun PermissionRequestDialog(
+    hasNotificationPermission: Boolean,
+    hasExactAlarmPermission: Boolean,
+    onDismiss: () -> Unit,
+    onConfirmNotification: () -> Unit,
+    onConfirmExactAlarm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("권한 안내", fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text("정확한 날씨 알림을 받으려면 아래의 '알림'과 '리마인더' 권한이 모두 필요합니다.", fontSize = 14.sp)
+                Divider(modifier = Modifier.padding(vertical = 4.dp))
+                PermissionStatusItem(
+                    permissionName = "알림",
+                    description = "날씨 정보를 알림으로 받습니다.",
+                    isGranted = hasNotificationPermission,
+                    buttonText = "권한 허용",
+                    onClick = onConfirmNotification
+                )
+                PermissionStatusItem(
+                    permissionName = "리마인더 (정확한 알람)",
+                    description = "지정한 시간에 정확히 알림을 울립니다.",
+                    isGranted = hasExactAlarmPermission,
+                    buttonText = "설정으로 이동",
+                    onClick = onConfirmExactAlarm
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("확인")
+            }
+        },
+        shape = RoundedCornerShape(16.dp)
+    )
+}
+
+@Composable
+private fun PermissionStatusItem(
+    permissionName: String,
+    description: String,
+    isGranted: Boolean,
+    buttonText: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(permissionName, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = description,
+                fontSize = 12.sp,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        if (!isGranted) {
+            Button(onClick = onClick, shape = RoundedCornerShape(8.dp)) {
+                Text(buttonText)
+            }
+        } else {
+            Text(
+                text = "허용됨",
+                color = Color(0xFF00C853), // Green A700
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
     }
 }

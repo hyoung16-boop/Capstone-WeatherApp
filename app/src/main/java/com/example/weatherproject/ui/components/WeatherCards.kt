@@ -109,7 +109,7 @@ fun CurrentWeatherCard(
                         color = Color.White
                     )
                     Text(
-                        text = "${weather.maxTemp} / ${weather.minTemp}", 
+                        text = "최고: ${weather.maxTemp} / 최저: ${weather.minTemp}", 
                         fontSize = 16.sp, 
                         color = Color.White
                     )
