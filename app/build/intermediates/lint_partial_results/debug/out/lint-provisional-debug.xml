@@ -2,6 +2,23 @@
 <incidents format="6" by="lint 8.1.0" type="conditional_incidents">
 
     <incident
+        id="ExactAlarm"
+        severity="error"
+        message="`USE_EXACT_ALARM` can only be used when targeting API level 33 or higher">
+        <location
+            file="${:app*debug*sourceProvider*0*manifest*0}"
+            line="10"
+            column="36"
+            startOffset="667"
+            endLine="10"
+            endColumn="70"
+            endOffset="701"/>
+        <map>
+            <condition targetLT="33"/>
+        </map>
+    </incident>
+
+    <incident
         id="ObsoleteSdkInt"
         severity="warning"
         message="Unnecessary; SDK_INT is always >= 31">
@@ -10,17 +27,17 @@
             replacement="">
             <range
                 file="${:app*debug*sourceProvider*0*manifest*0}"
-                startOffset="1117"
-                endOffset="1137"/>
+                startOffset="1192"
+                endOffset="1212"/>
         </fix-replace>
         <location
             file="${:app*debug*sourceProvider*0*manifest*0}"
-            line="21"
+            line="22"
             column="9"
-            startOffset="1117"
-            endLine="21"
+            startOffset="1192"
+            endLine="22"
             endColumn="29"
-            endOffset="1137"/>
+            endOffset="1212"/>
         <map>
             <condition minGE="ffffffffc0000000"/>
         </map>

@@ -61,10 +61,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _showSetupDialog = MutableStateFlow(false)
     val showSetupDialog = _showSetupDialog.asStateFlow()
 
+    // 체감온도 보정 다이얼로그 표시 여부 (설정 화면용)
+    private val _showTempAdjustmentDialog = MutableStateFlow(false)
+    val showTempAdjustmentDialog = _showTempAdjustmentDialog.asStateFlow()
+
     // 에러 메시지 (일회성 이벤트)
     private val _errorEvent = kotlinx.coroutines.flow.MutableSharedFlow<String>()
     val errorEvent = _errorEvent.asSharedFlow()
-
+    
     // 위치 관련
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)
@@ -106,7 +110,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun saveTempAdjustment(value: Int) {
         preferenceManager.setTempAdjustment(value)
         _tempAdjustment.value = value
-        _showSetupDialog.value = false
+        _showSetupDialog.value = false // 초기 설정 다이얼로그 닫기
+        _showTempAdjustmentDialog.value = false // 재설정 다이얼로그 닫기
+        
+        // 값이 변경되었으므로, 현재 날씨 정보가 있다면 체감온도를 즉시 재계산하고 UI를 업데이트합니다.
+        viewModelScope.launch {
+            _uiState.value.currentWeather?.let {
+                // 기존 서버 데이터로 UI 업데이트 함수를 다시 호출하여 체감온도만 갱신
+                fetchWeatherFromServer(_uiState.value.latitude ?: 0.0, _uiState.value.longitude ?: 0.0)
+            }
+        }
+    }
+
+    fun openTempAdjustmentDialog() {
+        _showTempAdjustmentDialog.value = true
+    }
+
+    fun closeTempAdjustmentDialog() {
+        _showTempAdjustmentDialog.value = false
     }
 
     // GPS가 비활성화되었을 때 호출될 함수

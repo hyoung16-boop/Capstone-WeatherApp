@@ -46,9 +46,7 @@ fun WeatherNavHost(
                 navController = navController
             )
         }
-        composable("settings") {
-            SettingsScreen(navController = navController)
-        }
+
         composable("cctv") {
             CctvScreen(
                 navController = navController,

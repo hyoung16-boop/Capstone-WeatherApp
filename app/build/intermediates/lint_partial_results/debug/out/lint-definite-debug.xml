@@ -11,12 +11,12 @@
             attribute="label"/>
         <location
             file="${:app*debug*sourceProvider*0*manifest*0}"
-            line="28"
+            line="29"
             column="13"
-            startOffset="1287"
-            endLine="28"
+            startOffset="1362"
+            endLine="29"
             endColumn="45"
-            endOffset="1319"/>
+            endOffset="1394"/>
     </incident>
 
     <incident
@@ -578,6 +578,22 @@
             endLine="13"
             endColumn="21"
             endOffset="276"/>
+    </incident>
+
+    <incident
+        id="IconLocation"
+        severity="warning"
+        message="Found bitmap drawable `res/drawable/ic_launcher_foreground_new.png` in densityless folder">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/drawable/ic_launcher_foreground_new.png"/>
+    </incident>
+
+    <incident
+        id="IconLauncherShape"
+        severity="warning"
+        message="Launcher icons should not fill every pixel of their square region; see the design guide for details">
+        <location
+            file="${:app*debug*sourceProvider*0*resDir*0}/drawable/ic_launcher_foreground_new.png"/>
     </incident>
 
 </incidents>

@@ -177,9 +177,9 @@ document.getElementById(id).style.display = 'none';
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Lint Report: 6 warnings</span>
+      <span class="mdl-layout-title">Lint Report: 8 warnings</span>
       <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Fri Dec 05 17:14:08 KST 2025 by AGP (8.1.0)</nav>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Mon Dec 08 15:20:15 KST 2025 by AGP (8.1.0)</nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -189,6 +189,8 @@ document.getElementById(id).style.display = 'none';
       <a class="mdl-navigation__link" href="#LintBaseline"><i class="material-icons warning-icon">warning</i>Baseline Issues (2)</a>
       <a class="mdl-navigation__link" href="#ObsoleteLintCustomCheck"><i class="material-icons warning-icon">warning</i>Obsolete custom lint check (2)</a>
       <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (4)</a>
+      <a class="mdl-navigation__link" href="#IconLauncherShape"><i class="material-icons warning-icon">warning</i>The launcher icon shape should use a distinct silhouette (1)</a>
+      <a class="mdl-navigation__link" href="#IconLocation"><i class="material-icons warning-icon">warning</i>Image defined in density-independent drawable folder (1)</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -214,6 +216,14 @@ document.getElementById(id).style.display = 'none';
 <tr>
 <td class="countColumn">4</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
 <a href="#GradleDependency">GradleDependency</a>: Obsolete Gradle Dependency</td></tr>
+<tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Usability:Icons">Usability:Icons</a>
+</td></tr>
+<tr>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#IconLauncherShape">IconLauncherShape</a>: The launcher icon shape should use a distinct silhouette</td></tr>
+<tr>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#IconLocation">IconLocation</a>: Image defined in density-independent drawable folder</td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (50)</a>
 </td></tr>
 <tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (40)</a>
@@ -418,6 +428,89 @@ To suppress this error, use the issue id "GradleDependency" as explained in the 
               <div class="mdl-card__actions mdl-card--border">
 <button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationGradleDependencyLink" onclick="reveal('explanationGradleDependency');">
 Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="GradleDependencyCardLink" onclick="hideid('GradleDependencyCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="Usability:Icons"></a>
+<a name="IconLauncherShape"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="IconLauncherShapeCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">The launcher icon shape should use a distinct silhouette</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/res/drawable/ic_launcher_foreground_new.png">../../src/main/res/drawable/ic_launcher_foreground_new.png</a></span>: <img class="embedimage" align="right" src="../../src/main/res/drawable/ic_launcher_foreground_new.png" /><span class="message">Launcher icons should not fill every pixel of their square region; see the design guide for details</span><br clear="right"/>
+</div>
+<div class="metadata"><div class="explanation" id="explanationIconLauncherShape" style="display: none;">
+According to the Android Design Guide (<a href="https://material.io/design/iconography/">https://material.io/design/iconography/</a>) your launcher icons should "use a distinct silhouette", a "three-dimensional, front view, with a slight perspective as if viewed from above, so that users perceive some depth."<br/>
+<br/>
+The unique silhouette implies that your launcher icon should not be a filled square.<br/>To suppress this error, use the issue id "IconLauncherShape" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">IconLauncherShape</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Icons</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Usability</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 6/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationIconLauncherShapeLink" onclick="reveal('explanationIconLauncherShape');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="IconLauncherShapeCardLink" onclick="hideid('IconLauncherShapeCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="IconLocation"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="IconLocationCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Image defined in density-independent drawable folder</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/res/drawable/ic_launcher_foreground_new.png">../../src/main/res/drawable/ic_launcher_foreground_new.png</a></span>: <img class="embedimage" align="right" src="../../src/main/res/drawable/ic_launcher_foreground_new.png" /><span class="message">Found bitmap drawable <code>res/drawable/ic_launcher_foreground_new.png</code> in densityless folder</span><br clear="right"/>
+</div>
+<div class="metadata"><div class="explanation" id="explanationIconLocation" style="display: none;">
+The res/drawable folder is intended for density-independent graphics such as shapes defined in XML. For bitmaps, move it to <code>drawable-mdpi</code> and consider providing higher and lower resolution versions in <code>drawable-ldpi</code>, <code>drawable-hdpi</code> and <code>drawable-xhdpi</code>. If the icon <b>really</b> is density independent (for example a solid color) you can place it in <code>drawable-nodpi</code>.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/practices/screens_support.html">https://developer.android.com/guide/practices/screens_support.html</a>
+</div>To suppress this error, use the issue id "IconLocation" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">IconLocation</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Icons</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Usability</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 5/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationIconLocationLink" onclick="reveal('explanationIconLocation');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="IconLocationCardLink" onclick="hideid('IconLocationCard');">
 Dismiss</button>            </div>
             </div>
           </section>

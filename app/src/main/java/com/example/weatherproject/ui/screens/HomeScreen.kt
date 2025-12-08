@@ -40,10 +40,11 @@ fun HomeScreen(
     searchViewModel: SearchViewModel,
     cctvViewModel: CctvViewModel
 ) {
-    val showDialog by mainViewModel.showSetupDialog.collectAsState()
+    val showSetupDialog by mainViewModel.showSetupDialog.collectAsState()
+    val showTempAdjustmentDialog by mainViewModel.showTempAdjustmentDialog.collectAsState()
     val tempAdjustment by mainViewModel.tempAdjustment.collectAsState()
     val isRefreshing by mainViewModel.isRefreshing.collectAsState()
-    
+
     val currentLocation by mainViewModel.currentLocation.collectAsState()
     val cctvInfo by cctvViewModel.cctvInfo.collectAsState()
     val cctvError by cctvViewModel.cctvError.collectAsState()
@@ -81,10 +82,26 @@ fun HomeScreen(
     var isDetailExpanded by remember { mutableStateOf(false) }
     var isForecastExpanded by remember { mutableStateOf(false) }
 
-    if (showDialog) {
-        TemperaturePreferenceDialog(onDismiss = { }) { adjustment ->
-            mainViewModel.saveTempAdjustment(adjustment)
-        }
+    // 초기 설정 다이얼로그
+    if (showSetupDialog) {
+        TemperaturePreferenceDialog(
+            currentValue = tempAdjustment,
+            onDismiss = { /* 초기 설정이므로 닫기 액션 없음 */ },
+            onConfirm = { adjustment ->
+                mainViewModel.saveTempAdjustment(adjustment)
+            }
+        )
+    }
+
+    // 재설정 다이얼로그
+    if (showTempAdjustmentDialog) {
+        TemperaturePreferenceDialog(
+            currentValue = tempAdjustment,
+            onDismiss = { mainViewModel.closeTempAdjustmentDialog() },
+            onConfirm = { adjustment ->
+                mainViewModel.saveTempAdjustment(adjustment)
+            }
+        )
     }
 
     Scaffold(
@@ -130,7 +147,8 @@ fun HomeScreen(
                 ClothingRecommendationCard(
                     currentTemp = weatherState.currentWeather.temperature,
                     feelsLike = weatherState.currentWeather.feelsLike,
-                    tempAdjustment = tempAdjustment
+                    tempAdjustment = tempAdjustment,
+                    onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
                 )
                 
                 NearbyCctvCard(
@@ -180,9 +198,11 @@ fun HomeScreen(
     }
 }
 
+
+
 @Composable
-fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit) {
-    var sliderPosition by remember { mutableStateOf(0f) }
+fun TemperaturePreferenceDialog(currentValue: Int, onDismiss: () -> Unit, onConfirm: (Int) -> Unit) {
+    var sliderPosition by remember { mutableStateOf(currentValue.toFloat()) }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -221,9 +241,11 @@ fun TemperaturePreferenceDialog(onDismiss: () -> Unit, onConfirm: (Int) -> Unit)
                     value = sliderPosition,
                     onValueChange = { sliderPosition = it.roundToInt().toFloat() },
                     valueRange = -3f..3f,
+                    steps = 5,
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colors.primary,
-                        activeTrackColor = MaterialTheme.colors.primary
+                        activeTrackColor = MaterialTheme.colors.primary,
+                        inactiveTrackColor = Color.LightGray
                     )
                 )
 

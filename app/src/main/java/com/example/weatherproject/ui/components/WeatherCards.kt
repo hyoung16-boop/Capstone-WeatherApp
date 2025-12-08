@@ -20,6 +20,7 @@ import com.example.weatherproject.ui.icons.MyCameraAlt
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -462,19 +463,33 @@ fun NearbyCctvCard(
 }
 
 @Composable
-fun ClothingRecommendationCard(currentTemp: String, feelsLike: String, tempAdjustment: Int) {
+fun ClothingRecommendationCard(
+    currentTemp: String,
+    feelsLike: String,
+    tempAdjustment: Int,
+    onSettingsClick: () -> Unit
+) {
     val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
     
-    val (recommendationText, items) = ClothingRecommender.getRecommendation(rawFeelsLike, tempAdjustment)
+    val (recommendationText, items) = ClothingRecommender.getRecommendation(rawFeelsLike)
     
     val adjustmentText = if (tempAdjustment > 0) "(더위 많이 탐)" else if (tempAdjustment < 0) "(추위 많이 탐)" else ""
     
     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), backgroundColor = Color.White.copy(alpha = 0.3f), elevation = 0.dp) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Default.Face, contentDescription = "옷차림 추천", tint = Color.White)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "오늘의 옷차림 추천 $adjustmentText", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(imageVector = Icons.Default.Face, contentDescription = "옷차림 추천", tint = Color.White)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "오늘의 옷차림 추천 $adjustmentText", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                }
+                IconButton(onClick = onSettingsClick) {
+                    Icon(imageVector = Icons.Default.Settings, contentDescription = "설정", tint = Color.White)
+                }
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(text = recommendationText, fontSize = 16.sp, color = Color.White)

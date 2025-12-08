@@ -54,7 +54,7 @@ class WeatherUpdateWorker(
 
             val calculatedFeelsLike = FeelsLikeTempCalculator.calculate(temp, humidity, windSpeedKmh)
             val finalFeelsLike = calculatedFeelsLike + tempAdjustment
-            val clothingRecommendation = ClothingRecommender.getRecommendation(finalFeelsLike.toInt(), tempAdjustment).first
+            val clothingRecommendation = ClothingRecommender.getRecommendation(finalFeelsLike.toInt()).first
 
             // 2-2. 3시간 내 강수 예보
             val rainForecast = hourlyResponse.weather?.take(3)?.find { it.pty.contains("비") || it.pty.contains("소나기") }

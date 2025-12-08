@@ -76,4 +76,26 @@ work = "2.9.0"
    However, you may simply not be aware that a more recent version is
    available, and that is what this lint check helps find.
 
-0 errors, 6 warnings (8 errors, 22 warnings filtered by baseline lint-baseline.xml)
+D:\save2\2\weatherapp\app\src\main\res\drawable\ic_launcher_foreground_new.png: Warning: Launcher icons should not fill every pixel of their square region; see the design guide for details [IconLauncherShape]
+
+   Explanation for issues of type "IconLauncherShape":
+   According to the Android Design Guide
+   (https://material.io/design/iconography/) your launcher icons should "use a
+   distinct silhouette", a "three-dimensional, front view, with a slight
+   perspective as if viewed from above, so that users perceive some depth."
+
+   The unique silhouette implies that your launcher icon should not be a
+   filled square.
+
+D:\save2\2\weatherapp\app\src\main\res\drawable\ic_launcher_foreground_new.png: Warning: Found bitmap drawable res/drawable/ic_launcher_foreground_new.png in densityless folder [IconLocation]
+
+   Explanation for issues of type "IconLocation":
+   The res/drawable folder is intended for density-independent graphics such
+   as shapes defined in XML. For bitmaps, move it to drawable-mdpi and
+   consider providing higher and lower resolution versions in drawable-ldpi,
+   drawable-hdpi and drawable-xhdpi. If the icon really is density independent
+   (for example a solid color) you can place it in drawable-nodpi.
+
+   https://developer.android.com/guide/practices/screens_support.html
+
+0 errors, 8 warnings (8 errors, 22 warnings filtered by baseline lint-baseline.xml)

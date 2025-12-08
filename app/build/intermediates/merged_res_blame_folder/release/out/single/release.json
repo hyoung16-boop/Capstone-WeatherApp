@@ -24,12 +24,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-main-66:\\xml\\backup_rules.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_ic_pause_circle_filled.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-mdpi-v4\\exo_ic_pause_circle_filled.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_ic_fullscreen_enter.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-mdpi-v4\\exo_ic_fullscreen_enter.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_ic_pause_circle_filled.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-mdpi-v4\\exo_ic_pause_circle_filled.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_ic_skip_previous.xml.flat",
@@ -88,12 +88,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\color\\common_google_signin_btn_tint.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_ic_call_answer_video_low.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-mdpi-v4\\ic_call_answer_video_low.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_ic_call_answer.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-xxhdpi-v4\\ic_call_answer.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_ic_call_answer_video_low.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-mdpi-v4\\ic_call_answer_video_low.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_exo_ic_chevron_left.png.flat",
@@ -114,6 +114,10 @@
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_exo_icon_next.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xxhdpi-v4\\exo_icon_next.png"
+    },
+    {
+        "merged": "com.example.weatherproject.app-merged_res-65:/drawable_ic_launcher_foreground_new.png.flat",
+        "source": "com.example.weatherproject.app-main-66:/drawable/ic_launcher_foreground_new.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxxhdpi-v4_exo_ic_default_album_image.png.flat",
@@ -160,16 +164,16 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\layout\\notification_template_part_chronometer.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_googleg_disabled_color_18.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-hdpi-v4\\googleg_disabled_color_18.png"
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_exo_icon_shuffle_off.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xhdpi-v4\\exo_icon_shuffle_off.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_exo_icon_repeat_one.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xhdpi-v4\\exo_icon_repeat_one.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_exo_icon_shuffle_off.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xhdpi-v4\\exo_icon_shuffle_off.png"
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_googleg_disabled_color_18.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-hdpi-v4\\googleg_disabled_color_18.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_exo_icon_shuffle_on.png.flat",
@@ -204,48 +208,48 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable\\common_google_signin_btn_icon_light.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_edit_mode_logo.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-anydpi-v21\\exo_edit_mode_logo.xml"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\layout_exo_list_divider.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\layout\\exo_list_divider.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_edit_mode_logo.xml.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-anydpi-v21\\exo_edit_mode_logo.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_exo_ic_chevron_left.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xhdpi-v4\\exo_ic_chevron_left.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-ldpi-v4_exo_ic_settings.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-ldpi-v4\\exo_ic_settings.png"
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-main-66:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_exo_ic_skip_previous.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-hdpi-v4\\exo_ic_skip_previous.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-main-66:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
-    },
-    {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_googleg_disabled_color_18.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-xxhdpi-v4\\googleg_disabled_color_18.png"
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-ldpi-v4_exo_ic_settings.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-ldpi-v4\\exo_ic_settings.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\layout_exo_styled_settings_list_item.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\layout\\exo_styled_settings_list_item.xml"
     },
     {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_googleg_disabled_color_18.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-xxhdpi-v4\\googleg_disabled_color_18.png"
+    },
+    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_ic_call_answer_video.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-xhdpi-v4\\ic_call_answer_video.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_exo_ic_chevron_right.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-hdpi-v4\\exo_ic_chevron_right.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\font_roboto_medium_numbers.ttf.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\font\\roboto_medium_numbers.ttf"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_exo_ic_chevron_right.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-hdpi-v4\\exo_ic_chevron_right.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_icon_stop.xml.flat",
@@ -262,6 +266,10 @@
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-xxhdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
+    },
+    {
+        "merged": "com.example.weatherproject.app-merged_res-65:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "com.example.weatherproject.app-main-66:/mipmap-anydpi/ic_launcher_round.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable_ic_launcher_foreground.xml.flat",
@@ -336,12 +344,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-mdpi-v4\\googleg_standard_color_18.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_ic_chevron_left.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-anydpi-v21\\exo_ic_chevron_left.xml"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxhdpi-v4_exo_edit_mode_logo.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xxhdpi-v4\\exo_edit_mode_logo.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-anydpi-v21_exo_ic_chevron_left.xml.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-anydpi-v21\\exo_ic_chevron_left.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_googleg_standard_color_18.png.flat",
@@ -380,12 +388,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-anydpi-v21\\ic_call_decline_low.xml"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxxhdpi-v4_exo_edit_mode_logo.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xxxhdpi-v4\\exo_edit_mode_logo.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-main-66:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xxxhdpi-v4_exo_edit_mode_logo.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-xxxhdpi-v4\\exo_edit_mode_logo.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\layout-v21_notification_template_custom_big.xml.flat",
@@ -584,12 +592,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-mdpi-v4\\ic_call_answer.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_ic_subtitle_on.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-mdpi-v4\\exo_ic_subtitle_on.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_icon_stop.png.flat",
@@ -640,12 +648,12 @@
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-play-services-base-18.1.0-23:\\drawable-hdpi-v4\\common_full_open_on_phone.png"
     },
     {
-        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_exo_ic_check.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-hdpi-v4\\exo_ic_check.png"
-    },
-    {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-ldpi-v4_exo_ic_audiotrack.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-ldpi-v4\\exo_ic_audiotrack.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-hdpi-v4_exo_ic_check.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-hdpi-v4\\exo_ic_check.png"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-v21_notification_action_background.xml.flat",
@@ -654,10 +662,6 @@
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable_notification_icon_background.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-core-1.13.1-46:\\drawable\\notification_icon_background.xml"
-    },
-    {
-        "merged": "com.example.weatherproject.app-merged_res-65:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.example.weatherproject.app-main-66:/drawable/ic_launcher_background.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_ic_default_album_image.png.flat",
@@ -758,6 +762,10 @@
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-ldpi-v4_exo_ic_fullscreen_exit.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-ldpi-v4\\exo_ic_fullscreen_exit.png"
+    },
+    {
+        "merged": "com.example.weatherproject.app-merged_res-65:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "com.example.weatherproject.app-main-66:/mipmap-anydpi/ic_launcher.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_icon_previous.png.flat",
@@ -966,10 +974,6 @@
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-mdpi-v4_exo_icon_repeat_off.png.flat",
         "source": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-media3-ui-1.3.1-10:\\drawable-mdpi-v4\\exo_icon_repeat_off.png"
-    },
-    {
-        "merged": "com.example.weatherproject.app-merged_res-65:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.weatherproject.app-main-66:/drawable/ic_launcher_foreground.xml"
     },
     {
         "merged": "C:\\Users\\user\\.gradle\\daemon\\8.13\\com.example.weatherproject.app-merged_res-65:\\drawable-xhdpi-v4_exo_edit_mode_logo.png.flat",
