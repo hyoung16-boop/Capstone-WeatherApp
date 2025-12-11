@@ -13,6 +13,7 @@ import com.example.weatherproject.network.WeeklyForecastResponse
 import com.example.weatherproject.util.FeelsLikeTempCalculator
 import com.example.weatherproject.util.GpsTransfer
 import com.example.weatherproject.util.PreferenceManager
+import com.example.weatherproject.common.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -143,14 +144,15 @@ class WeatherRepositoryImpl(
 
     // 아래 헬퍼 함수들도 ViewModel에서 Repository로 이동되었습니다.
     private fun getWeatherIconUrl(sky: String, pty: String): String {
-        return when {
-            pty.contains("비") || pty.contains("소나기") -> "https://openweathermap.org/img/wn/10d@2x.png"
-            pty.contains("눈") -> "https://openweathermap.org/img/wn/13d@2x.png"
-            sky.contains("맑음") -> "https://openweathermap.org/img/wn/01d@2x.png"
-            sky.contains("구름조금") || sky.contains("구름많음") -> "https://openweathermap.org/img/wn/02d@2x.png"
-            sky.contains("흐림") -> "https://openweathermap.org/img/wn/03d@2x.png"
-            else -> "https://openweathermap.org/img/wn/01d@2x.png"
+        val iconId = when {
+            pty.contains("비") || pty.contains("소나기") -> "10d"
+            pty.contains("눈") -> "13d"
+            sky.contains("맑음") -> "01d"
+            sky.contains("구름조금") || sky.contains("구름많음") -> "02d"
+            sky.contains("흐림") -> "03d"
+            else -> "01d" // 기본값
         }
+        return "${Constants.WEATHER_ICON_BASE_URL}${iconId}@2x.png"
     }
 
     private fun formatTime(time: String): String {

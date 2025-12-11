@@ -581,6 +581,7 @@ string common_google_play_services_wear_update_text
 string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
+string data_source_credit
 string default_error_message
 string default_popup_window_title
 string dropdown_menu
