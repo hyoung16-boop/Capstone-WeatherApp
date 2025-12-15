@@ -20,18 +20,17 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.weatherproject.data.WeatherState
 import com.example.weatherproject.ui.CctvViewModel
 import com.example.weatherproject.ui.MainViewModel
-import com.example.weatherproject.ui.MainViewModelFactory
 import com.example.weatherproject.ui.SearchViewModel
 import com.example.weatherproject.ui.WeatherNavHost
 import com.example.weatherproject.ui.theme.WeatherProjectTheme
 import com.example.weatherproject.util.LocationPermissionHelper
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory(application)
-    }
+    private val mainViewModel: MainViewModel by viewModels()
     private val searchViewModel: SearchViewModel by viewModels()
     private val cctvViewModel: CctvViewModel by viewModels()
 

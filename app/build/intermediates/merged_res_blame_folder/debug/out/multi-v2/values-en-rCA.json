@@ -4,7 +4,7 @@
             "outputFile": "com.example.weatherproject.app-mergeDebugResources-65:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\cbbe4e3d5a8b44cbb89f1900a70c7df8\\transformed\\core-1.13.1\\res\\values-en-rCA\\values-en-rCA.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\9359c239b8e7202eca2ea487619b7b9b\\transformed\\core-1.13.1\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\2608c01f369fb37d4b492491c0c3af18\\transformed\\ui-release\\res\\values-en-rCA\\values-en-rCA.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\17a2910dfbe6fad8fa05b4e7070b993a\\transformed\\ui-release\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\b10d9635d5b8fac6ed530863b3c17769\\transformed\\foundation-release\\res\\values-en-rCA\\values-en-rCA.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\5058bfa5f398ef1a65dae394d6c109ac\\transformed\\foundation-release\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

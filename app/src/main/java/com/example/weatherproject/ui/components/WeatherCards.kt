@@ -2,6 +2,7 @@ package com.example.weatherproject.ui.components
 
 import com.example.weatherproject.data.CctvInfo
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -252,7 +253,7 @@ fun WeatherDetailContent(details: WeatherDetails) {
         WeatherContextItem(label = "습도", value = details.humidity, icon = "💧") { rawValue ->
             when {
                 rawValue < 40 -> "건조함"
-                rawValue in 40..60 -> "쾌적함"
+                rawValue in 40..59 -> "쾌적함"
                 else -> "습함"
             }
         }
@@ -334,11 +335,17 @@ fun WeatherContextItem(label: String, value: String, icon: String, interpret: (I
 @Composable
 fun PmGaugeItem(label: String, value: String) {
     val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
-    val (status, color, progress) = when {
-        rawValue <= 30 -> Triple("좋음", Color(0xFF4CAF50), rawValue / 150f)
-        rawValue <= 80 -> Triple("보통", Color(0xFFFFC107), rawValue / 150f)
-        rawValue <= 150 -> Triple("나쁨", Color(0xFFFF9800), rawValue / 150f)
-        else -> Triple("매우 나쁨", Color(0xFFF44336), 1f)
+    
+    val Green = Color(0xFF4CAF50)
+    val Yellow = Color(0xFFFFC107)
+    val Orange = Color(0xFFFF9800)
+    val Red = Color(0xFFF44336)
+
+    val (status, gradientColors, progress) = when {
+        rawValue <= 30 -> Triple("좋음", listOf(Green, Green), rawValue / 150f)
+        rawValue <= 80 -> Triple("보통", listOf(Green, Yellow), rawValue / 150f)
+        rawValue <= 150 -> Triple("나쁨", listOf(Yellow, Orange), rawValue / 150f)
+        else -> Triple("매우 나쁨", listOf(Orange, Red), 1f)
     }
 
     val recommendation = when (status) {
@@ -360,12 +367,39 @@ fun PmGaugeItem(label: String, value: String) {
             Text(text = recommendation, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f), fontWeight = FontWeight.Medium)
         }
         Spacer(modifier = Modifier.height(12.dp))
-        LinearProgressIndicator(progress = progress.coerceIn(0f, 1f), color = color, backgroundColor = Color.White.copy(alpha = 0.3f), modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)))
+        
+        // 새로 만든 GradientProgressIndicator 사용
+        GradientProgressIndicator(
+            progress = progress.coerceIn(0f, 1f),
+            gradientColors = gradientColors,
+            modifier = Modifier.fillMaxWidth().height(8.dp)
+        )
+        
         Spacer(modifier = Modifier.height(4.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text("0", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
             Text("150+", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
         }
+    }
+}
+
+@Composable
+fun GradientProgressIndicator(
+    progress: Float,
+    gradientColors: List<Color>,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.White.copy(alpha = 0.3f)
+) {
+    Box(
+        modifier = modifier
+            .background(backgroundColor, shape = RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(4.dp))
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(fraction = progress)
+                .background(brush = Brush.horizontalGradient(colors = gradientColors))
+        )
     }
 }
 

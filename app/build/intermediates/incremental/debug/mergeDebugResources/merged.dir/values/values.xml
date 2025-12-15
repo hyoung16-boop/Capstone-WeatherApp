@@ -26,7 +26,6 @@
     <attr format="dimension" name="bar_height"/>
     <attr format="color" name="buffered_color"/>
     <attr format="reference" name="controller_layout_id"/>
-    <attr format="reference" name="coordinatorLayoutStyle"/>
     <attr format="reference" name="default_artwork"/>
     <attr format="boolean" name="hide_during_ads"/>
     <attr format="boolean" name="hide_on_touch"/>
@@ -303,6 +302,7 @@
     <item name="exo_subtitles" type="id"/>
     <item name="exo_time" type="id"/>
     <item name="exo_vr" type="id"/>
+    <item name="fragment_container_view_tag" type="id"/>
     <item name="hide_in_inspector_tag" type="id"/>
     <item name="inspection_slot_table_set" type="id"/>
     <item name="is_pooling_container_tag" type="id"/>
@@ -313,6 +313,7 @@
     <item name="nav_controller_view_tag" type="id"/>
     <item name="pooling_container_listener_holder_tag" type="id"/>
     <item name="report_drawn" type="id"/>
+    <item name="special_effects_controller_view_tag" type="id"/>
     <item name="tag_accessibility_actions" type="id"/>
     <item name="tag_accessibility_clickable_spans" type="id"/>
     <item name="tag_accessibility_heading" type="id"/>
@@ -333,6 +334,7 @@
     <id name="view_tree_on_back_pressed_dispatcher_owner"/>
     <id name="view_tree_saved_state_registry_owner"/>
     <id name="view_tree_view_model_store_owner"/>
+    <item name="visible_removing_fragment_view_tag" type="id"/>
     <item name="wrapped_composition_tag" type="id"/>
     <integer name="cancel_button_image_alpha">127</integer>
     <integer name="exo_media_button_opacity_percentage_disabled">33</integer>
@@ -644,9 +646,6 @@
     <style name="Theme.WeatherProject" parent="android:Theme.Material.Light.NoActionBar"/>
     <style name="Widget.Compat.NotificationActionContainer" parent=""/>
     <style name="Widget.Compat.NotificationActionText" parent=""/>
-    <style name="Widget.Support.CoordinatorLayout" parent="android:Widget">
-        <item name="statusBarBackground">#000000</item>
-    </style>
     <declare-styleable name="ActivityNavigator">
         <attr name="android:name"/>
         <attr format="string" name="action"/>
@@ -705,90 +704,6 @@
         <attr format="float" name="lStar"/>
         <attr name="android:lStar"/>
     </declare-styleable>
-    <declare-styleable name="CoordinatorLayout">
-        
-        <attr format="reference" name="keylines"/>
-        
-        <attr format="color|reference" name="statusBarBackground"/>
-    </declare-styleable>
-    <declare-styleable name="CoordinatorLayout_Layout">
-        <attr name="android:layout_gravity"/>
-        
-        <attr format="string" name="layout_behavior"/>
-        
-        <attr format="reference" name="layout_anchor"/>
-        
-        <attr format="integer" name="layout_keyline"/>
-
-        
-        <attr name="layout_anchorGravity">
-            
-            <flag name="top" value="0x30"/>
-            
-            <flag name="bottom" value="0x50"/>
-            
-            <flag name="left" value="0x03"/>
-            
-            <flag name="right" value="0x05"/>
-            
-            <flag name="center_vertical" value="0x10"/>
-            
-            <flag name="fill_vertical" value="0x70"/>
-            
-            <flag name="center_horizontal" value="0x01"/>
-            
-            <flag name="fill_horizontal" value="0x07"/>
-            
-            <flag name="center" value="0x11"/>
-            
-            <flag name="fill" value="0x77"/>
-            
-            <flag name="clip_vertical" value="0x80"/>
-            
-            <flag name="clip_horizontal" value="0x08"/>
-            
-            <flag name="start" value="0x00800003"/>
-            
-            <flag name="end" value="0x00800005"/>
-        </attr>
-
-        
-        <attr format="enum" name="layout_insetEdge">
-            
-            <enum name="none" value="0x0"/>
-            
-            <enum name="top" value="0x30"/>
-            
-            <enum name="bottom" value="0x50"/>
-            
-            <enum name="left" value="0x03"/>
-            
-            <enum name="right" value="0x05"/>
-            
-            <enum name="start" value="0x00800003"/>
-            
-            <enum name="end" value="0x00800005"/>
-        </attr>
-        
-        <attr name="layout_dodgeInsetEdges">
-            
-            <flag name="none" value="0x0"/>
-            
-            <flag name="top" value="0x30"/>
-            
-            <flag name="bottom" value="0x50"/>
-            
-            <flag name="left" value="0x03"/>
-            
-            <flag name="right" value="0x05"/>
-            
-            <flag name="start" value="0x00800003"/>
-            
-            <flag name="end" value="0x00800005"/>
-            
-            <flag name="all" value="0x77"/>
-        </attr>
-    </declare-styleable>
     <declare-styleable name="DefaultTimeBar">
     <attr name="bar_height"/>
     <attr name="bar_gravity"/>
@@ -816,14 +731,23 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            
+            <!-- The blocking font fetch works as follows.
+              First, check the local cache, then if the requested font is not cached, request the
+              font from the provider and wait until it is finished.  You can change the length of
+              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
+              default typeface will be used instead. -->
             <enum name="blocking" value="0"/>
-            
+            <!-- The async font fetch works as follows.
+              First, check the local cache, then if the requeted font is not cached, trigger a
+              request the font and continue with layout inflation. Once the font fetch succeeds, the
+              target text view will be refreshed with the downloaded font data. The
+              fontProviderFetchTimeout will be ignored if async loading is specified. -->
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            
+            <!-- A special value for the timeout. In this case, the blocking font fetching will not
+              timeout and wait until a reply is received from the font provider. -->
             <enum name="forever" value="-1"/>
         </attr>
         
@@ -849,6 +773,15 @@
         <attr name="android:fontWeight"/>
         <attr name="android:fontVariationSettings"/>
         <attr name="android:ttcIndex"/>
+    </declare-styleable>
+    <declare-styleable name="Fragment">
+        <attr name="android:name"/>
+        <attr name="android:id"/>
+        <attr name="android:tag"/>
+    </declare-styleable>
+    <declare-styleable name="FragmentContainerView">
+        <attr name="android:name"/>
+        <attr name="android:tag"/>
     </declare-styleable>
     <declare-styleable name="GradientColor">
         

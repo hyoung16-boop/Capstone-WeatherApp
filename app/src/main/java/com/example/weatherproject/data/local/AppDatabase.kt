@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [AlarmEntity::class], version = 2, exportSchema = false)
+@Database(entities = [AlarmEntity::class, WeatherCacheEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
+    abstract fun weatherDao(): WeatherDao
 
     companion object {
         @Volatile

@@ -4,7 +4,7 @@
             "outputFile": "com.example.weatherproject.app-mergeDebugResources-65:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\b8cca9f279ca96bf399ccbe896e61e1f\\transformed\\media-1.7.0\\res\\values-v24\\values-v24.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\12550cbd5c9f386eb79288580d8b92db\\transformed\\media-1.7.0\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

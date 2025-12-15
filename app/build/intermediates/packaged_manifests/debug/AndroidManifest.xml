@@ -27,6 +27,7 @@
     <uses-permission android:name="com.example.weatherproject.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
+        android:name="com.example.weatherproject.WeatherApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -40,9 +41,6 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/Theme.WeatherProject" >
-
-        <!-- ⬆️⬆️⬆️ 이 줄 추가! -->
-
         <activity
             android:name="com.example.weatherproject.MainActivity"
             android:exported="true"
@@ -184,10 +182,10 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="androidx.activity.ComponentActivity"
+            android:name="androidx.compose.ui.tooling.PreviewActivity"
             android:exported="true" />
         <activity
-            android:name="androidx.compose.ui.tooling.PreviewActivity"
+            android:name="androidx.activity.ComponentActivity"
             android:exported="true" />
 
         <receiver

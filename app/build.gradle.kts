@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt.android) // Hilt 플러그인 적용
 }
 
 android {
@@ -44,6 +45,10 @@ android {
 }
 
 dependencies {
+    // Hilt
+    implementation(libs.dagger.hilt.android)
+    ksp(libs.dagger.hilt.compiler)
+
     // 위치 서비스
     implementation(libs.google.play.services.location)
 
@@ -53,6 +58,7 @@ dependencies {
     implementation(libs.squareup.logging.interceptor)
     implementation(libs.google.gson)
 
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
