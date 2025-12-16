@@ -186,7 +186,10 @@ class WeatherRepositoryImpl(
         val weeklyForecast = weeklyData?.weather?.map { item ->
             WeeklyForecast(
                 day = formatDate(item.date),
-                iconUrl = getWeatherIconUrl(item.skyAm, "없음"),
+                skyAm = item.skyAm,
+                skyPm = item.skyPm,
+                iconAm = getWeatherIconUrl(item.skyAm, "없음"),
+                iconPm = getWeatherIconUrl(item.skyPm, "없음"),
                 maxTemp = "${item.maxTemp?.toInt() ?: 0}°",
                 minTemp = "${item.minTemp?.toInt() ?: 0}°"
             )

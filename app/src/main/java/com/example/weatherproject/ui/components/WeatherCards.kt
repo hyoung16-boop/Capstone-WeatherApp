@@ -568,37 +568,43 @@ fun WeeklyForecastItem(forecast: WeeklyForecast) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 12.dp), // More padding
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Day
         Text(
             text = forecast.day,
             fontSize = 14.sp,
             color = Color.White,
-            modifier = Modifier.weight(2.3f)
+            modifier = Modifier.weight(1.5f)
         )
 
-        AsyncImage(
-            model = forecast.iconUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(32.dp)
-                .weight(2.5f)
-        )
+        // AM/PM Icons
+        Row(
+            modifier = Modifier.weight(2f),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                model = forecast.iconAm,
+                contentDescription = forecast.skyAm,
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(Modifier.width(16.dp))
+            AsyncImage(
+                model = forecast.iconPm,
+                contentDescription = forecast.skyPm,
+                modifier = Modifier.size(32.dp)
+            )
+        }
 
-        Text(
-            text = "",
-            fontSize = 13.sp,
-            color = Color.White,
-            modifier = Modifier.weight(1.2f)
-        )
-
+        // Temp
         Text(
             text = "${forecast.minTemp} / ${forecast.maxTemp}",
             fontSize = 15.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(2f)
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1.5f)
         )
     }
 }

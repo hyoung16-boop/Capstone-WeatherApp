@@ -48,7 +48,10 @@ data class HourlyForecast(
 @Immutable
 data class WeeklyForecast(
     val day: String = "",
-    val iconUrl: String = "",
+    val iconAm: String = "",
+    val iconPm: String = "",
+    val skyAm: String = "",
+    val skyPm: String = "",
     val maxTemp: String = "--°",
     val minTemp: String = "--°"
 )
