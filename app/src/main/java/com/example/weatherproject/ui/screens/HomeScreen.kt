@@ -9,6 +9,8 @@ import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,12 +67,6 @@ fun HomeScreen(
 
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(true) {
-        mainViewModel.errorEvent.collect { message ->
-            scaffoldState.snackbarHostState.showSnackbar(message)
-        }
-    }
-    
     // 현재 위치가 변경되면 CCTV 정보 가져오기
     LaunchedEffect(currentLocation) {
         currentLocation?.let {
@@ -125,67 +121,70 @@ fun HomeScreen(
                 .padding(paddingValues)
                 .pullRefresh(pullRefreshState)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                CurrentWeatherCard(
-                    weather = weatherState.currentWeather,
-                    address = weatherState.address,
-                    details = weatherState.weatherDetails,
-                    isExpanded = isDetailExpanded,
-                    onClick = { isDetailExpanded = !isDetailExpanded }
-                )
-
-                HourlyForecastCard(
-                    hourlyForecasts = weatherState.hourlyForecast,
-                    weeklyForecasts = weatherState.weeklyForecast,
-                    isExpanded = isForecastExpanded,
-                    onClick = { isForecastExpanded = !isForecastExpanded }
-                )
-
-                ClothingRecommendationCard(
-                    currentTemp = weatherState.currentWeather.temperature,
-                    feelsLike = weatherState.currentWeather.feelsLike,
-                    tempAdjustment = tempAdjustment,
-                    onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
-                )
-                
-                NearbyCctvCard(
-                    isLoading = isCctvLoading,
-                    cctvInfo = cctvInfo,
-                    error = cctvError,
-                    onMoreClick = { navController.navigate("cctv") },
-                    onCctvClick = { cctv ->
-                        val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
-                        navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
+            // 날씨 정보 또는 로딩 화면
+            AnimatedVisibility(visible = weatherState.error == null) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    Text(
-                        text = stringResource(R.string.data_source_credit),
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f)
+                    CurrentWeatherCard(
+                        weather = weatherState.currentWeather,
+                        address = weatherState.address,
+                        details = weatherState.weatherDetails,
+                        isExpanded = isDetailExpanded,
+                        onClick = { isDetailExpanded = !isDetailExpanded }
                     )
-                    Text(
-                        text = weatherState.lastUpdated,
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f)
-                    )
-                }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    HourlyForecastCard(
+                        hourlyForecasts = weatherState.hourlyForecast,
+                        weeklyForecasts = weatherState.weeklyForecast,
+                        isExpanded = isForecastExpanded,
+                        onClick = { isForecastExpanded = !isForecastExpanded }
+                    )
+
+                    ClothingRecommendationCard(
+                        currentTemp = weatherState.currentWeather.temperature,
+                        feelsLike = weatherState.currentWeather.feelsLike,
+                        tempAdjustment = tempAdjustment,
+                        onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
+                    )
+                    
+                    NearbyCctvCard(
+                        isLoading = isCctvLoading,
+                        cctvInfo = cctvInfo,
+                        error = cctvError,
+                        onMoreClick = { navController.navigate("cctv") },
+                        onCctvClick = { cctv ->
+                            val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
+                            navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.data_source_credit),
+                            fontSize = 12.sp,
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
+                        Text(
+                            text = weatherState.lastUpdated,
+                            fontSize = 12.sp,
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
             }
 
             PullRefreshIndicator(
@@ -196,6 +195,48 @@ fun HomeScreen(
                 contentColor = Color(0xFF2563EB),
                 scale = false
             )
+
+            // 오류 메시지 표시
+            AnimatedVisibility(
+                visible = weatherState.error != null,
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Card(
+                    modifier = Modifier.padding(32.dp),
+                    backgroundColor = Color.White.copy(alpha = 0.3f),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(48.dp)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "오류",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = weatherState.error ?: "알 수 없는 오류가 발생했습니다.",
+                            color = Color.White.copy(alpha = 0.9f),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Button(onClick = { mainViewModel.refreshData() }) {
+                            Text("다시 시도")
+                        }
+                    }
+                }
+            }
         }
     }
 }

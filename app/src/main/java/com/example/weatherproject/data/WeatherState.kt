@@ -12,7 +12,8 @@ data class WeatherState(
     val latitude: Double? = null,
     val longitude: Double? = null,
     val address: String = "위치 정보 없음",
-    val lastUpdated: String = "업데이트 정보 없음"
+    val lastUpdated: String = "업데이트 정보 없음",
+    val error: String? = null
 )
 
 @Immutable
@@ -42,7 +43,8 @@ data class WeatherDetails(
 data class HourlyForecast(
     val time: String = "",
     val iconUrl: String = "",
-    val temperature: String = "--°"
+    val temperature: String = "--°",
+    val pty: String = "0" // 강수 형태 코드
 )
 
 @Immutable

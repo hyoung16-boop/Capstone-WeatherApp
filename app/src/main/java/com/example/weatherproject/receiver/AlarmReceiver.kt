@@ -6,9 +6,10 @@ import android.content.Intent
 import android.util.Log
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.weatherproject.data.local.AppDatabase
+import com.example.weatherproject.di.AlarmReceiverEntryPoint
 import com.example.weatherproject.util.AlarmScheduler
 import com.example.weatherproject.worker.WeatherUpdateWorker
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +33,13 @@ class AlarmReceiver : BroadcastReceiver() {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             try {
-                val alarmDao = AppDatabase.getDatabase(context).alarmDao()
+                // Hilt EntryPoint를 통해 안전하게 DAO 인스턴스를 가져옴
+                val hiltEntryPoint = EntryPointAccessors.fromApplication(
+                    context.applicationContext,
+                    AlarmReceiverEntryPoint::class.java
+                )
+                val alarmDao = hiltEntryPoint.alarmDao()
+
                 val alarm = alarmDao.getAlarmById(alarmId)
                 if (alarm != null && alarm.selectedDate == null) { // 반복 알람일 경우에만
                     AlarmScheduler.schedule(context, alarm)

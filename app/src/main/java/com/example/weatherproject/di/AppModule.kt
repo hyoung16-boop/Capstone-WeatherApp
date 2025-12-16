@@ -60,4 +60,10 @@ object AppModule {
     fun provideLocationProvider(application: Application): LocationProvider {
         return LocationProvider(application)
     }
+
+    @Provides
+    @Singleton
+    fun provideNotificationHelper(): com.example.weatherproject.util.NotificationHelper {
+        return com.example.weatherproject.util.NotificationHelper
+    }
 }

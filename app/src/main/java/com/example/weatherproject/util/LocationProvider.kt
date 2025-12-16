@@ -144,7 +144,7 @@ class LocationProvider(private val application: Application) {
                             fetchedAddress = finalAddress
                         }
                     }
-                } catch (e: IOException) {
+                } catch (e: Exception) {
                     Log.e("Geocoder", "Error fetching address", e)
                     fetchedAddress = "주소 확인 실패"
                 }

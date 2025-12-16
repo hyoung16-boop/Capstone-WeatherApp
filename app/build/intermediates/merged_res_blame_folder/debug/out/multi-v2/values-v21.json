@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.weatherproject.app-mergeDebugResources-65:/values-v21/values-v21.xml",
+            "outputFile": "com.example.weatherproject.app-mergeDebugResources-68:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\9359c239b8e7202eca2ea487619b7b9b\\transformed\\core-1.13.1\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\9e6f29d44f871f474ebbb6302776672c\\transformed\\core-1.13.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\12550cbd5c9f386eb79288580d8b92db\\transformed\\media-1.7.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\5a7f32de645ac875d3b32be8a2553fbc\\transformed\\media-1.7.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -42,7 +42,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\64dc5a38e3b7910d3a76043a7dae3855\\transformed\\media3-ui-1.3.1\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\f6096cbb6efc8284252488ef1b8b47d3\\transformed\\media3-ui-1.3.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

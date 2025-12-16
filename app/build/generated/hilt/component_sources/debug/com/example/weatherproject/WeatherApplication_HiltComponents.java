@@ -1,7 +1,12 @@
 package com.example.weatherproject;
 
+import androidx.hilt.work.HiltWrapper_WorkerFactoryModule;
+import com.example.weatherproject.di.AlarmReceiverEntryPoint;
 import com.example.weatherproject.di.AppModule;
+import com.example.weatherproject.ui.AlarmViewModel_HiltModules;
 import com.example.weatherproject.ui.MainViewModel_HiltModules;
+import com.example.weatherproject.worker.SmartAlertWorker_HiltModule;
+import com.example.weatherproject.worker.WeatherUpdateWorker_HiltModule;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -129,12 +134,16 @@ public final class WeatherApplication_HiltComponents {
           AppModule.class,
           ApplicationContextModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
+          HiltWrapper_WorkerFactoryModule.class,
+          SmartAlertWorker_HiltModule.class,
           ActivityRetainedCBuilderModule.class,
-          ServiceCBuilderModule.class
+          ServiceCBuilderModule.class,
+          WeatherUpdateWorker_HiltModule.class
       }
   )
   @Singleton
   public abstract static class SingletonC implements WeatherApplication_GeneratedInjector,
+      AlarmReceiverEntryPoint,
       FragmentGetContextFix.FragmentGetContextFixEntryPoint,
       HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint,
       ServiceComponentManager.ServiceComponentBuilderEntryPoint,
@@ -153,6 +162,7 @@ public final class WeatherApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
+          AlarmViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           MainViewModel_HiltModules.KeyModule.class,
@@ -193,6 +203,7 @@ public final class WeatherApplication_HiltComponents {
 
   @Subcomponent(
       modules = {
+          AlarmViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           MainViewModel_HiltModules.BindsModule.class
       }

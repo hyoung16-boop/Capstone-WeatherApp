@@ -2,13 +2,22 @@ package com.example.weatherproject;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.view.View;
 import androidx.fragment.app.Fragment;
+import androidx.hilt.work.HiltWorkerFactory;
+import androidx.hilt.work.WorkerAssistedFactory;
+import androidx.hilt.work.WorkerFactoryModule_ProvideFactoryFactory;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+import androidx.work.ListenableWorker;
+import androidx.work.WorkerParameters;
+import com.example.weatherproject.data.local.AlarmDao;
 import com.example.weatherproject.data.local.AppDatabase;
 import com.example.weatherproject.data.local.WeatherDao;
+import com.example.weatherproject.data.repository.SettingsRepository;
 import com.example.weatherproject.data.repository.WeatherRepository;
+import com.example.weatherproject.di.AppModule_ProvideAlarmDaoFactory;
 import com.example.weatherproject.di.AppModule_ProvideAppDatabaseFactory;
 import com.example.weatherproject.di.AppModule_ProvideLocationProviderFactory;
 import com.example.weatherproject.di.AppModule_ProvidePreferenceManagerFactory;
@@ -16,10 +25,16 @@ import com.example.weatherproject.di.AppModule_ProvideWeatherApiServiceFactory;
 import com.example.weatherproject.di.AppModule_ProvideWeatherDaoFactory;
 import com.example.weatherproject.di.AppModule_ProvideWeatherRepositoryFactory;
 import com.example.weatherproject.network.WeatherApiService;
+import com.example.weatherproject.ui.AlarmViewModel;
+import com.example.weatherproject.ui.AlarmViewModel_HiltModules;
 import com.example.weatherproject.ui.MainViewModel;
 import com.example.weatherproject.ui.MainViewModel_HiltModules;
 import com.example.weatherproject.util.LocationProvider;
 import com.example.weatherproject.util.PreferenceManager;
+import com.example.weatherproject.worker.SmartAlertWorker;
+import com.example.weatherproject.worker.SmartAlertWorker_AssistedFactory;
+import com.example.weatherproject.worker.WeatherUpdateWorker;
+import com.example.weatherproject.worker.WeatherUpdateWorker_AssistedFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import dagger.hilt.android.ActivityRetainedLifecycle;
@@ -45,6 +60,7 @@ import dagger.internal.KeepFieldType;
 import dagger.internal.LazyClassKeyMap;
 import dagger.internal.Preconditions;
 import dagger.internal.Provider;
+import dagger.internal.SingleCheck;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
@@ -381,7 +397,7 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_example_weatherproject_ui_MainViewModel, MainViewModel_HiltModules.KeyModule.provide()));
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_example_weatherproject_ui_AlarmViewModel, AlarmViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_example_weatherproject_ui_MainViewModel, MainViewModel_HiltModules.KeyModule.provide()));
     }
 
     @Override
@@ -401,7 +417,12 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_example_weatherproject_ui_AlarmViewModel = "com.example.weatherproject.ui.AlarmViewModel";
+
       static String com_example_weatherproject_ui_MainViewModel = "com.example.weatherproject.ui.MainViewModel";
+
+      @KeepFieldType
+      AlarmViewModel com_example_weatherproject_ui_AlarmViewModel2;
 
       @KeepFieldType
       MainViewModel com_example_weatherproject_ui_MainViewModel2;
@@ -414,6 +435,8 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
     private final ActivityRetainedCImpl activityRetainedCImpl;
 
     private final ViewModelCImpl viewModelCImpl = this;
+
+    private Provider<AlarmViewModel> alarmViewModelProvider;
 
     private Provider<MainViewModel> mainViewModelProvider;
 
@@ -430,12 +453,13 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final SavedStateHandle savedStateHandleParam,
         final ViewModelLifecycle viewModelLifecycleParam) {
-      this.mainViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.alarmViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.mainViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_example_weatherproject_ui_MainViewModel, ((Provider) mainViewModelProvider)));
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_example_weatherproject_ui_AlarmViewModel, ((Provider) alarmViewModelProvider), LazyClassKeyProvider.com_example_weatherproject_ui_MainViewModel, ((Provider) mainViewModelProvider)));
     }
 
     @Override
@@ -447,8 +471,13 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_example_weatherproject_ui_MainViewModel = "com.example.weatherproject.ui.MainViewModel";
 
+      static String com_example_weatherproject_ui_AlarmViewModel = "com.example.weatherproject.ui.AlarmViewModel";
+
       @KeepFieldType
       MainViewModel com_example_weatherproject_ui_MainViewModel2;
+
+      @KeepFieldType
+      AlarmViewModel com_example_weatherproject_ui_AlarmViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -472,7 +501,10 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.example.weatherproject.ui.MainViewModel 
+          case 0: // com.example.weatherproject.ui.AlarmViewModel 
+          return (T) new AlarmViewModel(singletonCImpl.provideAlarmDaoProvider.get(), singletonCImpl.settingsRepositoryProvider.get(), ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonCImpl.applicationContextModule));
+
+          case 1: // com.example.weatherproject.ui.MainViewModel 
           return (T) new MainViewModel(singletonCImpl.provideWeatherRepositoryProvider.get(), singletonCImpl.provideLocationProvider.get(), singletonCImpl.providePreferenceManagerProvider.get());
 
           default: throw new AssertionError(id);
@@ -563,9 +595,17 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
 
     private Provider<WeatherRepository> provideWeatherRepositoryProvider;
 
-    private Provider<LocationProvider> provideLocationProvider;
-
     private Provider<PreferenceManager> providePreferenceManagerProvider;
+
+    private Provider<SmartAlertWorker_AssistedFactory> smartAlertWorker_AssistedFactoryProvider;
+
+    private Provider<WeatherUpdateWorker_AssistedFactory> weatherUpdateWorker_AssistedFactoryProvider;
+
+    private Provider<AlarmDao> provideAlarmDaoProvider;
+
+    private Provider<SettingsRepository> settingsRepositoryProvider;
+
+    private Provider<LocationProvider> provideLocationProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
@@ -573,18 +613,37 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
 
     }
 
+    private Map<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>> mapOfStringAndProviderOfWorkerAssistedFactoryOf(
+        ) {
+      return ImmutableMap.<String, javax.inject.Provider<WorkerAssistedFactory<? extends ListenableWorker>>>of("com.example.weatherproject.worker.SmartAlertWorker", ((Provider) smartAlertWorker_AssistedFactoryProvider), "com.example.weatherproject.worker.WeatherUpdateWorker", ((Provider) weatherUpdateWorker_AssistedFactoryProvider));
+    }
+
+    private HiltWorkerFactory hiltWorkerFactory() {
+      return WorkerFactoryModule_ProvideFactoryFactory.provideFactory(mapOfStringAndProviderOfWorkerAssistedFactoryOf());
+    }
+
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
-      this.provideWeatherApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<WeatherApiService>(singletonCImpl, 1));
-      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 3));
-      this.provideWeatherDaoProvider = DoubleCheck.provider(new SwitchingProvider<WeatherDao>(singletonCImpl, 2));
-      this.provideWeatherRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WeatherRepository>(singletonCImpl, 0));
-      this.provideLocationProvider = DoubleCheck.provider(new SwitchingProvider<LocationProvider>(singletonCImpl, 4));
+      this.provideWeatherApiServiceProvider = DoubleCheck.provider(new SwitchingProvider<WeatherApiService>(singletonCImpl, 2));
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 4));
+      this.provideWeatherDaoProvider = DoubleCheck.provider(new SwitchingProvider<WeatherDao>(singletonCImpl, 3));
+      this.provideWeatherRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<WeatherRepository>(singletonCImpl, 1));
       this.providePreferenceManagerProvider = DoubleCheck.provider(new SwitchingProvider<PreferenceManager>(singletonCImpl, 5));
+      this.smartAlertWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<SmartAlertWorker_AssistedFactory>(singletonCImpl, 0));
+      this.weatherUpdateWorker_AssistedFactoryProvider = SingleCheck.provider(new SwitchingProvider<WeatherUpdateWorker_AssistedFactory>(singletonCImpl, 6));
+      this.provideAlarmDaoProvider = DoubleCheck.provider(new SwitchingProvider<AlarmDao>(singletonCImpl, 7));
+      this.settingsRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<SettingsRepository>(singletonCImpl, 8));
+      this.provideLocationProvider = DoubleCheck.provider(new SwitchingProvider<LocationProvider>(singletonCImpl, 9));
     }
 
     @Override
     public void injectWeatherApplication(WeatherApplication weatherApplication) {
+      injectWeatherApplication2(weatherApplication);
+    }
+
+    @Override
+    public AlarmDao alarmDao() {
+      return provideAlarmDaoProvider.get();
     }
 
     @Override
@@ -602,6 +661,11 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
       return new ServiceCBuilder(singletonCImpl);
     }
 
+    private WeatherApplication injectWeatherApplication2(WeatherApplication instance) {
+      WeatherApplication_MembersInjector.injectWorkerFactory(instance, hiltWorkerFactory());
+      return instance;
+    }
+
     private static final class SwitchingProvider<T> implements Provider<T> {
       private final SingletonCImpl singletonCImpl;
 
@@ -616,23 +680,45 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.example.weatherproject.data.repository.WeatherRepository 
+          case 0: // com.example.weatherproject.worker.SmartAlertWorker_AssistedFactory 
+          return (T) new SmartAlertWorker_AssistedFactory() {
+            @Override
+            public SmartAlertWorker create(Context appContext, WorkerParameters workerParams) {
+              return new SmartAlertWorker(appContext, workerParams, singletonCImpl.provideWeatherRepositoryProvider.get(), singletonCImpl.providePreferenceManagerProvider.get());
+            }
+          };
+
+          case 1: // com.example.weatherproject.data.repository.WeatherRepository 
           return (T) AppModule_ProvideWeatherRepositoryFactory.provideWeatherRepository(singletonCImpl.provideWeatherApiServiceProvider.get(), singletonCImpl.provideWeatherDaoProvider.get());
 
-          case 1: // com.example.weatherproject.network.WeatherApiService 
+          case 2: // com.example.weatherproject.network.WeatherApiService 
           return (T) AppModule_ProvideWeatherApiServiceFactory.provideWeatherApiService();
 
-          case 2: // com.example.weatherproject.data.local.WeatherDao 
+          case 3: // com.example.weatherproject.data.local.WeatherDao 
           return (T) AppModule_ProvideWeatherDaoFactory.provideWeatherDao(singletonCImpl.provideAppDatabaseProvider.get());
 
-          case 3: // com.example.weatherproject.data.local.AppDatabase 
+          case 4: // com.example.weatherproject.data.local.AppDatabase 
           return (T) AppModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 4: // com.example.weatherproject.util.LocationProvider 
-          return (T) AppModule_ProvideLocationProviderFactory.provideLocationProvider(ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonCImpl.applicationContextModule));
 
           case 5: // com.example.weatherproject.util.PreferenceManager 
           return (T) AppModule_ProvidePreferenceManagerFactory.providePreferenceManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 6: // com.example.weatherproject.worker.WeatherUpdateWorker_AssistedFactory 
+          return (T) new WeatherUpdateWorker_AssistedFactory() {
+            @Override
+            public WeatherUpdateWorker create(Context context, WorkerParameters workerParams2) {
+              return new WeatherUpdateWorker(context, workerParams2, singletonCImpl.provideWeatherRepositoryProvider.get(), singletonCImpl.providePreferenceManagerProvider.get());
+            }
+          };
+
+          case 7: // com.example.weatherproject.data.local.AlarmDao 
+          return (T) AppModule_ProvideAlarmDaoFactory.provideAlarmDao(singletonCImpl.provideAppDatabaseProvider.get());
+
+          case 8: // com.example.weatherproject.data.repository.SettingsRepository 
+          return (T) new SettingsRepository(singletonCImpl.providePreferenceManagerProvider.get());
+
+          case 9: // com.example.weatherproject.util.LocationProvider 
+          return (T) AppModule_ProvideLocationProviderFactory.provideLocationProvider(ApplicationContextModule_ProvideApplicationFactory.provideApplication(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }

@@ -42,4 +42,14 @@ class PreferenceManager(context: Context) {
         val json = prefs.getString(KEY_LAST_WEATHER_STATE, null)
         return gson.fromJson(json, WeatherState::class.java)
     }
+
+    // 범용 Boolean 값 저장을 위한 함수
+    fun putBoolean(key: String, value: Boolean) {
+        prefs.edit().putBoolean(key, value).apply()
+    }
+
+    // 범용 Boolean 값 로드를 위한 함수
+    fun getBoolean(key: String, defaultValue: Boolean): Boolean {
+        return prefs.getBoolean(key, defaultValue)
+    }
 }

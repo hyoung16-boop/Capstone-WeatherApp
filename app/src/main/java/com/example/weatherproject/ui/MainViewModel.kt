@@ -150,12 +150,16 @@ class MainViewModel @Inject constructor(
                     weatherDetails = newWeatherState.weatherDetails,
                     hourlyForecast = newWeatherState.hourlyForecast,
                     weeklyForecast = newWeatherState.weeklyForecast,
-                    lastUpdated = newWeatherState.lastUpdated
+                    lastUpdated = newWeatherState.lastUpdated,
+                    error = null // 성공 시 에러 메시지 제거
                 )
             }
             .onFailure { error ->
                 Log.e(TAG, "getWeatherData 실패: ${error.message}", error)
-                _errorEvent.emit("날씨 정보를 가져올 수 없습니다.")
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = "날씨 정보를 가져올 수 없습니다.\n네트워크 연결을 확인해주세요."
+                )
             }
     }
 

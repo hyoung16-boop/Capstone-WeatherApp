@@ -1,28 +1,77 @@
 package com.example.weatherproject.ui
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherproject.data.NotificationSettings
+import com.example.weatherproject.data.local.AlarmDao
 import com.example.weatherproject.data.local.AlarmEntity
-import com.example.weatherproject.data.local.AppDatabase
+import com.example.weatherproject.data.repository.SettingsRepository
+import com.example.weatherproject.util.AlarmScheduler
+import com.example.weatherproject.util.SmartAlertScheduler
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-import com.example.weatherproject.util.AlarmScheduler
+@HiltViewModel
+class AlarmViewModel @Inject constructor(
+    private val alarmDao: AlarmDao,
+    private val settingsRepository: SettingsRepository,
+    private val application: Application
+) : ViewModel() {
 
-class AlarmViewModel(application: Application) : AndroidViewModel(application) {
+    // 설정 repository로부터 세팅값을 Flow로 관찰
+    val settings: StateFlow<NotificationSettings> = settingsRepository.settings
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = NotificationSettings()
+        )
 
-    private val alarmDao = AppDatabase.getDatabase(application).alarmDao()
-
-    // DB의 데이터를 Flow로 관찰하여 UI 상태로 변환
     val alarmList: StateFlow<List<AlarmEntity>> = alarmDao.getAllAlarms()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+    
+    init {
+        // 스마트 알림 설정값이 변경될 때마다 스케줄링/취소 작업을 수행
+        settings.map { it.isSmartAlarmEnabled }
+            .distinctUntilChanged()
+            .onEach { isEnabled ->
+                if (isEnabled) {
+                    SmartAlertScheduler.schedule(application)
+                } else {
+                    SmartAlertScheduler.cancel(application)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun saveMasterSwitch(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveMasterSwitch(enabled)
+        }
+    }
+    fun saveUserAlarmSwitch(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveUserAlarmSwitch(enabled)
+        }
+    }
+    fun saveSmartAlarmSwitch(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveSmartAlarmSwitch(enabled)
+        }
+    }
+
 
     fun addAlarm(hour: Int, minute: Int, days: List<String>, date: Long?) {
         viewModelScope.launch {
@@ -35,7 +84,7 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
             )
             val id = alarmDao.insertAlarm(newAlarm)
             val savedAlarm = newAlarm.copy(id = id.toInt())
-            AlarmScheduler.schedule(getApplication(), savedAlarm)
+            AlarmScheduler.schedule(application, savedAlarm)
         }
     }
 
@@ -45,9 +94,9 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
             alarmDao.updateAlarm(updatedAlarm)
             
             if (updatedAlarm.isEnabled) {
-                AlarmScheduler.schedule(getApplication(), updatedAlarm)
+                AlarmScheduler.schedule(application, updatedAlarm)
             } else {
-                AlarmScheduler.cancel(getApplication(), updatedAlarm)
+                AlarmScheduler.cancel(application, updatedAlarm)
             }
         }
     }
@@ -55,7 +104,7 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteAlarm(alarm: AlarmEntity) {
         viewModelScope.launch {
             alarmDao.deleteAlarm(alarm)
-            AlarmScheduler.cancel(getApplication(), alarm)
+            AlarmScheduler.cancel(application, alarm)
         }
     }
 
@@ -74,7 +123,7 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
                 isEnabled = true
             )
             alarmDao.updateAlarm(updatedAlarm)
-            AlarmScheduler.schedule(getApplication(), updatedAlarm)
+            AlarmScheduler.schedule(application, updatedAlarm)
         }
     }
 }

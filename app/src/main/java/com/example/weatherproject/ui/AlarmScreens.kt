@@ -41,7 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.weatherproject.data.local.AlarmEntity
 import java.text.SimpleDateFormat
@@ -60,10 +62,11 @@ val BlueGradient = Brush.verticalGradient(
 @Composable
 fun AlarmListScreen(
     navController: NavController,
-    viewModel: AlarmViewModel = viewModel()
+    viewModel: AlarmViewModel = hiltViewModel()
 ) {
     val alarms by viewModel.alarmList.collectAsState()
-    var isMasterNotificationEnabled by remember { mutableStateOf(true) }
+    val settings by viewModel.settings.collectAsState()
+
 
     val context = LocalContext.current
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -165,8 +168,11 @@ fun AlarmListScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = onAddAlarmClick) {
-                            Icon(Icons.Default.Add, contentDescription = "알림 추가", tint = Color.White)
+                        // 사용자 지정 알림이 활성화 되어있을 때만 추가 버튼 표시
+                        AnimatedVisibility(visible = settings.isMasterEnabled && settings.isUserAlarmEnabled) {
+                            IconButton(onClick = onAddAlarmClick) {
+                                Icon(Icons.Default.Add, contentDescription = "알림 추가", tint = Color.White)
+                            }
                         }
                     }
                 )
@@ -212,6 +218,7 @@ fun AlarmListScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+                // 전체 알림 설정 카드
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -233,8 +240,8 @@ fun AlarmListScreen(
                                 color = Color.White
                             )
                             Switch(
-                                checked = isMasterNotificationEnabled,
-                                onCheckedChange = { isMasterNotificationEnabled = it },
+                                checked = settings.isMasterEnabled,
+                                onCheckedChange = { viewModel.saveMasterSwitch(it) },
                                 colors = SwitchDefaults.colors(
                                     checkedThumbColor = Color.White,
                                     uncheckedThumbColor = Color.LightGray,
@@ -244,28 +251,85 @@ fun AlarmListScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "현재 날씨를 간략하게 알려드리는 알림 기능입니다.",
+                            text = "날씨 정보를 알려드리는 전체 기능의 사용 여부를 설정합니다.",
                             fontSize = 14.sp,
                             color = Color.White.copy(alpha = 0.8f)
                         )
                     }
                 }
 
-                Divider(color = Color.White.copy(alpha = 0.3f), modifier = Modifier.padding(horizontal = 16.dp))
+                // 전체 알림이 켜져있을 때만 보이는 서브 메뉴들
+                AnimatedVisibility(visible = settings.isMasterEnabled) {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                        // 사용자 지정 알림 설정
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("사용자 지정 알림", fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Medium)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("원하는 시간에 날씨 브리핑을 받습니다.", fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f))
+                            }
+                            Switch(
+                                checked = settings.isUserAlarmEnabled,
+                                onCheckedChange = { viewModel.saveUserAlarmSwitch(it) },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    uncheckedThumbColor = Color.LightGray,
+                                    checkedTrackColor = Color.White.copy(alpha = 0.5f)
+                                )
+                            )
+                        }
+                        Divider(color = Color.White.copy(alpha = 0.3f))
+                        // 스마트 알림 설정
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("스마트 알림", fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Medium)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text("비나 눈이 오기 전에 미리 알려드립니다.", fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f))
+                            }
+                            Switch(
+                                checked = settings.isSmartAlarmEnabled,
+                                onCheckedChange = { viewModel.saveSmartAlarmSwitch(it) },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    uncheckedThumbColor = Color.LightGray,
+                                    checkedTrackColor = Color.White.copy(alpha = 0.5f)
+                                )
+                            )
+                        }
+                    }
+                }
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(alarms, key = { it.id }) { alarm ->
-                        AlarmCard(
-                            alarm = alarm,
-                            onToggle = { viewModel.toggleAlarm(alarm) },
-                            onClick = { navController.navigate("alarm_edit?alarmId=${alarm.id}") },
-                            isEnabled = isMasterNotificationEnabled && hasExactAlarmPermission
-                        )
+                // 사용자 지정 알림이 켜져 있을 때만 보이는 알람 목록
+                AnimatedVisibility(visible = settings.isMasterEnabled && settings.isUserAlarmEnabled) {
+                    Column {
+                        Divider(color = Color.White.copy(alpha = 0.3f), modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(alarms, key = { it.id }) { alarm ->
+                                AlarmCard(
+                                    alarm = alarm,
+                                    onToggle = { viewModel.toggleAlarm(alarm) },
+                                    onClick = { navController.navigate("alarm_edit?alarmId=${alarm.id}") },
+                                    isEnabled = settings.isMasterEnabled && hasExactAlarmPermission
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -330,7 +394,7 @@ fun AlarmCard(alarm: AlarmEntity, onToggle: () -> Unit, onClick: () -> Unit, isE
 fun AlarmEditScreen(
     navController: NavController,
     alarmId: Int = -1,
-    viewModel: AlarmViewModel = viewModel()
+    viewModel: AlarmViewModel = hiltViewModel()
 ) {
     var hourInput by remember { mutableStateOf("") }
     var minuteInput by remember { mutableStateOf("") }

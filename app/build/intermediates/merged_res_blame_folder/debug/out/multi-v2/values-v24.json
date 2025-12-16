@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.weatherproject.app-mergeDebugResources-65:/values-v24/values-v24.xml",
+            "outputFile": "com.example.weatherproject.app-mergeDebugResources-68:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\12550cbd5c9f386eb79288580d8b92db\\transformed\\media-1.7.0\\res\\values-v24\\values-v24.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\8.13\\transforms\\5a7f32de645ac875d3b32be8a2553fbc\\transformed\\media-1.7.0\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

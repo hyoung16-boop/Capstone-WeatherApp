@@ -48,6 +48,10 @@ dependencies {
     // Hilt
     implementation(libs.dagger.hilt.android)
     ksp(libs.dagger.hilt.compiler)
+    // Hilt-WorkManager Integration
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // 위치 서비스
     implementation(libs.google.play.services.location)

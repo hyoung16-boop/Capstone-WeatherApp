@@ -179,7 +179,8 @@ class WeatherRepositoryImpl(
             HourlyForecast(
                 time = formatTime(item.time),
                 iconUrl = getWeatherIconUrl(item.sky, item.pty),
-                temperature = "${item.temp?.toInt() ?: 0}°"
+                temperature = "${item.temp?.toInt() ?: 0}°",
+                pty = item.pty
             )
         } ?: emptyList()
 
