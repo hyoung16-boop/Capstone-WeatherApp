@@ -642,6 +642,11 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
     }
 
     @Override
+    public AlarmDao alarmDao() {
+      return provideAlarmDaoProvider.get();
+    }
+
+    @Override
     public Set<Boolean> getDisableFragmentGetContextFix() {
       return ImmutableSet.<Boolean>of();
     }

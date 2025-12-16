@@ -27,26 +27,26 @@ import javax.inject.Provider;
 public final class SmartAlertWorker_Factory {
   private final Provider<WeatherRepository> weatherRepositoryProvider;
 
-  private final Provider<PreferenceManager> prefManagerProvider;
+  private final Provider<PreferenceManager> preferenceManagerProvider;
 
   public SmartAlertWorker_Factory(Provider<WeatherRepository> weatherRepositoryProvider,
-      Provider<PreferenceManager> prefManagerProvider) {
+      Provider<PreferenceManager> preferenceManagerProvider) {
     this.weatherRepositoryProvider = weatherRepositoryProvider;
-    this.prefManagerProvider = prefManagerProvider;
+    this.preferenceManagerProvider = preferenceManagerProvider;
   }
 
   public SmartAlertWorker get(Context appContext, WorkerParameters workerParams) {
-    return newInstance(appContext, workerParams, weatherRepositoryProvider.get(), prefManagerProvider.get());
+    return newInstance(appContext, workerParams, weatherRepositoryProvider.get(), preferenceManagerProvider.get());
   }
 
   public static SmartAlertWorker_Factory create(
       Provider<WeatherRepository> weatherRepositoryProvider,
-      Provider<PreferenceManager> prefManagerProvider) {
-    return new SmartAlertWorker_Factory(weatherRepositoryProvider, prefManagerProvider);
+      Provider<PreferenceManager> preferenceManagerProvider) {
+    return new SmartAlertWorker_Factory(weatherRepositoryProvider, preferenceManagerProvider);
   }
 
   public static SmartAlertWorker newInstance(Context appContext, WorkerParameters workerParams,
-      WeatherRepository weatherRepository, PreferenceManager prefManager) {
-    return new SmartAlertWorker(appContext, workerParams, weatherRepository, prefManager);
+      WeatherRepository weatherRepository, PreferenceManager preferenceManager) {
+    return new SmartAlertWorker(appContext, workerParams, weatherRepository, preferenceManager);
   }
 }

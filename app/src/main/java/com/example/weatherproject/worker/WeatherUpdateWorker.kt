@@ -24,32 +24,53 @@ class WeatherUpdateWorker @AssistedInject constructor(
         Log.d("WeatherUpdateWorker", "Work started.")
 
         try {
-            val lastWeatherState = preferenceManager.getWeatherState()
-            val lat = lastWeatherState?.latitude
-            val lon = lastWeatherState?.longitude
-            if (lat == null || lon == null) {
-                Log.e("WeatherUpdateWorker", "Latitude or Longitude is null. Cannot fetch weather.")
-                return Result.failure()
+            var lat: Double?
+            var lon: Double?
+
+            // 1. 먼저 Preferences에서 마지막 위치 정보 가져오기 시도
+            val prefWeather = preferenceManager.getWeatherState()
+            if (prefWeather?.latitude != null && prefWeather.longitude != null) {
+                lat = prefWeather.latitude
+                lon = prefWeather.longitude
+                Log.d("WeatherUpdateWorker", "Location loaded from Preferences.")
+            } else {
+                // 2. 실패 시 Room DB 캐시에서 가져오기 시도
+                val cachedWeather = weatherRepository.getCachedWeather()
+                if (cachedWeather?.latitude != null && cachedWeather.longitude != null) {
+                    lat = cachedWeather.latitude
+                    lon = cachedWeather.longitude
+                    preferenceManager.saveWeatherState(cachedWeather) // 다음을 위해 Preferences에 저장
+                    Log.d("WeatherUpdateWorker", "Location restored from Room cache.")
+                } else {
+                    // 두 방법 모두 실패 시 작업 종료
+                    Log.e("WeatherUpdateWorker", "Could not find any location coordinates. Failing work.")
+                    return Result.failure()
+                }
             }
 
+            // --- 1. 최신 날씨 정보 가져오기 ---
             val tempAdjustment = preferenceManager.getTempAdjustment()
             val weatherDataResult = weatherRepository.getWeatherData(lat, lon, tempAdjustment)
 
             if (weatherDataResult.isFailure) {
-                Log.e("WeatherUpdateWorker", "Failed to get weather data from repository.")
+                Log.e("WeatherUpdateWorker", "Failed to get fresh weather data from repository.")
                 return Result.failure()
             }
 
-            val weatherState = weatherDataResult.getOrThrow()
-            val weather = weatherState.currentWeather
-            val hourlyForecast = weatherState.hourlyForecast
+            val freshWeatherState = weatherDataResult.getOrThrow()
+            // 워커가 최신 데이터를 사용하도록 Preference를 업데이트
+            preferenceManager.saveWeatherState(freshWeatherState)
+
+            val weather = freshWeatherState.currentWeather
+            val hourlyForecast = freshWeatherState.hourlyForecast
+            val weatherDetails = freshWeatherState.weatherDetails
 
             // --- 2. 알림 내용 생성 ---
             val clothingRecommendation = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20).first
             val rainForecast = hourlyForecast.take(3).find { it.pty != "0" }
             val rainText = if (rainForecast != null) "• 3시간 내에 비/눈 소식이 있어요. ☔️" else null
 
-            val pm10Value = weatherState.weatherDetails.pm10
+            val pm10Value = weatherDetails.pm10
             val pm10Status = if (pm10Value != "정보없음") {
                 val rawValue = pm10Value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
                 when {

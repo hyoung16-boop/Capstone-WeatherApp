@@ -469,15 +469,15 @@ public final class DaggerWeatherApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_weatherproject_ui_MainViewModel = "com.example.weatherproject.ui.MainViewModel";
-
       static String com_example_weatherproject_ui_AlarmViewModel = "com.example.weatherproject.ui.AlarmViewModel";
 
-      @KeepFieldType
-      MainViewModel com_example_weatherproject_ui_MainViewModel2;
+      static String com_example_weatherproject_ui_MainViewModel = "com.example.weatherproject.ui.MainViewModel";
 
       @KeepFieldType
       AlarmViewModel com_example_weatherproject_ui_AlarmViewModel2;
+
+      @KeepFieldType
+      MainViewModel com_example_weatherproject_ui_MainViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

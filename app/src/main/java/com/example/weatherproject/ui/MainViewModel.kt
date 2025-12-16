@@ -91,6 +91,8 @@ class MainViewModel @Inject constructor(
             val cachedWeather = weatherRepository.getCachedWeather()
             if (cachedWeather != null) {
                 _uiState.value = cachedWeather.copy(isLoading = false)
+                // 워커가 참조할 수 있도록 마지막 상태를 Preference에 저장
+                preferenceManager.saveWeatherState(cachedWeather)
             }
         }
     }
@@ -143,8 +145,7 @@ class MainViewModel @Inject constructor(
     private suspend fun fetchWeatherFromServer(lat: Double, lon: Double) {
         weatherRepository.getWeatherData(lat, lon, _tempAdjustment.value)
             .onSuccess { newWeatherState ->
-                // 주소, 위도, 경도는 이 함수에서 건드리지 않고, 날씨 관련 데이터만 업데이트합니다.
-                _uiState.value = _uiState.value.copy(
+                val updatedState = _uiState.value.copy(
                     isLoading = newWeatherState.isLoading,
                     currentWeather = newWeatherState.currentWeather,
                     weatherDetails = newWeatherState.weatherDetails,
@@ -153,6 +154,9 @@ class MainViewModel @Inject constructor(
                     lastUpdated = newWeatherState.lastUpdated,
                     error = null // 성공 시 에러 메시지 제거
                 )
+                _uiState.value = updatedState
+                // 워커가 참조할 수 있도록 최신 상태를 Preference에 저장
+                preferenceManager.saveWeatherState(updatedState)
             }
             .onFailure { error ->
                 Log.e(TAG, "getWeatherData 실패: ${error.message}", error)
