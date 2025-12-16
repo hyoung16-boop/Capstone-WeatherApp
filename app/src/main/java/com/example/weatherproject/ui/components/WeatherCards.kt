@@ -277,6 +277,51 @@ fun WeatherDetailContent(details: WeatherDetails) {
 @Composable
 fun WeeklyForecastContent(weeklyForecasts: List<WeeklyForecast>) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        // Header Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Spacer for Day column
+            Spacer(modifier = Modifier.weight(1.5f))
+
+            // AM/PM Labels for Icons column
+            Row(
+                modifier = Modifier.weight(2f),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "오전",
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.8f),
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "오후",
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.8f),
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            // Label for Temp column
+            Text(
+                text = "최저/최고",
+                fontSize = 12.sp,
+                color = Color.White.copy(alpha = 0.8f),
+                textAlign = TextAlign.End, // Match alignment with items
+                modifier = Modifier.weight(1.5f)
+            )
+        }
+
+        // Divider below header
+        Divider(color = Color.White.copy(alpha = 0.5f), modifier = Modifier.padding(bottom = 4.dp))
+
+        // List of forecast items
         weeklyForecasts.forEach { forecast ->
             WeeklyForecastItem(forecast = forecast)
             if (forecast != weeklyForecasts.last()) {
