@@ -1,18 +1,16 @@
 -- Merging decision tree log ---
 provider#androidx.work.impl.WorkManagerInitializer
-INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:41:9-44:35
-	tools:node
-		ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:44:13-32
+INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:41:9-43:71
 	android:authorities
 		INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml
 		ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:43:13-68
 	android:name
 		ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:42:13-69
 manifest
-ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-46:12
-INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-46:12
-INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-46:12
-INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-46:12
+ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-45:12
+INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-45:12
+INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-45:12
+INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:2:1-45:12
 MERGED from [androidx.hilt:hilt-work:1.2.0] C:\Users\user\.gradle\caches\8.13\transforms\4c117fa210cd2f61d7a0b636198f249e\transformed\hilt-work-1.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.hilt:hilt-navigation-compose:1.2.0] C:\Users\user\.gradle\caches\8.13\transforms\e1c55acd35a4adacb609d99a721da624\transformed\hilt-navigation-compose-1.2.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.hilt:hilt-navigation:1.2.0] C:\Users\user\.gradle\caches\8.13\transforms\44d48e63923bf9a32407abb7cf4db248\transformed\hilt-navigation-1.2.0\AndroidManifest.xml:2:1-7:12
@@ -143,8 +141,8 @@ ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:10:5-74
 	android:name
 		ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:10:22-71
 application
-ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:12:5-45:19
-INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:12:5-45:19
+ADDED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:12:5-44:19
+INJECTED from D:\jugan\WeatherApp\app\src\main\AndroidManifest.xml:12:5-44:19
 MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\user\.gradle\caches\8.13\transforms\0d4f50966766b1e6921d5aaf22655ee6\transformed\room-runtime-2.6.1\AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\user\.gradle\caches\8.13\transforms\0d4f50966766b1e6921d5aaf22655ee6\transformed\room-runtime-2.6.1\AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.work:work-runtime:2.9.0] C:\Users\user\.gradle\caches\8.13\transforms\dce0ee94d1a45f631994384b5fad57f3\transformed\work-runtime-2.9.0\AndroidManifest.xml:28:5-143:19

@@ -57,6 +57,10 @@
             android:name="com.example.weatherproject.receiver.AlarmReceiver"
             android:exported="false" />
 
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="com.example.weatherproject.workmanager-init" />
+
         <service
             android:name="androidx.room.MultiInstanceInvalidationService"
             android:directBootAware="true"
