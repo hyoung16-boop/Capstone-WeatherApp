@@ -7,6 +7,8 @@ import androidx.work.WorkerParameters
 import com.example.weatherproject.di.WorkerEntryPoint
 import com.example.weatherproject.util.ClothingRecommender
 import com.example.weatherproject.util.NotificationHelper
+import com.example.weatherproject.util.PmStatusHelper
+import com.example.weatherproject.util.WeatherSummarizer
 import dagger.hilt.android.EntryPointAccessors
 
 class WeatherUpdateWorker(
@@ -63,26 +65,19 @@ class WeatherUpdateWorker(
             val weatherDetails = freshWeatherState.weatherDetails
 
             // --- 2. 알림 내용 생성 ---
-            val clothingRecommendation = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20).first
+            val clothingItems = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20)
+            val clothingRecommendation = "추천 옷차림: " + clothingItems.joinToString(", ")
             val rainForecast = hourlyForecast.take(3).find { it.pty != "0" }
             val rainText = if (rainForecast != null) "• 3시간 내에 비/눈 소식이 있어요. ☔️" else null
 
             val pm10Value = weatherDetails.pm10
-            val pm10Status = if (pm10Value != "정보없음") {
-                val rawValue = pm10Value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
-                when {
-                    rawValue <= 30 -> "좋음"
-                    rawValue <= 80 -> "보통"
-                    rawValue <= 150 -> "나쁨"
-                    else -> "매우 나쁨"
-                }
-            } else {
-                "정보 없음"
-            }
+            val pm10Status = PmStatusHelper.getStatus(pm10Value)
             val pm10Text = "• 미세먼지: $pm10Status"
 
+            val mainWeatherSummary = WeatherSummarizer.getSummary(weather, weatherDetails, hourlyForecast)
+
             val notificationContent = buildString {
-                append("현재 기온은 ${weather.temperature}이며, 하늘은 ${weather.description} 상태입니다.\n")
+                append("$mainWeatherSummary\n\n")
                 append("\n$clothingRecommendation\n\n")
                 append(pm10Text)
                 rainText?.let { append("\n$it") }

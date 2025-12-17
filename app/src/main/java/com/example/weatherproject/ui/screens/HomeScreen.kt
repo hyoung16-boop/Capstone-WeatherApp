@@ -145,7 +145,9 @@ fun HomeScreen(
                     )
 
                     ClothingRecommendationCard(
-                        currentTemp = weatherState.currentWeather.temperature,
+                        currentWeather = weatherState.currentWeather,
+                        weatherDetails = weatherState.weatherDetails,
+                        hourlyForecast = weatherState.hourlyForecast,
                         feelsLike = weatherState.currentWeather.feelsLike,
                         tempAdjustment = tempAdjustment,
                         onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }

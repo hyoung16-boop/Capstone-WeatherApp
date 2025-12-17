@@ -41,6 +41,8 @@ import com.example.weatherproject.data.HourlyForecast
 import com.example.weatherproject.data.WeatherDetails
 import com.example.weatherproject.data.WeeklyForecast
 import com.example.weatherproject.util.ClothingRecommender
+import com.example.weatherproject.util.PmStatusHelper
+import com.example.weatherproject.util.WeatherSummarizer
 
 // 1. 현재 날씨 카드 (확장 가능)
 @Composable
@@ -379,28 +381,14 @@ fun WeatherContextItem(label: String, value: String, icon: String, interpret: (I
 
 @Composable
 fun PmGaugeItem(label: String, value: String) {
-    val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
-    
-    val Green = Color(0xFF4CAF50)
-    val Yellow = Color(0xFFFFC107)
-    val Orange = Color(0xFFFF9800)
-    val Red = Color(0xFFF44336)
-
-    val (status, gradientColors, progress) = when {
-        rawValue <= 30 -> Triple("좋음", listOf(Green, Green), rawValue / 150f)
-        rawValue <= 80 -> Triple("보통", listOf(Green, Yellow), rawValue / 150f)
-        rawValue <= 150 -> Triple("나쁨", listOf(Yellow, Orange), rawValue / 150f)
-        else -> Triple("매우 나쁨", listOf(Orange, Red), 1f)
-    }
-
-    val recommendation = when (status) {
-        "보통" -> "건강을 위해 마스크 권고"
-        "나쁨", "매우 나쁨" -> "마스크 착용 필수"
-        else -> ""
-    }
+    val status = PmStatusHelper.getStatus(value)
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "😷", fontSize = 24.sp)
                 Spacer(modifier = Modifier.width(16.dp))
@@ -409,21 +397,46 @@ fun PmGaugeItem(label: String, value: String) {
                     Text(text = status, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
-            Text(text = recommendation, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f), fontWeight = FontWeight.Medium)
+            // "정보없음"이 아닐 때만 마스크 추천 문구 표시
+            if (status != "정보없음") {
+                val recommendation = when (status) {
+                    "보통" -> "건강을 위해 마스크 권고"
+                    "나쁨", "매우 나쁨" -> "마스크 착용 필수"
+                    else -> ""
+                }
+                Text(text = recommendation, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f), fontWeight = FontWeight.Medium)
+            }
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        
-        // 새로 만든 GradientProgressIndicator 사용
-        GradientProgressIndicator(
-            progress = progress.coerceIn(0f, 1f),
-            gradientColors = gradientColors,
-            modifier = Modifier.fillMaxWidth().height(8.dp)
-        )
-        
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("0", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
-            Text("150+", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+
+        // "정보없음"이 아닐 때만 게이지 바 표시
+        if (status != "정보없음") {
+            val rawValue = value.replace(Regex("[^0-9]"), "").toIntOrNull() ?: 0
+            val Green = Color(0xFF4CAF50)
+            val Yellow = Color(0xFFFFC107)
+            val Orange = Color(0xFFFF9800)
+            val Red = Color(0xFFF44336)
+
+            val (gradientColors, progress) = when (status) {
+                "좋음" -> Pair(listOf(Green, Green), rawValue / 150f)
+                "보통" -> Pair(listOf(Green, Yellow), rawValue / 150f)
+                "나쁨" -> Pair(listOf(Yellow, Orange), rawValue / 150f)
+                "매우 나쁨" -> Pair(listOf(Orange, Red), 1f)
+                else -> Pair(listOf(Color.Gray, Color.Gray), 0f)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            GradientProgressIndicator(
+                progress = progress.coerceIn(0f, 1f),
+                gradientColors = gradientColors,
+                modifier = Modifier.fillMaxWidth().height(8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("0", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+                Text("150+", fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f))
+            }
         }
     }
 }
@@ -543,14 +556,17 @@ fun NearbyCctvCard(
 
 @Composable
 fun ClothingRecommendationCard(
-    currentTemp: String,
+    currentWeather: CurrentWeather,
+    weatherDetails: WeatherDetails,
+    hourlyForecast: List<HourlyForecast>,
     feelsLike: String,
     tempAdjustment: Int,
     onSettingsClick: () -> Unit
 ) {
     val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
-    
-    val (recommendationText, items) = ClothingRecommender.getRecommendation(rawFeelsLike)
+    val adjustedFeelsLike = rawFeelsLike + tempAdjustment
+    val items = ClothingRecommender.getRecommendation(adjustedFeelsLike)
+    val summaryText = WeatherSummarizer.getSummary(currentWeather, weatherDetails, hourlyForecast)
     
     val adjustmentText = if (tempAdjustment > 0) "(더위 많이 탐)" else if (tempAdjustment < 0) "(추위 많이 탐)" else ""
     
@@ -570,8 +586,8 @@ fun ClothingRecommendationCard(
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "설정", tint = Color.White)
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = recommendationText, fontSize = 16.sp, color = Color.White)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = summaryText, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f))
             Spacer(modifier = Modifier.height(12.dp))
             
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

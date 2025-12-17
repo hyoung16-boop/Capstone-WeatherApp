@@ -48,6 +48,7 @@ class WeatherRepositoryImpl(
             val weeklyDeferred = async { weatherApi.getWeeklyForecast(nx, ny) }
 
             val currentResponse = currentDeferred.await()
+            Log.d("API_RESPONSE", "Current Weather API Response: $currentResponse")
             val hourlyResponse = hourlyDeferred.await()
             val weeklyResponse = weeklyDeferred.await()
 
