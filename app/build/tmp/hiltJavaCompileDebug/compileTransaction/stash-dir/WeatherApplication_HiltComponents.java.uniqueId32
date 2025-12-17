@@ -6,6 +6,7 @@ import com.example.weatherproject.di.AppModule;
 import com.example.weatherproject.ui.AlarmViewModel_HiltModules;
 import com.example.weatherproject.ui.MainViewModel_HiltModules;
 import com.example.weatherproject.worker.SmartAlertWorker_HiltModule;
+import com.example.weatherproject.worker.TestWorker_HiltModule;
 import com.example.weatherproject.worker.WeatherUpdateWorker_HiltModule;
 import dagger.Binds;
 import dagger.Component;
@@ -136,6 +137,7 @@ public final class WeatherApplication_HiltComponents {
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
           HiltWrapper_WorkerFactoryModule.class,
           SmartAlertWorker_HiltModule.class,
+          TestWorker_HiltModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
           WeatherUpdateWorker_HiltModule.class

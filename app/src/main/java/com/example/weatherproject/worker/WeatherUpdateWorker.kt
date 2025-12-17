@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.weatherproject.data.repository.WeatherRepository
 import com.example.weatherproject.util.ClothingRecommender
+import com.example.weatherproject.util.LocationProvider
 import com.example.weatherproject.util.NotificationHelper
 import com.example.weatherproject.util.PreferenceManager
 import dagger.assisted.Assisted
@@ -17,36 +18,31 @@ class WeatherUpdateWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val weatherRepository: WeatherRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val locationProvider: LocationProvider // 의존성 주입
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         Log.d("WeatherUpdateWorker", "Work started.")
 
         try {
-            var lat: Double?
-            var lon: Double?
-
-            // 1. 먼저 Preferences에서 마지막 위치 정보 가져오기 시도
-            val prefWeather = preferenceManager.getWeatherState()
-            if (prefWeather?.latitude != null && prefWeather.longitude != null) {
-                lat = prefWeather.latitude
-                lon = prefWeather.longitude
-                Log.d("WeatherUpdateWorker", "Location loaded from Preferences.")
-            } else {
-                // 2. 실패 시 Room DB 캐시에서 가져오기 시도
-                val cachedWeather = weatherRepository.getCachedWeather()
-                if (cachedWeather?.latitude != null && cachedWeather.longitude != null) {
-                    lat = cachedWeather.latitude
-                    lon = cachedWeather.longitude
-                    preferenceManager.saveWeatherState(cachedWeather) // 다음을 위해 Preferences에 저장
-                    Log.d("WeatherUpdateWorker", "Location restored from Room cache.")
-                } else {
-                    // 두 방법 모두 실패 시 작업 종료
-                    Log.e("WeatherUpdateWorker", "Could not find any location coordinates. Failing work.")
-                    return Result.failure()
-                }
+            // [수정됨] 위치 정보 가져오기 (1. Preference -> 2. Room -> 3. LocationProvider)
+            val location = preferenceManager.getWeatherState()?.let { state ->
+                if (state.latitude != null && state.longitude != null) state.latitude to state.longitude else null
+            } ?: weatherRepository.getCachedWeather()?.let { state ->
+                if (state.latitude != null && state.longitude != null) {
+                    preferenceManager.saveWeatherState(state) // 다음을 위해 Preferences에 저장
+                    state.latitude to state.longitude
+                } else null
+            } ?: locationProvider.getFreshLocation()?.let { loc -> // 새로 만든 함수 호출
+                loc.latitude to loc.longitude
             }
+
+            if (location == null) {
+                Log.e("WeatherUpdateWorker", "Could not find any location coordinates. Failing work.")
+                return Result.failure()
+            }
+            val (lat, lon) = location
 
             // --- 1. 최신 날씨 정보 가져오기 ---
             val tempAdjustment = preferenceManager.getTempAdjustment()

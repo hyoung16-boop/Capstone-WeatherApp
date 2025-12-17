@@ -14,9 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
+import kotlin.coroutines.resume
 
 class LocationProvider(private val application: Application) {
 
@@ -38,6 +40,51 @@ class LocationProvider(private val application: Application) {
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
+
+    // [수정됨] Worker에서 직접 위치를 가져갈 수 있는 suspend 함수 추가
+    suspend fun getFreshLocation(): Location? = withContext(Dispatchers.IO) {
+        if (!hasLocationPermission()) {
+            Log.w("LocationProvider", "Location permission not granted for getFreshLocation.")
+            return@withContext null
+        }
+        suspendCancellableCoroutine { continuation ->
+            try {
+                fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener { location: Location? ->
+                        if (continuation.isActive) {
+                            if (location != null) {
+                                Log.d("LocationProvider", "Got fresh location: $location")
+                                continuation.resume(location)
+                            } else {
+                                Log.w("LocationProvider", "Fresh location is null, trying last location.")
+                                // 바로 실패하지 않고 마지막 위치라도 가져오기 시도
+                                fusedLocationClient.lastLocation.addOnSuccessListener { lastLocation ->
+                                    if (continuation.isActive) {
+                                        continuation.resume(lastLocation)
+                                    }
+                                }.addOnFailureListener {
+                                    if (continuation.isActive) {
+                                        continuation.resume(null)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("LocationProvider", "Failed to get fresh location.", e)
+                        if (continuation.isActive) {
+                            continuation.resume(null)
+                        }
+                    }
+            } catch (e: SecurityException) {
+                Log.e("LocationProvider", "SecurityException in getFreshLocation.", e)
+                if (continuation.isActive) {
+                    continuation.resume(null)
+                }
+            }
+        }
+    }
+
 
     fun getCurrentLocationOnce() {
         if (!hasLocationPermission()) {

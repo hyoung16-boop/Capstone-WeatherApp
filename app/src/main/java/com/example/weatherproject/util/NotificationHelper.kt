@@ -47,6 +47,11 @@ object NotificationHelper {
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setAutoCancel(true)
 
-        notificationManager.notify(notificationId, builder.build())
+        try {
+            notificationManager.notify(notificationId, builder.build())
+        } catch (e: SecurityException) {
+            // Android 13+에서 알림 권한이 없을 때 발생할 수 있는 크래시 방지
+            android.util.Log.e("NotificationHelper", "Failed to show notification due to missing permission.", e)
+        }
     }
 }

@@ -8,6 +8,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.weatherproject.di.AlarmReceiverEntryPoint
 import com.example.weatherproject.util.AlarmScheduler
+import com.example.weatherproject.worker.TestWorker
 import com.example.weatherproject.worker.WeatherUpdateWorker
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
