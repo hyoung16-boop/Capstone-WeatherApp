@@ -8,8 +8,8 @@ import javax.annotation.processing.Generated;
  */
 @AggregatedDeps(
     components = "dagger.hilt.components.SingletonComponent",
-    modules = "com.example.weatherproject.worker.WeatherUpdateWorker_HiltModule"
+    entryPoints = "com.example.weatherproject.di.WorkerEntryPoint"
 )
 @Generated("dagger.hilt.processor.internal.aggregateddeps.AggregatedDepsGenerator")
-public class _com_example_weatherproject_worker_WeatherUpdateWorker_HiltModule {
+public class _com_example_weatherproject_di_WorkerEntryPoint {
 }

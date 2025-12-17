@@ -3,11 +3,11 @@ package com.example.weatherproject;
 import androidx.hilt.work.HiltWrapper_WorkerFactoryModule;
 import com.example.weatherproject.di.AlarmReceiverEntryPoint;
 import com.example.weatherproject.di.AppModule;
+import com.example.weatherproject.di.WorkerEntryPoint;
 import com.example.weatherproject.ui.AlarmViewModel_HiltModules;
 import com.example.weatherproject.ui.MainViewModel_HiltModules;
 import com.example.weatherproject.worker.SmartAlertWorker_HiltModule;
 import com.example.weatherproject.worker.TestWorker_HiltModule;
-import com.example.weatherproject.worker.WeatherUpdateWorker_HiltModule;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -139,13 +139,13 @@ public final class WeatherApplication_HiltComponents {
           SmartAlertWorker_HiltModule.class,
           TestWorker_HiltModule.class,
           ActivityRetainedCBuilderModule.class,
-          ServiceCBuilderModule.class,
-          WeatherUpdateWorker_HiltModule.class
+          ServiceCBuilderModule.class
       }
   )
   @Singleton
   public abstract static class SingletonC implements WeatherApplication_GeneratedInjector,
       AlarmReceiverEntryPoint,
+      WorkerEntryPoint,
       FragmentGetContextFix.FragmentGetContextFixEntryPoint,
       HiltWrapper_ActivityRetainedComponentManager_ActivityRetainedComponentBuilderEntryPoint,
       ServiceComponentManager.ServiceComponentBuilderEntryPoint,

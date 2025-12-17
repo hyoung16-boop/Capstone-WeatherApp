@@ -2,31 +2,32 @@ package com.example.weatherproject.worker
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.weatherproject.data.repository.WeatherRepository
+import com.example.weatherproject.di.WorkerEntryPoint
 import com.example.weatherproject.util.ClothingRecommender
-import com.example.weatherproject.util.LocationProvider
 import com.example.weatherproject.util.NotificationHelper
-import com.example.weatherproject.util.PreferenceManager
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.EntryPointAccessors
 
-@HiltWorker
-class WeatherUpdateWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParams: WorkerParameters,
-    private val weatherRepository: WeatherRepository,
-    private val preferenceManager: PreferenceManager,
-    private val locationProvider: LocationProvider // 의존성 주입
-) : CoroutineWorker(context, workerParams) {
+class WeatherUpdateWorker(
+    private val appContext: Context,
+    workerParams: WorkerParameters
+) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
-        Log.d("WeatherUpdateWorker", "Work started.")
+        Log.d("WeatherUpdateWorker", "Work started using EntryPoint.")
+
+        // Hilt의 생성자 주입 대신 EntryPoint를 통해 직접 의존성을 가져옴
+        val hiltEntryPoint = EntryPointAccessors.fromApplication(
+            appContext,
+            WorkerEntryPoint::class.java
+        )
+        val weatherRepository = hiltEntryPoint.weatherRepository()
+        val preferenceManager = hiltEntryPoint.preferenceManager()
+        val locationProvider = hiltEntryPoint.locationProvider()
 
         try {
-            // [수정됨] 위치 정보 가져오기 (1. Preference -> 2. Room -> 3. LocationProvider)
+            // 위치 정보 가져오기 (1. Preference -> 2. Room -> 3. LocationProvider)
             val location = preferenceManager.getWeatherState()?.let { state ->
                 if (state.latitude != null && state.longitude != null) state.latitude to state.longitude else null
             } ?: weatherRepository.getCachedWeather()?.let { state ->
@@ -89,7 +90,7 @@ class WeatherUpdateWorker @AssistedInject constructor(
 
             // --- 3. 알림 표시 ---
             NotificationHelper.showNotification(
-                context,
+                appContext,
                 "오늘의 날씨 브리핑",
                 notificationContent
             )
