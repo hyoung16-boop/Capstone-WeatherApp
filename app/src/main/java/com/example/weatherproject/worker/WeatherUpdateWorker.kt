@@ -64,8 +64,9 @@ class WeatherUpdateWorker(
             val hourlyForecast = freshWeatherState.hourlyForecast
             val weatherDetails = freshWeatherState.weatherDetails
 
-            // --- 2. 알림 내용 생성 ---
-            val clothingItems = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20)
+            // 옷차림 추천 가져오기
+            val clothingItemIds = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20)
+            val clothingItems = clothingItemIds.map { applicationContext.getString(it) }
             val clothingRecommendation = "추천 옷차림: " + clothingItems.joinToString(", ")
             val rainForecast = hourlyForecast.take(3).find { it.pty != "0" }
             val rainText = if (rainForecast != null) "• 3시간 내에 비/눈 소식이 있어요. ☔️" else null

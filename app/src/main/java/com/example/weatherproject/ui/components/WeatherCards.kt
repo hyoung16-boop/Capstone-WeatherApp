@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -565,7 +566,7 @@ fun ClothingRecommendationCard(
 ) {
     val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
     val adjustedFeelsLike = rawFeelsLike + tempAdjustment
-    val items = ClothingRecommender.getRecommendation(adjustedFeelsLike)
+    val itemIds = ClothingRecommender.getRecommendation(adjustedFeelsLike)
     val summaryText = WeatherSummarizer.getSummary(currentWeather, weatherDetails, hourlyForecast)
     
     val adjustmentText = if (tempAdjustment > 0) "(더위 많이 탐)" else if (tempAdjustment < 0) "(추위 많이 탐)" else ""
@@ -591,8 +592,8 @@ fun ClothingRecommendationCard(
             Spacer(modifier = Modifier.height(12.dp))
             
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(items) { item ->
-                    ClothingItemChip(text = item)
+                items(itemIds) { itemId ->
+                    ClothingItemChip(textResId = itemId)
                 }
             }
             
@@ -603,14 +604,14 @@ fun ClothingRecommendationCard(
 }
 
 @Composable
-fun ClothingItemChip(text: String) {
+fun ClothingItemChip(textResId: Int) {
     Surface(
         color = Color.White.copy(alpha = 0.2f),
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.height(32.dp)
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 12.dp)) {
-            Text(text = text, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(text = stringResource(id = textResId), color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
 }

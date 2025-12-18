@@ -58,12 +58,21 @@ class SmartAlertWorker @AssistedInject constructor(
             val willRainOrSnow = hourlyForecasts.take(3).any { it.pty != "0" }
 
             if (willRainOrSnow) {
-                // TODO: 이전에 알림을 보냈는지, 보냈다면 너무 자주 보내지 않는지 확인하는 로직 추가
-                NotificationHelper.showNotification(
-                    context = applicationContext,
-                    title = "스마트 날씨 알림",
-                    content = "3시간 내에 비 또는 눈 소식이 있습니다. 우산을 챙기세요!"
-                )
+                val lastAlertTime = preferenceManager.getLastAlertTime()
+                val currentTime = System.currentTimeMillis()
+                val minInterval = 6 * 60 * 60 * 1000 // 6시간
+
+                if (currentTime - lastAlertTime >= minInterval) {
+                    NotificationHelper.showNotification(
+                        context = applicationContext,
+                        title = "스마트 날씨 알림",
+                        content = "3시간 내에 비 또는 눈 소식이 있습니다. 우산을 챙기세요!"
+                    )
+                    preferenceManager.saveLastAlertTime(currentTime)
+                    Log.d("SmartAlertWorker", "Alert sent. Updated lastAlertTime.")
+                } else {
+                    Log.d("SmartAlertWorker", "Alert skipped. Too soon since last alert.")
+                }
             }
 
             return Result.success()

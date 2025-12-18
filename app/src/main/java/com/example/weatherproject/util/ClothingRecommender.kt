@@ -6,7 +6,7 @@ object ClothingRecommender {
         feelsLikeTemp: Int,
         isRainy: Boolean = false,
         isWindy: Boolean = false
-    ): List<String> {
+    ): List<Int> {
 
         // 1. 현재 날씨 상태를 기반으로 날씨 태그 세트를 생성합니다.
         val currentWeatherTags = mutableSetOf<WeatherTag>()
@@ -36,11 +36,14 @@ object ClothingRecommender {
         recommendedItems.addAll(itemsByCategory[Category.BOTTOM] ?: emptyList())
         recommendedItems.addAll(itemsByCategory[Category.ACCESSORY] ?: emptyList())
 
-        // 20도 미만일 때만 아우터를 추가합니다.
-        if (feelsLikeTemp < 20) {
-            recommendedItems.addAll(itemsByCategory[Category.OUTERWEAR] ?: emptyList())
+        // 5. 아우터 추천 로직 개선
+        // 기존: if (feelsLikeTemp < 20) 무조건 추가
+        // 변경: 날씨 태그에 맞는 아우터가 있다면 자연스럽게 추가됨.
+        // 다만, 여름(VERY_HOT, HOT)에는 아우터가 추천되지 않도록 방어 로직 추가 가능
+        if (feelsLikeTemp < 26) { // 26도 미만이면 아우터 고려 (얇은 가디건 등)
+             recommendedItems.addAll(itemsByCategory[Category.OUTERWEAR] ?: emptyList())
         }
 
-        return recommendedItems.map { it.name }.distinct()
+        return recommendedItems.map { it.nameResId }.distinct()
     }
 }

@@ -8,6 +8,33 @@
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
     <string name="app_name">Weather project</string>
+    <string name="boots">부츠</string>
+    <string name="cardigan_thin">얇은 가디건</string>
+    <string name="coat">코트</string>
     <string name="data_source_credit">데이터 제공: 기상청</string>
+    <string name="field_jacket">야상</string>
+    <string name="gloves">장갑</string>
+    <string name="hat">모자</string>
+    <string name="hoodie_fleece">기모 후드티</string>
+    <string name="jacket">자켓</string>
+    <string name="jeans">청바지</string>
+    <string name="knitwear">니트</string>
+    <string name="padding_heavy">두꺼운 패딩</string>
+    <string name="padding_light">경량 패딩</string>
+    <string name="pants_cotton">면바지</string>
+    <string name="pants_fleece">기모 바지</string>
+    <string name="sandals">샌들</string>
+    <string name="scarf">목도리</string>
+    <string name="shirt_thin">얇은 셔츠</string>
+    <string name="shorts">반바지</string>
+    <string name="slacks">슬랙스</string>
+    <string name="sleeveless">민소매</string>
+    <string name="sweatshirt">맨투맨</string>
+    <string name="thermal_underwear">히트텍</string>
+    <string name="trench_coat">트렌치코트</string>
+    <string name="tshirt_long">긴팔 티셔츠</string>
+    <string name="tshirt_short">반팔 티셔츠</string>
+    <string name="umbrella">우산</string>
+    <string name="windbreaker">바람막이</string>
     <style name="Theme.WeatherProject" parent="android:Theme.Material.Light.NoActionBar"/>
 </resources>

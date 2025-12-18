@@ -37,7 +37,7 @@ enum class Category {
  * @param tags 이 옷이 적합한 날씨 태그 목록
  */
 data class ClothingItem(
-    val name: String,
+    val nameResId: Int,
     val category: Category,
     val tags: Set<WeatherTag>
 )

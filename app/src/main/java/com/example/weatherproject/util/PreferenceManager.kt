@@ -13,6 +13,7 @@ class PreferenceManager(context: Context) {
         private const val KEY_TEMP_ADJUSTMENT = "temp_adjustment"
         private const val KEY_IS_SETUP_COMPLETE = "is_setup_complete"
         private const val KEY_LAST_WEATHER_STATE = "last_weather_state"
+        private const val KEY_LAST_ALERT_TIME = "last_alert_time"
     }
 
     // 보정값 저장 (-3 ~ +3)
@@ -24,6 +25,16 @@ class PreferenceManager(context: Context) {
     // 보정값 가져오기 (기본값 0)
     fun getTempAdjustment(): Int {
         return prefs.getInt(KEY_TEMP_ADJUSTMENT, 0)
+    }
+
+    // 마지막 알림 시간 저장
+    fun saveLastAlertTime(time: Long) {
+        prefs.edit().putLong(KEY_LAST_ALERT_TIME, time).apply()
+    }
+
+    // 마지막 알림 시간 가져오기 (기본값 0)
+    fun getLastAlertTime(): Long {
+        return prefs.getLong(KEY_LAST_ALERT_TIME, 0L)
     }
 
     // 최초 설정 완료 여부 확인
