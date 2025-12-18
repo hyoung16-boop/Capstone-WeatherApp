@@ -16,14 +16,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// 위치 정보를 담는 데이터 클래스
 data class LocationInfo(
     val latitude: Double,
     val longitude: Double,
     val address: String,
-    val currentLocationForDistance: Location? // 거리 계산의 기준이 되는 현재 위치
+    val currentLocationForDistance: Location?
 )
 
+/**
+ * CCTV 화면의 상태와 비즈니스 로직을 관리하는 ViewModel입니다.
+ *
+ * 주요 역할:
+ * 1. 선택된 위치 주변의 CCTV 정보를 조회합니다.
+ * 2. 현재 위치와 CCTV 사이의 거리를 계산합니다.
+ * 3. CCTV 정보 로딩 상태 및 에러 상태를 관리합니다.
+ */
 @HiltViewModel
 class CctvViewModel @Inject constructor(
     private val repository: WeatherRepository,
@@ -39,15 +46,20 @@ class CctvViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // 사용자가 선택한 위치 정보 (검색 또는 현재 위치)
     private val _selectedLocationInfo = MutableStateFlow<LocationInfo?>(null)
     val selectedLocationInfo: StateFlow<LocationInfo?> = _selectedLocationInfo.asStateFlow()
 
-    // 새로운 위치로 업데이트하고 CCTV 정보를 가져오는 함수
+    /**
+     * CCTV를 조회할 기준 위치를 업데이트하고, 해당 위치의 CCTV 정보를 서버에 요청합니다.
+     *
+     * @param lat 위도
+     * @param lon 경도
+     * @param address 주소 텍스트
+     * @param currentLocation 현재 사용자 위치 (거리 계산용)
+     */
     fun updateSelectedLocation(lat: Double, lon: Double, address: String, currentLocation: Location?) {
         val newLocationInfo = LocationInfo(lat, lon, address, currentLocation)
         
-        // 중복 체크 제거: 사용자가 명시적으로 검색/클릭했을 때는 항상 갱신
         _selectedLocationInfo.value = newLocationInfo
         fetchCctvByLocation()
     }
@@ -56,9 +68,8 @@ class CctvViewModel @Inject constructor(
         fetchCctvByLocation()
     }
 
-    // ViewModel 내부 상태를 기반으로 CCTV 정보를 가져오는 함수
     private fun fetchCctvByLocation() {
-        val locationInfo = _selectedLocationInfo.value ?: return // 선택된 위치가 없으면 실행하지 않음
+        val locationInfo = _selectedLocationInfo.value ?: return
 
         viewModelScope.launch {
             _isLoading.value = true
@@ -111,7 +122,7 @@ class CctvViewModel @Inject constructor(
     }
 
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val r = 6371.0 // 지구 반지름 (km)
+        val r = 6371.0
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
         val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +

@@ -16,6 +16,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * 앱의 메인 화면(HomeScreen)에 대한 비즈니스 로직과 UI 상태를 관리하는 ViewModel입니다.
+ *
+ * 주요 역할:
+ * 1. 위치 정보(GPS)를 추적하고, 해당 위치의 날씨 데이터를 서버에서 가져옵니다.
+ * 2. 사용자가 검색한 지역의 날씨 정보를 업데이트합니다.
+ * 3. 앱 설정(체감온도 보정 등)을 관리하고 반영합니다.
+ * 4. UI 상태(로딩, 에러, 날씨 데이터)를 `StateFlow`로 노출하여 UI가 반응하도록 합니다.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val weatherRepository: WeatherRepository,
@@ -27,30 +36,23 @@ class MainViewModel @Inject constructor(
         private const val TAG = "MainViewModel"
     }
 
-    // [추가됨] 현재 GPS 위치를 자동으로 추적할지 여부를 결정하는 상태
     private val _isFollowingGps = MutableStateFlow(true)
 
-    // 메인 날씨 상태 (UI가 바라보는 데이터)
     private val _uiState = MutableStateFlow(WeatherState())
     val uiState: StateFlow<WeatherState> = _uiState.asStateFlow()
 
-    // 새로고침 상태
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    // 체질 보정값
     private val _tempAdjustment = MutableStateFlow(0)
     val tempAdjustment: StateFlow<Int> = _tempAdjustment.asStateFlow()
 
-    // 최초 설정 다이얼로그 표시 여부
     private val _showSetupDialog = MutableStateFlow(false)
     val showSetupDialog: StateFlow<Boolean> = _showSetupDialog.asStateFlow()
 
-    // 체감온도 보정 다이얼로그 표시 여부 (설정 화면용)
     private val _showTempAdjustmentDialog = MutableStateFlow(false)
     val showTempAdjustmentDialog: StateFlow<Boolean> = _showTempAdjustmentDialog.asStateFlow()
 
-    // 에러 메시지 (일회성 이벤트)
     private val _errorEvent = kotlinx.coroutines.flow.MutableSharedFlow<String>()
     val errorEvent = _errorEvent.asSharedFlow()
 
@@ -60,14 +62,16 @@ class MainViewModel @Inject constructor(
         loadCachedWeather()
         checkUserPreference()
         observeLocationUpdates()
-        // 앱 시작 시, GPS 추적 모드가 기본값이므로 위치 추적 시작
         startLocationTracking()
     }
 
+    /**
+     * 위치 제공자(LocationProvider)로부터 실시간 위치 업데이트를 구독합니다.
+     * GPS 추적 모드(_isFollowingGps)가 활성화된 경우에만, 변경된 위치 기반으로 날씨를 갱신합니다.
+     */
     private fun observeLocationUpdates() {
         viewModelScope.launch {
             locationProvider.currentLocation.collect { location ->
-                // [수정됨] GPS 추적 모드일 때만, 위치 변경에 따라 자동으로 날씨를 가져옴
                 if (_isFollowingGps.value) {
                     location?.let {
                         _uiState.value = _uiState.value.copy(latitude = it.latitude, longitude = it.longitude)
@@ -78,7 +82,6 @@ class MainViewModel @Inject constructor(
         }
         viewModelScope.launch {
             locationProvider.address.collect { address ->
-                // [수정됨] GPS 추적 모드일 때만, 자동으로 주소를 업데이트함
                 if (_isFollowingGps.value && address.isNotBlank()) {
                     _uiState.value = _uiState.value.copy(address = address)
                 }
@@ -91,7 +94,6 @@ class MainViewModel @Inject constructor(
             val cachedWeather = weatherRepository.getCachedWeather()
             if (cachedWeather != null) {
                 _uiState.value = cachedWeather.copy(isLoading = false)
-                // 워커가 참조할 수 있도록 마지막 상태를 Preference에 저장
                 preferenceManager.saveWeatherState(cachedWeather)
             }
         }
@@ -135,13 +137,16 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    // LocationProvider에 위임
     fun hasLocationPermission(): Boolean = locationProvider.hasLocationPermission()
     fun getCurrentLocationOnce() = locationProvider.getCurrentLocationOnce()
     fun startLocationTracking() = locationProvider.startLocationTracking()
     private fun stopLocationTracking() = locationProvider.stopLocationTracking()
 
 
+    /**
+     * 서버로부터 날씨 데이터를 비동기로 요청하고 UI 상태를 업데이트합니다.
+     * 성공 시 데이터를 로컬 DB 및 Preference에 캐싱하며, 실패 시 에러 상태를 UI에 전달합니다.
+     */
     private suspend fun fetchWeatherFromServer(lat: Double, lon: Double) {
         weatherRepository.getWeatherData(lat, lon, _tempAdjustment.value)
             .onSuccess { newWeatherState ->
@@ -152,10 +157,9 @@ class MainViewModel @Inject constructor(
                     hourlyForecast = newWeatherState.hourlyForecast,
                     weeklyForecast = newWeatherState.weeklyForecast,
                     lastUpdated = newWeatherState.lastUpdated,
-                    error = null // 성공 시 에러 메시지 제거
+                    error = null
                 )
                 _uiState.value = updatedState
-                // 워커가 참조할 수 있도록 최신 상태를 Preference에 저장
                 preferenceManager.saveWeatherState(updatedState)
             }
             .onFailure { error ->
@@ -172,10 +176,9 @@ class MainViewModel @Inject constructor(
             if (_isRefreshing.value) return@launch
             _isRefreshing.value = true
             try {
-                // 현재 GPS 추적 모드라면, 현재 위치 기준 새로고침
                 if (_isFollowingGps.value) {
                     getCurrentLocationOnce()
-                } else { // 검색 위치 고정 모드라면, 현재 표시중인 좌표 기준 새로고침
+                } else {
                     uiState.value.latitude?.let { lat ->
                         uiState.value.longitude?.let { lon ->
                             fetchWeatherFromServer(lat, lon)
@@ -190,49 +193,46 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    // [수정됨] '현재 위치' 버튼을 눌렀을 때의 동작
+    /**
+     * 사용자가 '현재 위치' 버튼을 눌렀을 때 호출됩니다.
+     * 검색 모드를 종료하고 GPS 추적 모드로 전환하며, 강제로 위치 및 날씨 정보를 갱신합니다.
+     * StateFlow의 중복 무시 특성을 우회하기 위해 강제 호출 로직이 포함되어 있습니다.
+     */
     fun refreshMyLocation() {
         viewModelScope.launch {
             if (_isRefreshing.value) return@launch
             _isRefreshing.value = true
             
-            // 1. GPS 추적 모드로 전환
             _isFollowingGps.value = true
-            // 2. 위치 추적을 다시 시작
             startLocationTracking()
-            // 3. 즉시 현재 위치를 한번 가져와서 업데이트 플로우를 트리거
             getCurrentLocationOnce()
-            
-            // [추가] StateFlow 특성상 위치가 동일하면 collect가 호출되지 않으므로,
-            // 현재 저장된 위치가 있다면 강제로 날씨 API를 호출하여 갱신 보장
+
             currentLocation.value?.let { loc ->
                 fetchWeatherFromServer(loc.latitude, loc.longitude)
             }
             
-            // [추가] 주소 정보도 강제로 동기화 (검색된 지역 이름이 남아있는 경우 해결)
             val currentAddr = locationProvider.address.value
             if (currentAddr.isNotBlank()) {
                 _uiState.value = _uiState.value.copy(address = currentAddr)
             }
             
-            // 로딩 표시는 위의 로직들이 실행된 후 일정시간 뒤 해제
-            kotlinx.coroutines.delay(1500) // 사용자가 인지할 시간을 줌
+            kotlinx.coroutines.delay(1500)
             _isRefreshing.value = false
         }
     }
 
-    // [수정됨] 다른 지역을 검색했을 때의 동작
+    /**
+     * 사용자가 특정 도시를 검색했을 때 호출됩니다.
+     * GPS 추적을 중단하고, 선택된 도시의 좌표로 날씨 정보를 수동 업데이트합니다.
+     */
     fun updateWeatherByLocation(city: String, lat: Double, lon: Double) {
         viewModelScope.launch {
-            // 1. GPS 추적 모드를 비활성화하여, 백그라운드 업데이트가 검색 결과를 덮어쓰지 않도록 함
             _isFollowingGps.value = false
             stopLocationTracking()
 
             _isRefreshing.value = true
-            // 2. 검색된 위치의 주소와 좌표로 UI 상태를 명시적으로 업데이트
             _uiState.value = _uiState.value.copy(address = city, latitude = lat, longitude = lon)
             try {
-                // 3. 해당 위치의 날씨 정보를 가져옴
                 fetchWeatherFromServer(lat, lon)
             } finally {
                 _isRefreshing.value = false

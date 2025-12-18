@@ -11,11 +11,24 @@ import com.example.weatherproject.util.PmStatusHelper
 import com.example.weatherproject.util.WeatherSummarizer
 import dagger.hilt.android.EntryPointAccessors
 
+/**
+ * 백그라운드에서 주기적으로(또는 알람 시간에 맞춰) 실행되어 날씨를 업데이트하고 알림을 보내는 워커입니다.
+ *
+ * 주요 역할:
+ * 1. 현재 위치를 파악합니다 (저장된 위치 또는 실시간 GPS).
+ * 2. 최신 날씨 데이터를 서버에서 가져옵니다.
+ * 3. 날씨 정보, 미세먼지 상태, 옷차림 추천 등을 포함한 종합 브리핑 알림을 생성하여 사용자에게 발송합니다.
+ *
+ * Hilt의 `EntryPointAccessors`를 사용하여 워커 내부에서 의존성을 주입받습니다.
+ */
 class WeatherUpdateWorker(
     private val appContext: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams) {
 
+    /**
+     * 워커의 실행 진입점입니다.
+     */
     override suspend fun doWork(): Result {
         Log.d("WeatherUpdateWorker", "Work started using EntryPoint.")
 

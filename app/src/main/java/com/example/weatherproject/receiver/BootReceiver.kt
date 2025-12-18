@@ -12,17 +12,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * 기기 재부팅 완료 시(`BOOT_COMPLETED`) 호출되는 브로드캐스트 리시버입니다.
+ *
+ * 역할:
+ * - 안드로이드 시스템은 재부팅 시 등록된 알람(AlarmManager)을 모두 초기화합니다.
+ * - 이 리시버는 DB에 저장된 알람 목록을 읽어와서, 활성화된 알람들을 다시 예약(Reschedule)하는 역할을 합니다.
+ */
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             Log.d("BootReceiver", "Device booted. Rescheduling alarms...")
-
-            // 1. 스마트 알림 재예약
-            // 스마트 알림 설정 상태를 확인해야 하지만, 기본적으로 Worker는 WorkManager가 알아서 복구할 수도 있습니다.
-            // 하지만 확실하게 하기 위해 재예약 로직을 호출하거나, WorkManager의 정책을 따릅니다.
-            // WorkManager는 기본적으로 재부팅 후에도 작업이 유지되므로 별도 처리가 필요 없을 수 있으나,
-            // SmartAlertScheduler 로직에 따라 다시 걸어주는 것이 안전할 수 있습니다.
-            // 여기서는 AlarmEntity 기반의 사용자 알람 복구에 집중하겠습니다.
 
             val pendingResult = goAsync()
             val scope = CoroutineScope(Dispatchers.IO)
@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
                         AlarmReceiverEntryPoint::class.java
                     )
                     val alarmDao = hiltEntryPoint.alarmDao()
-                    val alarms = alarmDao.getAllAlarmsSnapshot() // Flow가 아닌 List를 반환하는 메서드 필요
+                    val alarms = alarmDao.getAllAlarmsSnapshot()
 
                     for (alarm in alarms) {
                         if (alarm.isEnabled) {
