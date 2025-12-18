@@ -1,6 +1,7 @@
 package com.example.weatherproject.data.repository
 
 import com.example.weatherproject.data.WeatherState
+import com.example.weatherproject.network.CctvResponse
 
 /**
  * ViewModel과 데이터 소스(네트워크, 캐시 등) 사이의 중재자 역할을 하는 인터페이스입니다.
@@ -27,4 +28,9 @@ interface WeatherRepository {
      * @return 저장된 WeatherState가 있으면 반환, 없으면 null 반환
      */
     suspend fun getCachedWeather(): WeatherState?
+
+    /**
+     * 주변 CCTV 정보를 가져옵니다.
+     */
+    suspend fun getNearbyCctv(lat: Double, lng: Double): Result<CctvResponse>
 }

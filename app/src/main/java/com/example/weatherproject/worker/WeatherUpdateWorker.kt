@@ -68,26 +68,48 @@ class WeatherUpdateWorker(
             val clothingItemIds = ClothingRecommender.getRecommendation(weather.feelsLike.replace("°", "").toIntOrNull() ?: 20)
             val clothingItems = clothingItemIds.map { applicationContext.getString(it) }
             val clothingRecommendation = "추천 옷차림: " + clothingItems.joinToString(", ")
-            val rainForecast = hourlyForecast.take(3).find { it.pty != "0" }
-            val rainText = if (rainForecast != null) "• 3시간 내에 비/눈 소식이 있어요. ☔️" else null
+            
+            // 강수 예보 분석 (향후 3시간)
+            val threeHourForecast = hourlyForecast.take(3)
+            val willRain = threeHourForecast.any { it.pty == "1" || it.pty == "4" }
+            val willSnow = threeHourForecast.any { it.pty == "2" || it.pty == "3" }
+            
+            val rainText = when {
+                willRain && willSnow -> "• 3시간 내에 비 또는 눈 소식이 있어요. ☔❄️"
+                willRain -> "• 3시간 내에 비 소식이 있어요. 우산을 챙기세요 ☔"
+                willSnow -> "• 3시간 내에 눈 소식이 있어요. 미끄럼 주의하세요 ❄️"
+                else -> null
+            }
 
             val pm10Value = weatherDetails.pm10
             val pm10Status = PmStatusHelper.getStatus(pm10Value)
-            val pm10Text = "• 미세먼지: $pm10Status"
+            val pm10Text = "😷 미세먼지: $pm10Status"
 
             val mainWeatherSummary = WeatherSummarizer.getSummary(weather, weatherDetails, hourlyForecast)
 
+            // 알림 내용 구성
             val notificationContent = buildString {
-                append("$mainWeatherSummary\n\n")
-                append("\n$clothingRecommendation\n\n")
-                append(pm10Text)
-                rainText?.let { append("\n$it") }
+                // 1. 현재 날씨 팩트 정보 (기온, 상태, 체감)
+                append("🌡️ ${weather.temperature} (체감 ${weather.feelsLike})\n")
+                append("SKY: ${weather.description}\n")
+                append("$pm10Text\n\n")
+
+                // 2. 날씨 요약 (조언)
+                append("$mainWeatherSummary\n")
+                
+                // 3. 강수 예보 (있을 경우만)
+                rainText?.let { append("$it\n") }
+
+                // 4. 옷차림 추천
+                append("\n$clothingRecommendation")
             }
 
             // --- 3. 알림 표시 ---
+            Log.d("WeatherUpdateWorker", "Generated Notification Content:\n$notificationContent")
+            
             NotificationHelper.showNotification(
                 appContext,
-                "오늘의 날씨 브리핑",
+                "현재 날씨 브리핑", // 제목 변경
                 notificationContent
             )
             Log.d("WeatherUpdateWorker", "Notification shown successfully.")

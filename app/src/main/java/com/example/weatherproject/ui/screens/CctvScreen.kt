@@ -64,8 +64,8 @@ fun CctvScreen(
     val searchResults by searchViewModel.searchResults.collectAsState()
     val context = LocalContext.current
 
-    // 화면이 처음 구성될 때, 선택된 위치가 없으면 현재 위치로 데이터를 로드
-    LaunchedEffect(Unit) {
+    // 화면이 처음 구성되거나 현재 위치가 변경될 때 데이터를 로드
+    LaunchedEffect(currentLocation) {
         if (cctvViewModel.selectedLocationInfo.value == null) {
             currentLocation?.let {
                 val address = mainUiState.address.takeIf { it.isNotBlank() } ?: "현재 위치"

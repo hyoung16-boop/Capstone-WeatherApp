@@ -7,6 +7,8 @@ import dagger.internal.Preconditions;
 import dagger.internal.QualifierMetadata;
 import dagger.internal.ScopeMetadata;
 import javax.annotation.processing.Generated;
+import javax.inject.Provider;
+import retrofit2.Retrofit;
 
 @ScopeMetadata("javax.inject.Singleton")
 @QualifierMetadata
@@ -23,20 +25,23 @@ import javax.annotation.processing.Generated;
     "cast"
 })
 public final class AppModule_ProvideWeatherApiServiceFactory implements Factory<WeatherApiService> {
+  private final Provider<Retrofit> retrofitProvider;
+
+  public AppModule_ProvideWeatherApiServiceFactory(Provider<Retrofit> retrofitProvider) {
+    this.retrofitProvider = retrofitProvider;
+  }
+
   @Override
   public WeatherApiService get() {
-    return provideWeatherApiService();
+    return provideWeatherApiService(retrofitProvider.get());
   }
 
-  public static AppModule_ProvideWeatherApiServiceFactory create() {
-    return InstanceHolder.INSTANCE;
+  public static AppModule_ProvideWeatherApiServiceFactory create(
+      Provider<Retrofit> retrofitProvider) {
+    return new AppModule_ProvideWeatherApiServiceFactory(retrofitProvider);
   }
 
-  public static WeatherApiService provideWeatherApiService() {
-    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideWeatherApiService());
-  }
-
-  private static final class InstanceHolder {
-    private static final AppModule_ProvideWeatherApiServiceFactory INSTANCE = new AppModule_ProvideWeatherApiServiceFactory();
+  public static WeatherApiService provideWeatherApiService(Retrofit retrofit) {
+    return Preconditions.checkNotNullFromProvides(AppModule.INSTANCE.provideWeatherApiService(retrofit));
   }
 }

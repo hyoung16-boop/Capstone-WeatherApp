@@ -9,6 +9,7 @@ import com.example.weatherproject.data.WeeklyForecast
 import com.example.weatherproject.data.local.WeatherCacheEntity
 import com.example.weatherproject.data.local.WeatherDao
 import com.example.weatherproject.network.WeatherApiService
+import com.example.weatherproject.network.CctvResponse
 import com.example.weatherproject.network.CurrentWeatherResponse
 import com.example.weatherproject.network.HourlyForecastResponse
 import com.example.weatherproject.network.WeeklyForecastResponse
@@ -24,13 +25,17 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+import com.example.weatherproject.util.PreferenceManager
+import java.util.Calendar
+
 /**
  * WeatherRepository의 실제 구현체.
  * 네트워크, 로컬 DB 등 구체적인 데이터 소스를 다룹니다.
  */
 class WeatherRepositoryImpl(
     private val weatherApi: WeatherApiService,
-    private val weatherDao: WeatherDao
+    private val weatherDao: WeatherDao,
+    private val preferenceManager: PreferenceManager
 ) : WeatherRepository {
 
     private val gson = Gson() // 데이터 변환을 위한 Gson 인스턴스
@@ -47,10 +52,49 @@ class WeatherRepositoryImpl(
             val hourlyDeferred = async { weatherApi.getHourlyForecast(nx, ny) }
             val weeklyDeferred = async { weatherApi.getWeeklyForecast(nx, ny) }
 
+            // 현재 날씨는 필수 (실패 시 전체 실패)
             val currentResponse = currentDeferred.await()
-            Log.d("API_RESPONSE", "Current Weather API Response: $currentResponse")
-            val hourlyResponse = hourlyDeferred.await()
-            val weeklyResponse = weeklyDeferred.await()
+            
+            // 예보 데이터는 선택 (실패 시 로그 남기고 null 처리)
+            val hourlyResponse = try {
+                hourlyDeferred.await()
+            } catch (e: Exception) {
+                Log.e("WeatherRepository", "Hourly forecast API failed", e)
+                null
+            }
+
+            val weeklyResponse = try {
+                weeklyDeferred.await()
+            } catch (e: Exception) {
+                Log.e("WeatherRepository", "Weekly forecast API failed", e)
+                null
+            }
+
+            // 어제 날씨 비교 로직
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.KOREA)
+            val todayDate = dateFormat.format(calendar.time)
+            
+            calendar.add(Calendar.DAY_OF_YEAR, -1)
+            val yesterdayDate = dateFormat.format(calendar.time)
+
+            val currentTemp = currentResponse.weather.temp?.toInt() ?: 0
+            
+            // 오늘 기온 저장
+            preferenceManager.saveDailyTemp(todayDate, currentTemp)
+            
+            // 어제 기온 불러오기 및 비교
+            val yesterdayTemp = preferenceManager.getDailyTemp(yesterdayDate)
+            val comparisonText = if (yesterdayTemp != null) {
+                val diff = currentTemp - yesterdayTemp
+                when {
+                    diff > 0 -> "어제보다 ${diff}° 높아요 🔺"
+                    diff < 0 -> "어제보다 ${Math.abs(diff)}° 낮아요 🔻"
+                    else -> "어제와 기온이 같아요"
+                }
+            } else {
+                null
+            }
 
             val weatherState = mapResponseToWeatherState(
                 currentData = currentResponse,
@@ -58,7 +102,8 @@ class WeatherRepositoryImpl(
                 weeklyData = weeklyResponse,
                 tempAdjustment = tempAdjustment,
                 lat = lat,
-                lon = lon
+                lon = lon,
+                comparisonText = comparisonText
             )
 
             // UI 모델(WeatherState) -> DB 모델(WeatherCacheEntity)로 변환하여 저장
@@ -75,6 +120,16 @@ class WeatherRepositoryImpl(
     override suspend fun getCachedWeather(): WeatherState? {
         // DB 모델(WeatherCacheEntity) -> UI 모델(WeatherState)로 변환
         return weatherDao.getWeatherCache()?.toWeatherState()
+    }
+
+    override suspend fun getNearbyCctv(lat: Double, lng: Double): Result<CctvResponse> = withContext(Dispatchers.IO) {
+        try {
+            val response = weatherApi.getNearbyCctv(lat, lng)
+            Result.success(response)
+        } catch (e: Exception) {
+            Log.e("WeatherRepository", "CCTV API 호출 실패: ${e.message}", e)
+            Result.failure(e)
+        }
     }
 
     private fun WeatherState.toEntity(): WeatherCacheEntity {
@@ -135,7 +190,8 @@ class WeatherRepositoryImpl(
             latitude = this.latitude,
             longitude = this.longitude,
             address = this.address,
-            lastUpdated = this.lastUpdated
+            lastUpdated = this.lastUpdated,
+            yesterdayComparisonText = null
         )
     }
 
@@ -145,7 +201,8 @@ class WeatherRepositoryImpl(
         weeklyData: WeeklyForecastResponse?,
         tempAdjustment: Int,
         lat: Double,
-        lon: Double
+        lon: Double,
+        comparisonText: String?
     ): WeatherState {
         val weather = currentData?.weather
         val temp = weather?.temp ?: 0.0
@@ -206,7 +263,8 @@ class WeatherRepositoryImpl(
             weeklyForecast = weeklyForecast,
             latitude = lat,
             longitude = lon,
-            lastUpdated = "업데이트: $lastUpdatedTimestamp"
+            lastUpdated = "업데이트: $lastUpdatedTimestamp",
+            yesterdayComparisonText = comparisonText
         )
     }
 

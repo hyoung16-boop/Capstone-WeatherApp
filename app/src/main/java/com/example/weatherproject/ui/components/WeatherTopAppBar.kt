@@ -37,6 +37,7 @@ fun WeatherTopAppBar(
 ) {
     val searchText by searchViewModel.searchText.collectAsState()
     val searchResults by searchViewModel.searchResults.collectAsState()
+    val currentLocation by viewModel.currentLocation.collectAsState() // 현재 위치 구독
     val context = LocalContext.current
 
     Box(
@@ -101,7 +102,7 @@ fun WeatherTopAppBar(
                                 .clickable {
                                     searchViewModel.onCitySelected(context, city) { lat, lon ->
                                         viewModel.updateWeatherByLocation(city, lat, lon)
-                                        cctvViewModel.updateSelectedLocation(lat, lon, city, null)
+                                        cctvViewModel.updateSelectedLocation(lat, lon, city, currentLocation)
                                     }
                                 }
                                 .padding(16.dp),

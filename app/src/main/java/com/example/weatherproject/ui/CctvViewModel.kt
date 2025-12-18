@@ -6,13 +6,15 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherproject.data.CctvInfo
-import com.example.weatherproject.network.RetrofitClient
+import com.example.weatherproject.data.repository.WeatherRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 // 위치 정보를 담는 데이터 클래스
 data class LocationInfo(
@@ -22,7 +24,11 @@ data class LocationInfo(
     val currentLocationForDistance: Location? // 거리 계산의 기준이 되는 현재 위치
 )
 
-class CctvViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class CctvViewModel @Inject constructor(
+    private val repository: WeatherRepository,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _cctvInfo = MutableStateFlow<CctvInfo?>(null)
     val cctvInfo: StateFlow<CctvInfo?> = _cctvInfo
@@ -40,9 +46,8 @@ class CctvViewModel(application: Application) : AndroidViewModel(application) {
     // 새로운 위치로 업데이트하고 CCTV 정보를 가져오는 함수
     fun updateSelectedLocation(lat: Double, lon: Double, address: String, currentLocation: Location?) {
         val newLocationInfo = LocationInfo(lat, lon, address, currentLocation)
-        // 같은 위치를 다시 선택한 경우 중복 호출 방지
-        if (_selectedLocationInfo.value?.latitude == newLocationInfo.latitude && _selectedLocationInfo.value?.longitude == newLocationInfo.longitude) return
-
+        
+        // 중복 체크 제거: 사용자가 명시적으로 검색/클릭했을 때는 항상 갱신
         _selectedLocationInfo.value = newLocationInfo
         fetchCctvByLocation()
     }
@@ -63,33 +68,38 @@ class CctvViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 Log.d("CctvViewModel", "CCTV 검색: Lat=${locationInfo.latitude}, Lng=${locationInfo.longitude}")
 
-                val response = withContext(Dispatchers.IO) {
-                    RetrofitClient.weatherApi.getNearbyCctv(lat = locationInfo.latitude, lng = locationInfo.longitude)
-                }
+                val result = repository.getNearbyCctv(lat = locationInfo.latitude, lng = locationInfo.longitude)
 
-                if (response.status == "success") {
-                    val distance = locationInfo.currentLocationForDistance?.let { currentLoc ->
-                        calculateDistance(
-                            currentLoc.latitude,
-                            currentLoc.longitude,
-                            response.cctvLat.toDoubleOrNull() ?: 0.0,
-                            response.cctvLng.toDoubleOrNull() ?: 0.0
+                if (result.isSuccess) {
+                    val response = result.getOrThrow()
+                    
+                    if (response.status == "success") {
+                        val distance = locationInfo.currentLocationForDistance?.let { currentLoc ->
+                            calculateDistance(
+                                currentLoc.latitude,
+                                currentLoc.longitude,
+                                response.cctvLat.toDoubleOrNull() ?: 0.0,
+                                response.cctvLng.toDoubleOrNull() ?: 0.0
+                            )
+                        }
+
+                        val cctvData = CctvInfo(
+                            cctvName = response.cctvName,
+                            cctvUrl = response.cctvUrl,
+                            type = response.cctvType,
+                            roadName = response.cctvName.split(" ").firstOrNull() ?: "",
+                            distance = distance?.let { String.format("%.1fkm", it) } ?: "",
+                            latitude = response.cctvLat,
+                            longitude = response.cctvLng
                         )
+                        _cctvInfo.value = cctvData
+                        Log.d("CctvViewModel", "CCTV 정보 업데이트 완료: ${cctvData.cctvName}")
+                    } else {
+                        _cctvError.value = "주변에 CCTV 정보가 없습니다."
                     }
-
-                    val cctvData = CctvInfo(
-                        cctvName = response.cctvName,
-                        cctvUrl = response.cctvUrl,
-                        type = response.cctvType,
-                        roadName = response.cctvName.split(" ").firstOrNull() ?: "",
-                        distance = distance?.let { String.format("%.1fkm", it) } ?: "",
-                        latitude = response.cctvLat,
-                        longitude = response.cctvLng
-                    )
-                    _cctvInfo.value = cctvData
-                    Log.d("CctvViewModel", "CCTV 정보 업데이트 완료: ${cctvData.cctvName}")
                 } else {
-                    _cctvError.value = "주변에 CCTV 정보가 없습니다."
+                     _cctvError.value = "CCTV 정보를 가져오는 데 실패했습니다."
+                     Log.e("CctvViewModel", "CCTV API 호출 실패", result.exceptionOrNull())
                 }
             } catch (e: Exception) {
                 Log.e("CctvViewModel", "CCTV API 호출 실패: ${e.message}", e)

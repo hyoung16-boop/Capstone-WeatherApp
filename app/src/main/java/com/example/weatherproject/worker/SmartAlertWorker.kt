@@ -54,22 +54,32 @@ class SmartAlertWorker @AssistedInject constructor(
 
             val hourlyForecasts = freshWeatherState.hourlyForecast
             
-            // pty(강수형태) 코드가 "0"(없음)이 아니면 비나 눈이 오는 것으로 간주
-            val willRainOrSnow = hourlyForecasts.take(3).any { it.pty != "0" }
+            val threeHourForecast = hourlyForecasts.take(3)
+            
+            // PTY 코드: 1=비, 2=비/눈, 3=눈, 4=소나기
+            val willRain = threeHourForecast.any { it.pty == "1" || it.pty == "4" }
+            val willSnow = threeHourForecast.any { it.pty == "2" || it.pty == "3" }
 
-            if (willRainOrSnow) {
+            if (willRain || willSnow) {
                 val lastAlertTime = preferenceManager.getLastAlertTime()
                 val currentTime = System.currentTimeMillis()
                 val minInterval = 6 * 60 * 60 * 1000 // 6시간
 
                 if (currentTime - lastAlertTime >= minInterval) {
+                    val message = when {
+                        willRain && willSnow -> "3시간 내에 비 또는 눈 소식이 있습니다. 우산과 따뜻한 옷차림을 준비하세요! ☔❄️"
+                        willRain -> "3시간 내에 비 소식이 있습니다. 우산을 챙기세요! ☔"
+                        willSnow -> "3시간 내에 눈 소식이 있습니다. 미끄럼 주의하시고 따뜻하게 입으세요! ❄️"
+                        else -> "기상 변화가 예상됩니다. 날씨를 확인해주세요."
+                    }
+
                     NotificationHelper.showNotification(
                         context = applicationContext,
                         title = "스마트 날씨 알림",
-                        content = "3시간 내에 비 또는 눈 소식이 있습니다. 우산을 챙기세요!"
+                        content = message
                     )
                     preferenceManager.saveLastAlertTime(currentTime)
-                    Log.d("SmartAlertWorker", "Alert sent. Updated lastAlertTime.")
+                    Log.d("SmartAlertWorker", "Alert sent: $message")
                 } else {
                     Log.d("SmartAlertWorker", "Alert skipped. Too soon since last alert.")
                 }

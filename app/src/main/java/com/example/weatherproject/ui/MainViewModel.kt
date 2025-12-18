@@ -203,6 +203,18 @@ class MainViewModel @Inject constructor(
             // 3. 즉시 현재 위치를 한번 가져와서 업데이트 플로우를 트리거
             getCurrentLocationOnce()
             
+            // [추가] StateFlow 특성상 위치가 동일하면 collect가 호출되지 않으므로,
+            // 현재 저장된 위치가 있다면 강제로 날씨 API를 호출하여 갱신 보장
+            currentLocation.value?.let { loc ->
+                fetchWeatherFromServer(loc.latitude, loc.longitude)
+            }
+            
+            // [추가] 주소 정보도 강제로 동기화 (검색된 지역 이름이 남아있는 경우 해결)
+            val currentAddr = locationProvider.address.value
+            if (currentAddr.isNotBlank()) {
+                _uiState.value = _uiState.value.copy(address = currentAddr)
+            }
+            
             // 로딩 표시는 위의 로직들이 실행된 후 일정시간 뒤 해제
             kotlinx.coroutines.delay(1500) // 사용자가 인지할 시간을 줌
             _isRefreshing.value = false

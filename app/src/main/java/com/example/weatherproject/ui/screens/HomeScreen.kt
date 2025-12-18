@@ -68,12 +68,12 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
 
     // 현재 위치가 변경되면 CCTV 정보 가져오기
-    LaunchedEffect(currentLocation) {
+    LaunchedEffect(currentLocation, weatherState.address) {
         currentLocation?.let {
-            if (cctvInfo == null) { // 정보가 없을 때만 자동 로드
-                val address = weatherState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
-                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
-            }
+            // 정보 유무와 상관없이, 현재 위치나 주소가 변경되면 CCTV 위치 정보도 동기화합니다.
+            // (CctvViewModel 내부에서 좌표 중복 체크를 하므로 안전함)
+            val address = weatherState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
+            cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
         }
     }
 
@@ -150,6 +150,7 @@ fun HomeScreen(
                         hourlyForecast = weatherState.hourlyForecast,
                         feelsLike = weatherState.currentWeather.feelsLike,
                         tempAdjustment = tempAdjustment,
+                        yesterdayComparisonText = weatherState.yesterdayComparisonText,
                         onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
                     )
                     

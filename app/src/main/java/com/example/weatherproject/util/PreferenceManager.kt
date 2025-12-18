@@ -14,6 +14,21 @@ class PreferenceManager(context: Context) {
         private const val KEY_IS_SETUP_COMPLETE = "is_setup_complete"
         private const val KEY_LAST_WEATHER_STATE = "last_weather_state"
         private const val KEY_LAST_ALERT_TIME = "last_alert_time"
+        private const val KEY_DAILY_TEMP = "daily_temp_" // prefix for daily temp keys
+    }
+
+    // 특정 날짜의 기온 저장 (예: "20231025" -> 20)
+    fun saveDailyTemp(date: String, temp: Int) {
+        prefs.edit().putInt(KEY_DAILY_TEMP + date, temp).apply()
+    }
+
+    // 특정 날짜의 기온 가져오기 (없으면 null 반환)
+    fun getDailyTemp(date: String): Int? {
+        val key = KEY_DAILY_TEMP + date
+        if (prefs.contains(key)) {
+            return prefs.getInt(key, 0)
+        }
+        return null
     }
 
     // 보정값 저장 (-3 ~ +3)

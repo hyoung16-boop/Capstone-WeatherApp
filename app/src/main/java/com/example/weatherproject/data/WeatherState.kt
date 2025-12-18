@@ -13,7 +13,8 @@ data class WeatherState(
     val longitude: Double? = null,
     val address: String = "위치 정보 없음",
     val lastUpdated: String = "업데이트 정보 없음",
-    val error: String? = null
+    val error: String? = null,
+    val yesterdayComparisonText: String? = null // 어제 대비 기온 차이 텍스트
 )
 
 @Immutable

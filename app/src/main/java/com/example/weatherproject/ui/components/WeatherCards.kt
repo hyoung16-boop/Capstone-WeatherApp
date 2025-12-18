@@ -562,6 +562,7 @@ fun ClothingRecommendationCard(
     hourlyForecast: List<HourlyForecast>,
     feelsLike: String,
     tempAdjustment: Int,
+    yesterdayComparisonText: String?, // 파라미터 추가
     onSettingsClick: () -> Unit
 ) {
     val rawFeelsLike = feelsLike.replace(Regex("[^0-9-]"), "").toIntOrNull() ?: 20
@@ -589,6 +590,18 @@ fun ClothingRecommendationCard(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = summaryText, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f))
+            
+            // 어제와 비교 텍스트 표시
+            if (yesterdayComparisonText != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = yesterdayComparisonText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFFEB3B) // 노란색으로 강조
+                )
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
             
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
