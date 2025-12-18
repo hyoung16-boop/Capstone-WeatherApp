@@ -58,6 +58,12 @@ class CctvViewModel @Inject constructor(
      * @param currentLocation 현재 사용자 위치 (거리 계산용)
      */
     fun updateSelectedLocation(lat: Double, lon: Double, address: String, currentLocation: Location?) {
+        // 중복 호출 방지: 위도와 경도가 변경되지 않았다면 API 호출 스킵
+        val lastInfo = _selectedLocationInfo.value
+        if (lastInfo != null && lastInfo.latitude == lat && lastInfo.longitude == lon) {
+            return
+        }
+
         val newLocationInfo = LocationInfo(lat, lon, address, currentLocation)
         
         _selectedLocationInfo.value = newLocationInfo

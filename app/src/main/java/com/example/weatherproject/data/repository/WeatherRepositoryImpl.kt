@@ -270,12 +270,17 @@ class WeatherRepositoryImpl(
 
     private fun getWeatherIconUrl(sky: String, pty: String): String {
         val iconId = when {
-            pty.contains("비") || pty.contains("소나기") -> "10d"
-            pty.contains("눈") -> "13d"
-            sky.contains("맑음") -> "01d"
-            sky.contains("구름조금") || sky.contains("구름많음") -> "02d"
-            sky.contains("흐림") -> "03d"
-            else -> "01d" // 기본값
+            // 강수 형태(PTY) 우선 확인 (눈 > 비)
+            pty.contains("눈") || pty.contains("진눈깨비") -> "13d" // 눈
+            pty.contains("비") || pty.contains("소나기") -> "10d"   // 비
+            
+            // 하늘 상태(SKY) 확인
+            sky.contains("흐림") -> "03d"      // 흐림
+            sky.contains("구름많음") -> "02d"  // 구름 많음
+            sky.contains("구름조금") -> "02d"  // 구름 조금
+            sky.contains("맑음") -> "01d"      // 맑음
+            
+            else -> "01d" // 기본값 (맑음)
         }
         return "${Constants.WEATHER_ICON_BASE_URL}${iconId}@2x.png"
     }

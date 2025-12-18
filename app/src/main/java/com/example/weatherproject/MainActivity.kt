@@ -157,10 +157,17 @@ class MainActivity : ComponentActivity() {
         fun showFullScreenNotification(context: Context, weatherState: WeatherState) {
             // Prepare notification content
             val weather = weatherState.currentWeather
-            val notificationContent = "기온: %s (체감: %s) | 상태: %s".format(
-                weather.temperature,
-                weather.feelsLike,
-                weather.description
+            val weatherDetails = weatherState.weatherDetails
+            val pm10Status = com.example.weatherproject.util.PmStatusHelper.getStatus(weatherDetails.pm10)
+
+            val tempValue = weather.temperature.replace("°", "")
+            val feelsLikeValue = weather.feelsLike.replace("°", "")
+
+            val notificationContent = "날씨 : %s 기온: %s도(체감온도 : %s도 ) 미세먼지 : %s".format(
+                weather.description,
+                tempValue,
+                feelsLikeValue,
+                pm10Status
             )
 
             // Use the helper class

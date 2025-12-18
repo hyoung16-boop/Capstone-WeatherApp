@@ -29,6 +29,10 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+
 @Composable
 fun CctvPlayerScreen(
     navController: NavController,
@@ -88,9 +92,26 @@ fun CctvPlayerScreen(
         }
     }
 
-    // 화면 종료 시 플레이어 해제
-    DisposableEffect(Unit) {
+    // 화면 종료 시 플레이어 해제 및 생명주기 관리
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> {
+                    exoPlayer.pause()
+                    Log.d("CctvPlayerScreen", "일시정지 (ON_PAUSE)")
+                }
+                Lifecycle.Event.ON_RESUME -> {
+                    exoPlayer.play()
+                    Log.d("CctvPlayerScreen", "재생 재개 (ON_RESUME)")
+                }
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
         onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
             exoPlayer.release()
             Log.d("CctvPlayerScreen", "ExoPlayer 해제됨")
         }

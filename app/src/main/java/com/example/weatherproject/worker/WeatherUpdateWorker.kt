@@ -94,18 +94,17 @@ class WeatherUpdateWorker(
                 else -> null
             }
 
-            val pm10Value = weatherDetails.pm10
-            val pm10Status = PmStatusHelper.getStatus(pm10Value)
-            val pm10Text = "😷 미세먼지: $pm10Status"
+            val pm10Status = PmStatusHelper.getStatus(weatherDetails.pm10)
+            
+            val tempValue = weather.temperature.replace("°", "")
+            val feelsLikeValue = weather.feelsLike.replace("°", "")
 
             val mainWeatherSummary = WeatherSummarizer.getSummary(weather, weatherDetails, hourlyForecast)
 
             // 알림 내용 구성
             val notificationContent = buildString {
                 // 1. 현재 날씨 팩트 정보 (기온, 상태, 체감)
-                append("🌡️ ${weather.temperature} (체감 ${weather.feelsLike})\n")
-                append("SKY: ${weather.description}\n")
-                append("$pm10Text\n\n")
+                append("날씨 : ${weather.description} 기온: ${tempValue}도(체감온도 : ${feelsLikeValue}도 ) 미세먼지 : $pm10Status\n\n")
 
                 // 2. 날씨 요약 (조언)
                 append("$mainWeatherSummary\n")

@@ -589,7 +589,7 @@ fun ClothingRecommendationCard(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = summaryText, fontSize = 14.sp, color = Color.White.copy(alpha = 0.9f))
+            Text(text = summaryText, fontSize = 16.sp, color = Color.White.copy(alpha = 0.9f))
             
             // 어제와 비교 텍스트 표시
             if (yesterdayComparisonText != null) {
@@ -602,7 +602,16 @@ fun ClothingRecommendationCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Text(
+                text = "오늘 날씨에 추천하는 옷차림은:",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
             
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(itemIds) { itemId ->
