@@ -322,6 +322,63 @@ public final class AlarmDao_Impl implements AlarmDao {
     }, $completion);
   }
 
+  @Override
+  public Object getAlarmsByTime(final int hour, final int minute,
+      final Continuation<? super List<AlarmEntity>> $completion) {
+    final String _sql = "SELECT * FROM alarms WHERE hour = ? AND minute = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, hour);
+    _argIndex = 2;
+    _statement.bindLong(_argIndex, minute);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<AlarmEntity>>() {
+      @Override
+      @NonNull
+      public List<AlarmEntity> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfHour = CursorUtil.getColumnIndexOrThrow(_cursor, "hour");
+          final int _cursorIndexOfMinute = CursorUtil.getColumnIndexOrThrow(_cursor, "minute");
+          final int _cursorIndexOfDays = CursorUtil.getColumnIndexOrThrow(_cursor, "days");
+          final int _cursorIndexOfSelectedDate = CursorUtil.getColumnIndexOrThrow(_cursor, "selectedDate");
+          final int _cursorIndexOfIsEnabled = CursorUtil.getColumnIndexOrThrow(_cursor, "isEnabled");
+          final List<AlarmEntity> _result = new ArrayList<AlarmEntity>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final AlarmEntity _item;
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final int _tmpHour;
+            _tmpHour = _cursor.getInt(_cursorIndexOfHour);
+            final int _tmpMinute;
+            _tmpMinute = _cursor.getInt(_cursorIndexOfMinute);
+            final List<String> _tmpDays;
+            final String _tmp;
+            _tmp = _cursor.getString(_cursorIndexOfDays);
+            _tmpDays = __converters.fromString(_tmp);
+            final Long _tmpSelectedDate;
+            if (_cursor.isNull(_cursorIndexOfSelectedDate)) {
+              _tmpSelectedDate = null;
+            } else {
+              _tmpSelectedDate = _cursor.getLong(_cursorIndexOfSelectedDate);
+            }
+            final boolean _tmpIsEnabled;
+            final int _tmp_1;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsEnabled);
+            _tmpIsEnabled = _tmp_1 != 0;
+            _item = new AlarmEntity(_tmpId,_tmpHour,_tmpMinute,_tmpDays,_tmpSelectedDate,_tmpIsEnabled);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
   @NonNull
   public static List<Class<?>> getRequiredConverters() {
     return Collections.emptyList();

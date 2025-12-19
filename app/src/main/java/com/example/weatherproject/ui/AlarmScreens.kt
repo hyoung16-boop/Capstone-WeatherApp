@@ -424,6 +424,22 @@ fun AlarmEditScreen(
     }
 
     val context = LocalContext.current
+    
+    LaunchedEffect(Unit) {
+        viewModel.saveResult.collect { result: SaveResult ->
+            when (result) {
+                is SaveResult.Success -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
+                }
+                is SaveResult.Duplicate -> {
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                }
+                else -> {} // For safety/exhaustiveness
+            }
+        }
+    }
+
     val calendar = Calendar.getInstance()
     
     val datePickerDialog: DatePickerDialog = remember {
@@ -474,7 +490,6 @@ fun AlarmEditScreen(
                                 } else {
                                     viewModel.updateAlarmInfo(alarmId, finalHour, mInput, if (isRepeatingMode) selectedDays.toList() else emptyList(), if (!isRepeatingMode) selectedDateMillis else null)
                                 }
-                                navController.popBackStack()
                             }
                         }) {
                             Text("저장", color = Color.White, fontWeight = FontWeight.Bold)

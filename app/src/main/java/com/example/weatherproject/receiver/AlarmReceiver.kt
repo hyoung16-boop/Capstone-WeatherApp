@@ -42,9 +42,17 @@ class AlarmReceiver : BroadcastReceiver() {
                 val alarmDao = hiltEntryPoint.alarmDao()
 
                 val alarm = alarmDao.getAlarmById(alarmId)
-                if (alarm != null && alarm.selectedDate == null) { // 반복 알람일 경우에만
-                    AlarmScheduler.schedule(context, alarm)
-                    Log.d("AlarmReceiver", "Rescheduled next alarm for repeating alarm: $alarmId")
+                if (alarm != null) {
+                    if (alarm.selectedDate != null) {
+                        // 일회성 알람: 울린 후 비활성화 (OFF) 처리
+                        val disabledAlarm = alarm.copy(isEnabled = false)
+                        alarmDao.updateAlarm(disabledAlarm)
+                        Log.d("AlarmReceiver", "One-time alarm disabled: $alarmId")
+                    } else {
+                        // 반복 알람: 다음 알람 스케줄링
+                        AlarmScheduler.schedule(context, alarm)
+                        Log.d("AlarmReceiver", "Rescheduled next alarm for repeating alarm: $alarmId")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("AlarmReceiver", "Error rescheduling alarm: $alarmId", e)

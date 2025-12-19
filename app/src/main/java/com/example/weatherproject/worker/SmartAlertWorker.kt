@@ -16,30 +16,44 @@ class SmartAlertWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val weatherRepository: WeatherRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val locationProvider: com.example.weatherproject.util.LocationProvider // 추가
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
         try {
-            var lat: Double?
-            var lon: Double?
+            var lat: Double? = null
+            var lon: Double? = null
 
-            // 1. 먼저 Preferences에서 마지막 위치 정보 가져오기 시도
+            // 1. Preferences에서 마지막 위치 정보 가져오기 시도
             val prefWeather = preferenceManager.getWeatherState()
             if (prefWeather?.latitude != null && prefWeather.longitude != null) {
                 lat = prefWeather.latitude
                 lon = prefWeather.longitude
-            } else {
-                // 2. 실패 시 Room DB 캐시에서 가져오기 시도
+            } 
+            
+            // 2. 실패 시 Room DB 캐시에서 가져오기 시도
+            if (lat == null || lon == null) {
                 val cachedWeather = weatherRepository.getCachedWeather()
                 if (cachedWeather?.latitude != null && cachedWeather.longitude != null) {
                     lat = cachedWeather.latitude
                     lon = cachedWeather.longitude
-                    preferenceManager.saveWeatherState(cachedWeather) // 다음을 위해 Preferences에 저장
-                } else {
-                    // 두 방법 모두 실패 시 작업 종료
-                    return Result.failure()
+                    preferenceManager.saveWeatherState(cachedWeather)
                 }
+            }
+
+            // 3. 여전히 실패 시 실시간 위치 시도 (마지막 보루)
+            if (lat == null || lon == null) {
+                 val freshLocation = locationProvider.getFreshLocation()
+                 if (freshLocation != null) {
+                     lat = freshLocation.latitude
+                     lon = freshLocation.longitude
+                 }
+            }
+
+            // 모든 방법 실패 시 작업 종료
+            if (lat == null || lon == null) {
+                return Result.failure()
             }
 
             // 날씨 데이터 가져오기
@@ -60,11 +74,13 @@ class SmartAlertWorker @AssistedInject constructor(
             val willRain = threeHourForecast.any { it.pty == "1" || it.pty == "4" }
             val willSnow = threeHourForecast.any { it.pty == "2" || it.pty == "3" }
 
+            // [원복 완료] 비 또는 눈 소식이 있을 때만 실행
             if (willRain || willSnow) {
                 val lastAlertTime = preferenceManager.getLastAlertTime()
                 val currentTime = System.currentTimeMillis()
-                val minInterval = 6 * 60 * 60 * 1000 // 6시간
+                val minInterval = 3 * 60 * 60 * 1000 // 3시간 유지
 
+                // [원복 완료] 최소 간격 체크
                 if (currentTime - lastAlertTime >= minInterval) {
                     val message = when {
                         willRain && willSnow -> "3시간 내에 비 또는 눈 소식이 있습니다. 우산과 따뜻한 옷차림을 준비하세요! ☔❄️"

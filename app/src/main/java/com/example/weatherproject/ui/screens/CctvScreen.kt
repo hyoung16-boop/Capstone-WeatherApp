@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import com.example.weatherproject.ui.icons.MyCameraAlt
@@ -125,6 +126,11 @@ fun CctvScreen(
                             value = searchText,
                             onValueChange = { searchViewModel.onSearchTextChange(it) },
                             label = { Text("CCTV 위치 검색", color = Color.White.copy(alpha = 0.7f)) },
+                            trailingIcon = {
+                                IconButton(onClick = { searchViewModel.performSearch() }) {
+                                    Icon(Icons.Default.Search, contentDescription = "검색", tint = Color.White)
+                                }
+                            },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }),

@@ -243,14 +243,25 @@ class WeatherRepositoryImpl(
             uvIndex = "5"
         )
 
-        val hourlyForecast = hourlyData?.weather?.take(24)?.map { item ->
-            HourlyForecast(
-                time = formatTime(item.time),
-                iconUrl = getWeatherIconUrl(item.sky, item.pty),
-                temperature = "${item.temp?.toInt() ?: 0}°",
-                pty = item.pty
-            )
-        } ?: emptyList()
+        // 현재 시간 (예: 202405201400)
+        val currentDateTime = SimpleDateFormat("yyyyMMddHHmm", Locale.KOREAN).format(Date()).toLongOrNull() ?: 0L
+
+        val hourlyForecast = hourlyData?.weather
+            ?.filter { item ->
+                // 예보 시간 (예: 20240520 + 1500 = 202405201500)
+                val itemDateTime = (item.date + item.time).toLongOrNull() ?: 0L
+                // 현재 시간보다 미래인 데이터만 사용 (지나간 예보는 제외)
+                itemDateTime >= currentDateTime
+            }
+            ?.take(24)
+            ?.map { item ->
+                HourlyForecast(
+                    time = formatTime(item.time),
+                    iconUrl = getWeatherIconUrl(item.sky, item.pty),
+                    temperature = "${item.temp?.toInt() ?: 0}°",
+                    pty = item.pty
+                )
+            } ?: emptyList()
 
         val weeklyForecast = weeklyData?.weather?.map { item ->
             WeeklyForecast(

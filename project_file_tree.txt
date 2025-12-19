@@ -1,0 +1,109 @@
+D:\jugan\WeatherApp
+├── .gitignore
+├── README.md
+├── build.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── settings.gradle.kts
+├── gradle/
+│   ├── libs.versions.toml
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+└── app/
+    ├── build.gradle.kts
+    ├── lint-baseline.xml
+    ├── proguard-rules.pro
+    └── src/
+        └── main/
+            ├── AndroidManifest.xml
+            ├── java/com/example/weatherproject/
+            │   ├── MainActivity.kt
+            │   ├── WeatherApplication.kt
+            │   ├── common/
+            │   │   └── Constants.kt
+            │   ├── data/
+            │   │   ├── CctvInfo.kt
+            │   │   ├── NotificationSettings.kt
+            │   │   ├── WeatherState.kt
+            │   │   ├── local/
+            │   │   │   ├── AlarmDao.kt
+            │   │   │   ├── AlarmEntity.kt
+            │   │   │   ├── AppDatabase.kt
+            │   │   │   ├── Converters.kt
+            │   │   │   ├── WeatherDao.kt
+            │   │   │   └── WeatherEntity.kt
+            │   │   └── repository/
+            │   │       ├── SettingsRepository.kt
+            │   │       ├── WeatherRepository.kt
+            │   │       └── WeatherRepositoryImpl.kt
+            │   ├── di/
+            │   │   ├── AlarmReceiverEntryPoint.kt
+            │   │   ├── AppModule.kt
+            │   │   └── WorkerEntryPoint.kt
+            │   ├── network/
+            │   │   ├── CctvResponse.kt
+            │   │   ├── WeatherApiService.kt
+            │   │   └── WeatherResponse.kt
+            │   ├── receiver/
+            │   │   ├── AlarmReceiver.kt
+            │   │   └── BootReceiver.kt
+            │   ├── ui/
+            │   │   ├── AlarmScreens.kt
+            │   │   ├── AlarmViewModel.kt
+            │   │   ├── CctvViewModel.kt
+            │   │   ├── MainViewModel.kt
+            │   │   ├── Navigation.kt
+            │   │   ├── SearchViewModel.kt
+            │   │   ├── components/
+            │   │   │   ├── WeatherCards.kt
+            │   │   │   └── WeatherTopAppBar.kt
+            │   │   ├── icons/
+            │   │   │   └── CameraAlt.kt
+            │   │   ├── screens/
+            │   │   │   ├── CctvDetailScreen.kt
+            │   │   │   ├── CctvPlayerScreen.kt
+            │   │   │   ├── CctvScreen.kt
+            │   │   │   ├── DetailWeatherScreen.kt
+            │   │   │   ├── ForecastScreen.kt
+            │   │   │   └── HomeScreen.kt
+            │   │   └── theme/
+            │   │       ├── Color.kt
+            │   │       ├── Theme.kt
+            │   │       └── Type.kt
+            │   ├── util/
+            │   │   ├── AlarmScheduler.kt
+            │   │   ├── ClothingData.kt
+            │   │   ├── ClothingDatabase.kt
+            │   │   ├── ClothingRecommender.kt
+            │   │   ├── FeelsLikeTempCalculator.kt
+            │   │   ├── GenderPreferences.kt
+            │   │   ├── GpsTransfer.kt
+            │   │   ├── LocationPermissionHelper.kt
+            │   │   ├── LocationProvider.kt
+            │   │   ├── NotificationHelper.kt
+            │   │   ├── PmStatusHelper.kt
+            │   │   ├── PreferenceManager.kt
+            │   │   ├── SmartAlertScheduler.kt
+            │   │   └── WeatherSummarizer.kt
+            │   └── worker/
+            │       ├── SmartAlertWorker.kt
+            │       ├── TestWorker.kt
+            │       └── WeatherUpdateWorker.kt
+            └── res/
+                ├── drawable/
+                ├── mipmap-anydpi/
+                ├── mipmap-hdpi/
+                ├── mipmap-mdpi/
+                ├── mipmap-xhdpi/
+                ├── mipmap-xxhdpi/
+                ├── mipmap-xxxhdpi/
+                ├── values/
+                │   ├── colors.xml
+                │   ├── strings.xml
+                │   └── themes.xml
+                └── xml/
+                    ├── backup_rules.xml
+                    ├── data_extraction_rules.xml
+                    └── network_security_config.xml

@@ -22,4 +22,8 @@ interface AlarmDao {
 
     @Delete
     suspend fun deleteAlarm(alarm: AlarmEntity)
+
+    // 중복 검사를 위해 같은 시간의 알람 조회
+    @Query("SELECT * FROM alarms WHERE hour = :hour AND minute = :minute")
+    suspend fun getAlarmsByTime(hour: Int, minute: Int): List<AlarmEntity>
 }

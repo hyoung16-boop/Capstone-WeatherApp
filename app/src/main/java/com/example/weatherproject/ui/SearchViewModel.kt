@@ -91,8 +91,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
             
             Log.d("SearchViewModel", "Selected: $selectedAddressString, Lat: $lat, Lon: $lon")
             
-            // 검색창 초기화
-            _searchText.value = ""
+            // 검색 결과 리스트만 초기화하고, 검색어는 유지 (사용자 편의)
             _searchResults.value = emptyList()
             _addressList = emptyList()
 
@@ -107,7 +106,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                     val addr = addresses[0]
                     withContext(Dispatchers.Main) {
                         onCoordinatesFound(addr.latitude, addr.longitude)
-                        _searchText.value = ""
+                        // 검색어 유지
                         _searchResults.value = emptyList()
                     }
                 }

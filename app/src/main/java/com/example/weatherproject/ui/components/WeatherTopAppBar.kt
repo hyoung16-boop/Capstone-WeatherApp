@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,6 +61,11 @@ fun WeatherTopAppBar(
                     value = searchText,
                     onValueChange = { searchViewModel.onSearchTextChange(it) },
                     label = { Text("도시 검색", color = Color.White.copy(alpha = 0.7f)) },
+                    trailingIcon = {
+                        IconButton(onClick = { searchViewModel.performSearch() }) {
+                            Icon(Icons.Default.Search, contentDescription = "검색", tint = Color.White)
+                        }
+                    },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = { searchViewModel.performSearch() }),
