@@ -64,12 +64,17 @@ fun CctvScreen(
     val searchResults by searchViewModel.searchResults.collectAsState()
     val context = LocalContext.current
 
-    // 화면이 처음 구성되거나 현재 위치가 변경될 때 데이터를 로드
-    LaunchedEffect(currentLocation) {
-        if (cctvViewModel.selectedLocationInfo.value == null) {
+    // 화면이 처음 구성되거나(Unit), 현재 위치가 변경될 때 데이터를 로드
+    LaunchedEffect(Unit, currentLocation) {
+        // 위치 정보가 없거나, CCTV 데이터가 없거나, 에러가 있는 경우 -> 강제 갱신
+        val needRefresh = cctvViewModel.selectedLocationInfo.value == null || 
+                          cctvInfo == null || 
+                          cctvError != null
+
+        if (needRefresh) {
             currentLocation?.let {
                 val address = mainUiState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
-                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
+                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it, forceRefresh = true)
             }
         }
     }
@@ -139,7 +144,7 @@ fun CctvScreen(
                             android.widget.Toast.makeText(context, "주변 CCTV를 탐색합니다...", android.widget.Toast.LENGTH_SHORT).show()
                             currentLocation?.let {
                                 val address = mainUiState.address.takeIf { it.isNotBlank() } ?: "현재 위치"
-                                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it)
+                                cctvViewModel.updateSelectedLocation(it.latitude, it.longitude, address, it, forceRefresh = true)
                             }
                         }) {
                             Icon(Icons.Default.LocationOn, "현재 위치", tint = Color.White)

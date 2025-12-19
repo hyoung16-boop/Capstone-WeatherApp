@@ -1,4 +1,4 @@
-#Thu Dec 18 15:41:45 KST 2025
+#Fri Dec 19 10:42:31 KST 2025
 base.0=D\:\\jugan\\WeatherApp\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=D\:\\jugan\\WeatherApp\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.10=D\:\\jugan\\WeatherApp\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\4\\classes.dex

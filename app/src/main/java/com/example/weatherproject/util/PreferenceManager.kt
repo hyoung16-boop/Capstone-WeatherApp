@@ -19,7 +19,7 @@ class PreferenceManager(context: Context) {
 
     // 특정 날짜의 기온 저장 (예: "20231025" -> 20)
     fun saveDailyTemp(date: String, temp: Int) {
-        prefs.edit().putInt(KEY_DAILY_TEMP + date, temp).apply()
+        prefs.edit().putInt(KEY_DAILY_TEMP + date, temp).commit()
     }
 
     // 특정 날짜의 기온 가져오기 (없으면 null 반환)

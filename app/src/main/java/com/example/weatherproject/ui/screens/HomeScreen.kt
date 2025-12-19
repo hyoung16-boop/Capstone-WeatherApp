@@ -1,6 +1,8 @@
 package com.example.weatherproject.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -123,70 +125,76 @@ fun HomeScreen(
         ) {
             // 날씨 정보 또는 로딩 화면
             AnimatedVisibility(visible = weatherState.error == null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    CurrentWeatherCard(
-                        weather = weatherState.currentWeather,
-                        address = weatherState.address,
-                        details = weatherState.weatherDetails,
-                        isExpanded = isDetailExpanded,
-                        onClick = { isDetailExpanded = !isDetailExpanded }
-                    )
-
-                    HourlyForecastCard(
-                        hourlyForecasts = weatherState.hourlyForecast,
-                        weeklyForecasts = weatherState.weeklyForecast,
-                        isExpanded = isForecastExpanded,
-                        onClick = { isForecastExpanded = !isForecastExpanded }
-                    )
-
-                    ClothingRecommendationCard(
-                        currentWeather = weatherState.currentWeather,
-                        weatherDetails = weatherState.weatherDetails,
-                        hourlyForecast = weatherState.hourlyForecast,
-                        feelsLike = weatherState.currentWeather.feelsLike,
-                        tempAdjustment = tempAdjustment,
-                        yesterdayComparisonText = weatherState.yesterdayComparisonText,
-                        onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
-                    )
-                    
-                    NearbyCctvCard(
-                        isLoading = isCctvLoading,
-                        cctvInfo = cctvInfo,
-                        error = cctvError,
-                        onMoreClick = { navController.navigate("cctv") },
-                        onCctvClick = { cctv ->
-                            val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
-                            navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
+                Crossfade(
+                    targetState = weatherState.lastUpdated,
+                    animationSpec = tween(500),
+                    label = "WeatherContentUpdate"
+                ) { _ ->
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Text(
-                            text = stringResource(R.string.data_source_credit),
-                            fontSize = 12.sp,
-                            color = Color.White.copy(alpha = 0.7f)
+                        CurrentWeatherCard(
+                            weather = weatherState.currentWeather,
+                            address = weatherState.address,
+                            details = weatherState.weatherDetails,
+                            isExpanded = isDetailExpanded,
+                            onClick = { isDetailExpanded = !isDetailExpanded }
                         )
-                        Text(
-                            text = weatherState.lastUpdated,
-                            fontSize = 12.sp,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
-                    }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                        HourlyForecastCard(
+                            hourlyForecasts = weatherState.hourlyForecast,
+                            weeklyForecasts = weatherState.weeklyForecast,
+                            isExpanded = isForecastExpanded,
+                            onClick = { isForecastExpanded = !isForecastExpanded }
+                        )
+
+                        ClothingRecommendationCard(
+                            currentWeather = weatherState.currentWeather,
+                            weatherDetails = weatherState.weatherDetails,
+                            hourlyForecast = weatherState.hourlyForecast,
+                            feelsLike = weatherState.currentWeather.feelsLike,
+                            tempAdjustment = tempAdjustment,
+                            yesterdayComparisonText = weatherState.yesterdayComparisonText,
+                            onSettingsClick = { mainViewModel.openTempAdjustmentDialog() }
+                        )
+                        
+                        NearbyCctvCard(
+                            isLoading = isCctvLoading,
+                            cctvInfo = cctvInfo,
+                            error = cctvError,
+                            onMoreClick = { navController.navigate("cctv") },
+                            onCctvClick = { cctv ->
+                                val encodedUrl = android.util.Base64.encodeToString(cctv.cctvUrl.toByteArray(), android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
+                                navController.navigate("cctvPlayer/${cctv.cctvName}/$encodedUrl")
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.data_source_credit),
+                                fontSize = 12.sp,
+                                color = Color.White.copy(alpha = 0.7f)
+                            )
+                            Text(
+                                text = weatherState.lastUpdated,
+                                fontSize = 12.sp,
+                                color = Color.White.copy(alpha = 0.7f)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
                 }
             }
 

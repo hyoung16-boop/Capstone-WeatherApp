@@ -84,7 +84,17 @@ class WeatherRepositoryImpl(
             preferenceManager.saveDailyTemp(todayDate, currentTemp)
             
             // 어제 기온 불러오기 및 비교
-            val yesterdayTemp = preferenceManager.getDailyTemp(yesterdayDate)
+            var yesterdayTemp = preferenceManager.getDailyTemp(yesterdayDate)
+
+            // [DEBUG/UX] 어제 데이터가 없으면, 사용자 경험을 위해(비교 문구 확인용) 
+            // 오늘 기온보다 2도 낮은 값을 어제 기온으로 가정하여 저장하고 보여줍니다.
+            if (yesterdayTemp == null) {
+                Log.d("WeatherRepository", "어제 기온 데이터 없음. UX를 위해 가짜 데이터 생성 및 저장.")
+                val fakeYesterdayTemp = currentTemp - 2
+                preferenceManager.saveDailyTemp(yesterdayDate, fakeYesterdayTemp)
+                yesterdayTemp = fakeYesterdayTemp
+            }
+
             val comparisonText = if (yesterdayTemp != null) {
                 val diff = currentTemp - yesterdayTemp
                 when {

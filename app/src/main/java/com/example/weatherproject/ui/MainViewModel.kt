@@ -164,9 +164,14 @@ class MainViewModel @Inject constructor(
             }
             .onFailure { error ->
                 Log.e(TAG, "getWeatherData 실패: ${error.message}", error)
+                val errorMessage = when (error) {
+                    is java.net.UnknownHostException -> "네트워크 연결을 확인해주세요."
+                    is java.net.SocketTimeoutException -> "서버 응답이 지연되고 있습니다.\n잠시 후 다시 시도해주세요."
+                    else -> "날씨 정보를 가져올 수 없습니다.\n잠시 후 다시 시도해주세요."
+                }
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = "날씨 정보를 가져올 수 없습니다.\n네트워크 연결을 확인해주세요."
+                    error = errorMessage
                 )
             }
     }
@@ -175,6 +180,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             if (_isRefreshing.value) return@launch
             _isRefreshing.value = true
+            val startTime = System.currentTimeMillis()
             try {
                 if (_isFollowingGps.value) {
                     getCurrentLocationOnce()
@@ -188,6 +194,10 @@ class MainViewModel @Inject constructor(
             } catch (e: Exception) {
                 _errorEvent.emit(e.message ?: "알 수 없는 오류가 발생했습니다.")
             } finally {
+                val elapsedTime = System.currentTimeMillis() - startTime
+                if (elapsedTime < 1000) {
+                    kotlinx.coroutines.delay(1000 - elapsedTime)
+                }
                 _isRefreshing.value = false
             }
         }
@@ -202,22 +212,28 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             if (_isRefreshing.value) return@launch
             _isRefreshing.value = true
-            
-            _isFollowingGps.value = true
-            startLocationTracking()
-            getCurrentLocationOnce()
+            val startTime = System.currentTimeMillis()
 
-            currentLocation.value?.let { loc ->
-                fetchWeatherFromServer(loc.latitude, loc.longitude)
+            try {
+                _isFollowingGps.value = true
+                startLocationTracking()
+                getCurrentLocationOnce()
+
+                currentLocation.value?.let { loc ->
+                    fetchWeatherFromServer(loc.latitude, loc.longitude)
+                }
+                
+                val currentAddr = locationProvider.address.value
+                if (currentAddr.isNotBlank()) {
+                    _uiState.value = _uiState.value.copy(address = currentAddr)
+                }
+            } finally {
+                val elapsedTime = System.currentTimeMillis() - startTime
+                if (elapsedTime < 1000) {
+                    kotlinx.coroutines.delay(1000 - elapsedTime)
+                }
+                _isRefreshing.value = false
             }
-            
-            val currentAddr = locationProvider.address.value
-            if (currentAddr.isNotBlank()) {
-                _uiState.value = _uiState.value.copy(address = currentAddr)
-            }
-            
-            kotlinx.coroutines.delay(1500)
-            _isRefreshing.value = false
         }
     }
 
@@ -232,9 +248,15 @@ class MainViewModel @Inject constructor(
 
             _isRefreshing.value = true
             _uiState.value = _uiState.value.copy(address = city, latitude = lat, longitude = lon)
+            
+            val startTime = System.currentTimeMillis()
             try {
                 fetchWeatherFromServer(lat, lon)
             } finally {
+                val elapsedTime = System.currentTimeMillis() - startTime
+                if (elapsedTime < 1000) {
+                    kotlinx.coroutines.delay(1000 - elapsedTime)
+                }
                 _isRefreshing.value = false
             }
         }
