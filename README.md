@@ -61,15 +61,15 @@ https://blog.naver.com/jueun3010/224115564573
       예: if (isWinter && windSpeed >= 4.0) -> "칼바람 때문에 체감온도가 뚝 떨어졌어요."
 
 
+------------------------------------------------------------------------------------------------------------------------------------
 
-
-1. 아키텍처:
+ 아키텍처:
    패턴: MVVM (Model-View-ViewModel) 및 클린 아키텍처 지향.
    DI (의존성 주입): Hilt를 전반적으로 사용 (AppModule, @HiltViewModel, 워커/리시버를 위한 EntryPointAccessors).
    UI: Jetpack Compose 기반 (단일 액티비티 MainActivity, WeatherNavHost를 통한 네비게이션).
    비동기 처리: Kotlin Coroutines 및 Flow 사용.
 
-2. 핵심 기능:
+핵심 기능:
    실시간 날씨: WeatherApiService를 통해 현재, 시간별, 주간 예보 조회.
    위치 기반: GPS(FusedLocationProvider) 및 주소 검색(Geocoder) 지원.
    데이터 지속성: Room DB(AppDatabase)에 전체 날씨 상태 캐싱, PreferenceManager로 설정 값(체감 온도 보정 등) 관리.
@@ -80,12 +80,12 @@ https://blog.naver.com/jueun3010/224115564573
    옷차림 추천: ClothingRecommender가 체감 온도를 분석하여 적절한 옷차림 제안.
    날씨 요약: WeatherSummarizer가 날씨 상태를 자연어 문장으로 요약 (예: "겨울이지만 봄처럼 포근해요").
 
- 3. 데이터 흐름:
+데이터 흐름:
     요청: MainViewModel -> WeatherRepository -> WeatherApiService (원격) / WeatherDao (로컬).
     처리: 레포지토리에서 체감 온도 계산, 어제 날씨 비교, 데이터 매핑 후 WeatherState 생성.
     표시: HomeScreen이 MainViewModel.uiState를 구독하여 화면 렌더링.
     
- 4. 네트워크:
+네트워크:
     Base URL: https://www.weapi.shop/
     엔드포인트: /api/weather/current, /api/weather/forecast, /api/weather/week, /get_cctv.
     클라이언트: OkHttp (로깅 인터셉터 포함).
